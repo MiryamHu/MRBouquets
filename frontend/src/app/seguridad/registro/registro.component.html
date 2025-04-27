@@ -1,0 +1,59 @@
+<h2 style="text-align: center;">Registro de Usuario</h2>
+
+<form
+  [formGroup]="registroForm"
+  (ngSubmit)="onSubmit()"
+  style="max-width: 500px; margin: auto; display: flex; flex-direction: column; gap: 16px;"
+>
+  <mat-form-field appearance="fill">
+    <mat-label>Nombre de usuario</mat-label>
+    <input matInput formControlName="nombre_usuario" />
+    <mat-error *ngIf="registroForm.get('nombre_usuario')?.invalid && registroForm.get('nombre_usuario')?.touched">
+      Campo requerido
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" />
+    <mat-error *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched">
+      Campo requerido
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Apellido</mat-label>
+    <input matInput formControlName="apellido" />
+    <mat-error *ngIf="registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched">
+      Campo requerido
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Correo</mat-label>
+    <input matInput type="email" formControlName="correo" />
+    <mat-error *ngIf="registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched">
+      Correo inválido
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Contraseña</mat-label>
+    <input matInput type="password" formControlName="contrasena" />
+    <mat-error *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched">
+      Mínimo 6 caracteres
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Teléfono</mat-label>
+    <input matInput formControlName="telefono" />
+  </mat-form-field>
+
+  <div *ngIf="mensaje" style="color: green;">{{ mensaje }}</div>
+  <div *ngIf="error" style="color: red;">{{ error }}</div>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="registroForm.invalid">
+    Registrarse
+  </button>
+</form>

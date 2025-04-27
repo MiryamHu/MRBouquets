@@ -1,0 +1,185 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Tipografía y contenedor general */
+  body {
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  .contenedor-principal {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+  }
+  
+  /* Encabezado */
+  .encabezado {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #f8f8f8;
+    gap: 1rem;
+  }
+  .logo h1 {
+    font-size: 1.5rem;
+    color: #d6336c;
+  }
+  .navegacion .lista-navegacion {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  .navegacion .lista-navegacion a {
+    text-decoration: none;
+    color: #333;
+  }
+  .acciones-usuario .boton {
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d6336c;
+    border-radius: 0.25rem;
+    color: #d6336c;
+    transition: background 0.3s, color 0.3s;
+  }
+  .acciones-usuario .boton-principal {
+    background: #d6336c;
+    color: #fff;
+  }
+  .acciones-usuario .boton:hover,
+  .acciones-usuario .boton-principal:hover {
+    background: #c12b5a;
+    color: #fff;
+  }
+  
+  /* Sección de banner */
+  .seccion-banner {
+    display: grid;
+    width: 100%;
+  }
+  .banner-img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;    
+    display: block;
+  }
+  
+  /* Sección de destacados */
+  .seccion-destacados {
+    padding: 2rem;
+    background: #fff;
+  }
+  .titulo-seccion {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: #d6336c;
+  }
+  .grid-destacados {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+  .tarjeta-bouquet {
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    text-align: center;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+  }
+  .tarjeta-bouquet img {
+    width: 100%;
+    height: auto;
+  }
+  .tarjeta-bouquet h3 {
+    margin: 0.5rem 0;
+  }
+  .tarjeta-bouquet p {
+    flex: 1;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+  }
+  .tarjeta-bouquet .boton {
+    margin: 1rem;
+    background: #d6336c;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+  }
+  
+  /* Sección de novedades */
+  .seccion-novedades {
+    padding: 2rem;
+    background: #f0f0f0;
+  }
+  .grid-novedades {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+  .bloque-novedad {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+  }
+  .bloque-novedad h4 {
+    margin-bottom: 0.5rem;
+    color: #d6336c;
+  }
+  
+  /* Pie de página */
+  .pie-pagina {
+    background: #333;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .lista-redes {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  .lista-redes a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  /* Responsive: tablet */
+  @media (max-width: 768px) {
+    .encabezado {
+      grid-template-columns: 1fr auto;
+    }
+    .acciones-usuario {
+      display: none;
+    }
+    .banner-img {
+      height: 300px;  
+    }
+  }
+  
+  /* Responsive: móvil */
+  @media (max-width: 480px) {
+    .grid-destacados {
+      grid-template-columns: 1fr;
+    }
+    .grid-novedades {
+      grid-template-columns: 1fr;
+    }
+    .navegacion .lista-navegacion {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .banner-img {
+      height: 200px;  
+    }
+  }
+  

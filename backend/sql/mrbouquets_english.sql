@@ -30,7 +30,6 @@ CREATE TABLE addresses (
     address_line VARCHAR(255) NOT NULL,
     city VARCHAR(100) NOT NULL,
     postal_code VARCHAR(20) NOT NULL,
-    country VARCHAR(50) NOT NULL,
     phone VARCHAR(20),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
