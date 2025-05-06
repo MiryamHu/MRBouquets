@@ -13,21 +13,26 @@
     </nav>
 
     <!-- Acciones de usuario -->
-    <div class="acciones-usuario">
-      <!-- Si está logueado -->
-      <ng-container *ngIf="auth.isLoggedIn(); else anon">
-        <span class="saludo">Hola, {{ userName }}</span>
-        <button class="boton cerrar-sesion" (click)="logout()">
-          Cerrar sesión
-        </button>
-      </ng-container>
-
-      <!-- Si no está logueado -->
-      <ng-template #anon>
-        <a routerLink="/login">Iniciar sesión</a>
-        <a routerLink="/registro" class="boton boton-principal">Registro</a>
-      </ng-template>
-    </div>
+    <!-- Acciones de usuario -->
+<div class="acciones-usuario">
+    <!-- Si está logueado -->
+    <ng-container *ngIf="auth.isLoggedIn(); else anon">
+      <span class="saludo">Hola, {{ userName }}</span>
+      <!-- Enlace al carrito sólo para usuarios logueados -->
+      <a routerLink="/perfil" class="boton">👤 Mi Perfil</a>
+      <a routerLink="/carrito" class="boton">
+        🛒 Mi carrito
+      </a>
+      <button class="boton cerrar-sesion" (click)="logout()">
+        Cerrar sesión
+      </button>
+    </ng-container>
+    <!-- Si no está logueado -->
+    <ng-template #anon>
+      <a routerLink="/login">Iniciar sesión</a>
+      <a routerLink="/registro" class="boton boton-principal">Registro</a>
+    </ng-template>
+  </div>
   </header>
 
   <!-- Sección banner -->
@@ -39,25 +44,27 @@
   <section class="seccion-destacados">
     <h2 class="titulo-seccion">Bouquets Destacados</h2>
     <div class="grid-destacados">
-      <article class="tarjeta-bouquet">
-        <img src="img/Bouquet_Romantico.webp" alt="Bouquet Romántico">
-        <h3>Bouquet Romántico</h3>
-        <p>Rosas y lirios para momentos inolvidables.</p>
-        <a href="#" class="boton">Ver más</a>
+      <article class="tarjeta-bouquet" *ngFor="let producto of productos">
+        <img [src]="producto.img" [alt]="producto.nombre">
+        <h3>{{ producto.nombre }}</h3>
+        <p>{{ producto.descripcion }}</p>
+        <button class="boton"
+                (click)="onAddToCart(producto)">
+          Agregar al carrito
+        </button>
       </article>
-      <article class="tarjeta-bouquet">
-        <img src="img/Bouquet_Alegre.webp" alt="Bouquet Alegre">
-        <h3>Bouquet Alegre</h3>
-        <p>Colorido y vibrante para alegrar tu día.</p>
-        <a href="#" class="boton">Ver más</a>
-      </article>
-      <article class="tarjeta-bouquet">
-        <img src="img/Bouquet_Elegante.webp" alt="Bouquet Elegante">
-        <h3>Bouquet Elegante</h3>
-        <p>Orquídeas y tulipanes para un toque de distinción.</p>
-        <a href="#" class="boton">Ver más</a>
-      </article>
+      
     </div>
+    <!-- Modal de invitación a login -->
+<div class="modal-backdrop" *ngIf="showLoginModal">
+  <div class="modal-contenido">
+    <h3>¡Ups!</h3>
+    <p>Para añadir productos al carrito debes iniciar sesión.</p>
+    <button class="boton" (click)="goLogin()">Ir a Login</button>
+    <button class="boton cerrar" (click)="showLoginModal = false">Cerrar</button>
+  </div>
+</div>
+
   </section>
   
   <!-- Sección de novedades -->

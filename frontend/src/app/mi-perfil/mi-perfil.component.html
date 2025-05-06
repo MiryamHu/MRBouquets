@@ -1,0 +1,21 @@
+<div class="perfil-container" *ngIf="isBrowser">
+    <h2>Mi Perfil</h2>
+  
+    <div class="datos-usuario" *ngIf="userData; else noUser">
+      <p><strong>Nombre de usuario:</strong> {{ userData.nombre_usuario ?? userData.nombre }}</p>
+      <p><strong>Nombre:</strong> {{ userData.nombre }}</p>
+      <p><strong>Apellido:</strong> {{ userData.apellido }}</p>
+      <p><strong>Correo:</strong> {{ userData.correo }}</p>
+      <p *ngIf="userData.telefono"><strong>Teléfono:</strong> {{ userData.telefono }}</p>
+    </div>
+    <ng-template #noUser>
+      <p>No se han encontrado datos de usuario.</p>
+    </ng-template>
+  
+    <section class="pedidos-antiguos">
+      <h3>Mis Pedidos Anteriores</h3>
+      <!-- Módulo deshabilitado por el momento -->
+      <p class="disabled">Esta sección estará disponible próximamente.</p>
+    </section>
+  </div>
+  

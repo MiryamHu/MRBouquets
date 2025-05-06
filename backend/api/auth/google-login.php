@@ -81,7 +81,7 @@ if ($user = $res->fetch_assoc()) {
 }
 
 $stmt->close();
-
+                
 // 4) Respuesta final
 echo json_encode([
   'mensaje' => 'Login Google OK',
