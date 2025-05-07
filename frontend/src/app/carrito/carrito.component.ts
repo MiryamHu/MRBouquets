@@ -1,30 +1,32 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { CartService, CartItem } from '../services/cart.service';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule }           from '@angular/common';
+import { RouterModule, Router }   from '@angular/router';
+import { PedidoService }          from '../services/pedido.service';
+import { CartService, CartItem }  from '../services/cart.service';
 
 @Component({
   selector: 'app-carrito',
   standalone: true,
-  imports: [ CommonModule, RouterModule ],
+  imports: [
+    CommonModule,
+    RouterModule
+  ],
   templateUrl: './carrito.component.html',
   styleUrls: ['./carrito.component.css']
 })
 export class CarritoComponent implements OnInit {
   items: CartItem[] = [];
-  subtotal: number = 0;
-  isBrowser: boolean;
+  subtotal = 0;
+  showModal = false;
 
   constructor(
     private cartService: CartService,
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: any
-  ) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-  }
+    private pedidoService: PedidoService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    if (!this.isBrowser) return;
+    // Siempre nos suscribimos al servicio; no hace falta isBrowser
     this.cartService.items$.subscribe(items => {
       this.items = items;
       this.calculateSubtotal();
@@ -45,7 +47,6 @@ export class CarritoComponent implements OnInit {
   decrement(item: CartItem): void {
     if (item.quantity > 1) {
       item.quantity--;
-      // para forzar el next()
       this.cartService['itemsSubject'].next([...this.items]);
       this.calculateSubtotal();
     } else {
@@ -64,10 +65,24 @@ export class CarritoComponent implements OnInit {
   }
 
   proceedToCheckout(): void {
-    this.router.navigate(['/checkout']);
+    this.pedidoService.confirmOrder(this.subtotal).subscribe({
+      next: () => {
+        this.cartService.clearCart();
+        this.calculateSubtotal();
+        this.showModal = true;
+      },
+      error: () => {
+        alert('Hubo un error al confirmar tu pedido. Intenta de nuevo.');
+      }
+    });
   }
 
   continueShopping(): void {
-    this.router.navigate(['/catalogo']);
+    this.router.navigate(['/']);
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.router.navigate(['/']);
   }
 }

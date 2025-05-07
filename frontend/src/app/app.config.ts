@@ -1,8 +1,7 @@
-
-import { ApplicationConfig } from '@angular/core';
-import { provideZoneChangeDetection } from '@angular/core';
+// src/app/app.config.ts
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import {
   provideHttpClient,
   withFetch,
@@ -13,19 +12,22 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // optimiza detección de cambios
+    // 1) Todos los providers de BrowserModule (renderer, sanitizers, etc.)
+    importProvidersFrom(BrowserModule),
+
+    // 2) Optimización de change detection
     provideZoneChangeDetection({ eventCoalescing: true }),
 
-    // rutas
-    provideRouter(routes),
-
-    // habilitamos cliente-SSR
+    // 3) Soporte a hydration (SSR) si lo usas
     provideClientHydration(withEventReplay()),
 
-    // HttpClient usando fetch() + carga tus interceptores
+    // 4) HttpClient basado en fetch + tus interceptores
     provideHttpClient(
       withFetch(),
       withInterceptorsFromDi()
-    )
+    ),
+
+    // 5) Configuración del router con tus rutas
+    provideRouter(routes),
   ]
 };

@@ -1,4 +1,4 @@
-<div class="cart-container" *ngIf="isBrowser">
+<div class="cart-container">
   <div class="cart-header">
     <h2>Carrito de Compras</h2>
     <button class="btn-clear" (click)="clearCart()">Vaciar Carrito</button>
@@ -45,4 +45,10 @@
   <button class="btn-secondary full-width" (click)="continueShopping()">
     Seguir Comprando
   </button>
+  <div class="modal-backdrop" *ngIf="showModal">
+    <div class="modal">
+      <p>Su pedido está confirmado, gracias por su compra.</p>
+      <button class="btn-primary" (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
 </div>
