@@ -1,0 +1,54 @@
+<div class="cart-container">
+  <div class="cart-header">
+    <h2>Carrito de Compras</h2>
+    <button class="btn-clear" (click)="clearCart()">Vaciar Carrito</button>
+    <button class="btn-close" (click)="continueShopping()">×</button>
+  </div>
+
+  <div class="cart-items">
+    <div class="cart-item" *ngFor="let item of items">
+      <img [src]="item.img" [alt]="item.nombre" class="item-img">
+      <div class="item-details">
+        <h3>{{ item.nombre }}</h3>
+        <p>{{ item.descripcion }}</p>
+        <span class="item-price">
+          {{ item.quantity * item.price | currency:'USD':'symbol':'1.2-2' }}
+        </span>
+      </div>
+      <div class="quantity-controls">
+        <button (click)="decrement(item)">–</button>
+        <span>{{ item.quantity }}</span>
+        <button (click)="increment(item)">+</button>
+      </div>
+      <button class="btn-remove" (click)="removeItem(item.id)">🗑️</button>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="line">
+      <span>Subtotal</span>
+      <span>{{ subtotal | currency:'USD':'symbol':'1.2-2' }}</span>
+    </div>
+    <div class="line">
+      <span>Envío</span>
+      <span>Calculado al pagar</span>
+    </div>
+    <div class="line total">
+      <span>Total</span>
+      <span>{{ subtotal | currency:'USD':'symbol':'1.2-2' }}</span>
+    </div>
+  </div>
+
+  <button class="btn-primary full-width" (click)="proceedToCheckout()">
+    Proceder al Pago
+  </button>
+  <button class="btn-secondary full-width" (click)="continueShopping()">
+    Seguir Comprando
+  </button>
+  <div class="modal-backdrop" *ngIf="showModal">
+    <div class="modal">
+      <p>Su pedido está confirmado, gracias por su compra.</p>
+      <button class="btn-primary" (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
+</div>

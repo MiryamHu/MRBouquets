@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, RegisterData } from '../../services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ],
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css']
 })
@@ -37,11 +44,12 @@ export class RegistroComponent {
   onSubmit(): void {
     if (this.registroForm.invalid) return;
 
-    this.auth.register(this.registroForm.value).subscribe({
+    const data: RegisterData = this.registroForm.value;
+    this.auth.register(data).subscribe({
       next: res => {
-        this.mensaje = res.mensaje || 'Usuario registrado';
+        this.mensaje = res.mensaje;
         this.error = '';
-        this.router.navigate(['/login']);
+        setTimeout(() => this.router.navigate(['/login']), 1000);
       },
       error: err => {
         this.error = err.error?.error || 'Error en el registro';

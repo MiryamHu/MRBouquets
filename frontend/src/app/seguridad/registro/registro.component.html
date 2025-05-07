@@ -50,8 +50,12 @@
     <input matInput formControlName="telefono" />
   </mat-form-field>
 
-  <div *ngIf="mensaje" style="color: green;">{{ mensaje }}</div>
-  <div *ngIf="error" style="color: red;">{{ error }}</div>
+  <div *ngIf="mensaje" style="color: green; text-align: center;">
+    {{ mensaje }}
+  </div>
+  <div *ngIf="error" style="color: red; text-align: center;">
+    {{ error }}
+  </div>
 
   <button mat-raised-button color="primary" type="submit" [disabled]="registroForm.invalid">
     Registrarse

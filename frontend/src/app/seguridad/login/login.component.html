@@ -1,3 +1,4 @@
+<!-- src/app/seguridad/login/login.component.html -->
 <h2 style="text-align: center;">Iniciar sesión</h2>
 
 <form
@@ -21,9 +22,22 @@
     </mat-error>
   </mat-form-field>
 
-  <div *ngIf="error" style="color: red;">{{ error }}</div>
+  <div *ngIf="error" style="color: red; text-align: center;">
+    {{ error }}
+  </div>
 
   <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
     Entrar
   </button>
 </form>
+
+<!-- === Botón de Google Sign-In === -->
+<div style="text-align: center; margin-top: 24px;">
+  <!-- Carga automática del One-Tap / Sign-In Button -->
+  <div
+    id="g_id_onload"
+    [attr.data-client_id]="googleClientId"
+    data-callback="handleCredentialResponse">
+  </div>
+  <div class="g_id_signin" data-type="standard"></div>
+</div>
