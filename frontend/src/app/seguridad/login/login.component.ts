@@ -71,8 +71,8 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) return;
 
     const data: LoginData = {
-      email: this.loginForm.value.correo,
-      password: this.loginForm.value.contrasena
+      correo: this.loginForm.value.correo,
+      contrasena: this.loginForm.value.contrasena
     };
 
     this.auth.login(data).subscribe({

@@ -43,11 +43,23 @@
   <!-- Sección de destacados -->
   <section class="seccion-destacados">
     <h2 class="titulo-seccion">Bouquets Destacados</h2>
-    <div class="grid-destacados">
+    <!-- Estado de carga -->
+    <div *ngIf="loading" class="text-center my-4">
+      <p>Cargando productos...</p>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+
+    <!-- Productos -->
+    <div *ngIf="!loading && !error" class="grid-destacados">
       <article class="tarjeta-bouquet" *ngFor="let producto of productos">
         <img [src]="producto.img" [alt]="producto.nombre">
         <h3>{{ producto.nombre }}</h3>
         <p>{{ producto.descripcion }}</p>
+        <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
         <button class="boton"
                 (click)="onAddToCart(producto)">
           Agregar al carrito

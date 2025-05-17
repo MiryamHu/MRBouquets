@@ -3,6 +3,7 @@ import { CommonModule }           from '@angular/common';
 import { RouterModule, Router }   from '@angular/router';
 import { PedidoService }          from '../services/pedido.service';
 import { CartService, CartItem }  from '../services/cart.service';
+import { Ramo } from '../services/ramos.service';
 
 @Component({
   selector: 'app-carrito',
@@ -41,7 +42,12 @@ export class CarritoComponent implements OnInit {
   }
 
   increment(item: CartItem): void {
-    this.cartService.add(item);
+    // Convertir CartItem a Ramo
+    const ramo: Ramo = {
+      ...item,
+      precio: item.price
+    };
+    this.cartService.add(ramo);
   }
 
   decrement(item: CartItem): void {
@@ -65,13 +71,14 @@ export class CarritoComponent implements OnInit {
   }
 
   proceedToCheckout(): void {
-    this.pedidoService.confirmOrder(this.subtotal).subscribe({
+    this.pedidoService.confirmOrder(this.subtotal, this.items).subscribe({
       next: () => {
         this.cartService.clearCart();
         this.calculateSubtotal();
         this.showModal = true;
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error al procesar el pedido:', error);
         alert('Hubo un error al confirmar tu pedido. Intenta de nuevo.');
       }
     });

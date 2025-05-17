@@ -1,8 +1,9 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { CartService, Product } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
+import { RamosService, Ramo } from '../../services/ramos.service';
 
 @Component({
   selector: 'app-principal',
@@ -11,40 +12,40 @@ import { CartService, Product } from '../../services/cart.service';
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })
-export class PrincipalComponent {
-  productos: Product[] = [
-    {
-      id: 1,
-      nombre: 'Bouquet Romántico',
-      descripcion: 'Rosas y lirios...',
-      img: 'img/Bouquet_Romantico.webp',
-      price: 49.99
-    },
-    {
-      id: 2,
-      nombre: 'Bouquet Alegre',
-      descripcion: 'Colorido y vibrante...',
-      img: 'img/Bouquet_Alegre.webp',
-      price: 39.50
-    },
-    {
-      id: 3,
-      nombre: 'Bouquet Elegante',
-      descripcion: 'Orquídeas y tulipanes...',
-      img: 'img/Bouquet_Elegante.webp',
-      price: 59.00
-    },
-  ];
+export class PrincipalComponent implements OnInit {
+  productos: Ramo[] = [];
   showLoginModal = false;
   isBrowser: boolean;
+  error: string = '';
+  loading: boolean = true;
 
   constructor(
     public auth: AuthService,
     private cartService: CartService,
+    private ramosService: RamosService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+
+  ngOnInit(): void {
+    this.loadRamos();
+  }
+
+  private loadRamos(): void {
+    this.loading = true;
+    this.ramosService.getRamos().subscribe({
+      next: (ramos) => {
+        this.productos = ramos;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar los ramos:', err);
+        this.error = 'Error al cargar los productos. Por favor, intente más tarde.';
+        this.loading = false;
+      }
+    });
   }
 
   get userName(): string {
@@ -57,7 +58,7 @@ export class PrincipalComponent {
     this.router.navigate(['/']);
   }
 
-  onAddToCart(producto: Product): void {
+  onAddToCart(producto: Ramo): void {
     if (this.auth.isLoggedIn()) {
       this.cartService.add(producto);
     } else {

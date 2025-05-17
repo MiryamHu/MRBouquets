@@ -1,13 +1,28 @@
 <?php
-require_once '../conexion.php';
-header("Access-Control-Allow-Origin: *");
+require_once __DIR__ . '/../session_config.php';
+require_once __DIR__ . '/../conexion.php';
+
+// Asegurarnos de que no haya output antes de las cabeceras
+ob_start();
+
+// Configurar CORS
+header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json");
 
+error_log("=== Iniciando proceso de login con Google ===");
+
+// Manejar preflight request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
+    http_response_code(204);
     exit;
 }
+
+// Iniciar sesión limpia
+start_clean_session();
+
 // tu CLIENT_ID de Google
 define('GOOGLE_CLIENT_ID', '404368959204-ouvmhhtevnj3glddn2ndgjih4ps3eldv.apps.googleusercontent.com');
 
@@ -81,9 +96,36 @@ if ($user = $res->fetch_assoc()) {
 }
 
 $stmt->close();
+
+// Configurar la sesión
+if (!session_regenerate_id(true)) {
+    error_log("Error al regenerar ID de sesión en Google login");
+    http_response_code(500);
+    echo json_encode(['error' => 'Error interno del servidor']);
+    exit;
+}
+
+$_SESSION['id_usuario'] = $user['id'];
+$_SESSION['usuario'] = $user['nombre'];
+$_SESSION['initialized'] = true;
+$_SESSION['created'] = time();
+$_SESSION['last_activity'] = time();
+
+error_log("=== Login con Google exitoso ===");
+error_log("Usuario ID: " . $user['id']);
+error_log("Contenido de SESSION: " . print_r($_SESSION, true));
+error_log("ID de sesión: " . session_id());
+error_log("Cookies después del login: " . print_r($_COOKIE, true));
+
+// Asegurarnos de que la cookie de sesión se envía
+session_write_close();
                 
 // 4) Respuesta final
 echo json_encode([
   'mensaje' => 'Login Google OK',
-  'usuario' => $user
+  'usuario' => $user,
+  'session_id' => session_id()
 ]);
+
+// Asegurarnos de que todo el output se envíe
+ob_end_flush();
