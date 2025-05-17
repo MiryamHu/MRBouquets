@@ -1,17 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-// Define la interfaz de producto tal como la usas en PrincipalComponent
-export interface Product {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  img: string;
-  price: number; 
-}
+import { Ramo } from './ramos.service';
 
 // Interfaz para items en el carrito, con cantidad
-export interface CartItem extends Product {
+export interface CartItem extends Omit<Ramo, 'precio'> {
+  price: number;
   quantity: number;
 }
 
@@ -30,12 +23,19 @@ export class CartService {
   /**
    * Añade un producto al carrito. Si ya existe, incrementa la cantidad.
    */
-  add(product: Product): void {
-    const existing = this.items.find(item => item.id === product.id);
+  add(ramo: Ramo): void {
+    const existing = this.items.find(item => item.id === ramo.id);
     if (existing) {
       existing.quantity++;
     } else {
-      this.items.push({ ...product, quantity: 1 });
+      // Convertir precio a price al agregar al carrito
+      const cartItem: CartItem = {
+        ...ramo,
+        price: ramo.precio,
+        quantity: 1
+      };
+      delete (cartItem as any).precio; // Eliminar la propiedad precio
+      this.items.push(cartItem);
     }
     this.itemsSubject.next([...this.items]);
   }

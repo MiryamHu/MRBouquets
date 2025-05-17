@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
+import { CartItem } from './cart.service';
 
 export interface PedidoResponse {
   mensaje: string;
@@ -25,8 +26,12 @@ export class PedidoService {
     return isPlatformBrowser(this.platformId);
   }
 
-  confirmOrder(total: number): Observable<PedidoResponse> {
-    return this.http.post<PedidoResponse>(this.apiUrl, { total }).pipe(
+  confirmOrder(total: number, items: CartItem[]): Observable<PedidoResponse> {
+    return this.http.post<PedidoResponse>(
+      this.apiUrl, 
+      { total, items },
+      { withCredentials: true }
+    ).pipe(
       tap(res => {
         // si quieres guardar el último pedido en localStorage
         if (this.isBrowser()) {

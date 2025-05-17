@@ -13,9 +13,90 @@
     </ng-template>
   
     <section class="pedidos-antiguos">
-      <h3>Mis Pedidos Anteriores</h3>
-      <!-- Módulo deshabilitado por el momento -->
-      <p class="disabled">Esta sección estará disponible próximamente.</p>
+      <div class="pedidos-header">
+        <h3>Mis Pedidos Anteriores</h3>
+        
+        <!-- Filtros y ordenamiento -->
+        <div class="filtros-container">
+          <div class="filtro-estado">
+            <label for="estadoFiltro">Estado:</label>
+            <select id="estadoFiltro" [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
+              <option value="">Todos</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="confirmado">Confirmado</option>
+              <option value="en_proceso">En Proceso</option>
+              <option value="entregado">Entregado</option>
+              <option value="cancelado">Cancelado</option>
+            </select>
+          </div>
+          
+          <div class="orden-fecha">
+            <label for="ordenFecha">Ordenar por:</label>
+            <select id="ordenFecha" [(ngModel)]="ordenFecha" (change)="aplicarFiltros()">
+              <option value="desc">Más recientes primero</option>
+              <option value="asc">Más antiguos primero</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Estado de carga -->
+      <div *ngIf="loadingPedidos" class="loading-pedidos">
+        <div class="spinner"></div>
+        <p>Cargando pedidos...</p>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="errorPedidos" class="error-pedidos">
+        <p>{{ errorPedidos }}</p>
+        <button class="btn-retry" (click)="cargarPedidos()">Intentar de nuevo</button>
+      </div>
+
+      <!-- Lista de pedidos -->
+      <div *ngIf="!loadingPedidos && !errorPedidos" class="lista-pedidos">
+        <div *ngIf="pedidosFiltrados.length > 0; else noPedidos">
+          <div *ngFor="let pedido of pedidosFiltrados | slice:(paginaActual-1)*itemsPorPagina:paginaActual*itemsPorPagina" 
+               class="pedido-card">
+            <div class="pedido-header">
+              <span class="pedido-id">Pedido #{{ pedido.id }}</span>
+              <span class="pedido-fecha">{{ pedido.fecha_pedido }}</span>
+              <span class="pedido-estado" [class]="getEstadoClase(pedido.estado)">
+                {{ getEstadoTexto(pedido.estado) }}
+              </span>
+            </div>
+            <div class="pedido-detalles">
+              <div class="pedido-items-lista">
+                <div *ngFor="let item of getPedidoItems(pedido.detalles)" class="pedido-item">
+                  <span class="item-cantidad">{{ item.cantidad }}x</span>
+                  <span class="item-nombre">{{ item.nombre }}</span>
+                  <span class="item-precio">{{ item.precio }}€</span>
+                </div>
+              </div>
+              <p class="pedido-total">Total: {{ pedido.precio_total }}€</p>
+            </div>
+          </div>
+
+          <!-- Paginación -->
+          <div class="paginacion" *ngIf="totalPaginas > 1">
+            <button 
+              [disabled]="paginaActual === 1" 
+              (click)="cambiarPagina(paginaActual - 1)"
+              class="btn-pagina">
+              &laquo; Anterior
+            </button>
+            <span class="pagina-actual">{{ paginaActual }} de {{ totalPaginas }}</span>
+            <button 
+              [disabled]="paginaActual === totalPaginas" 
+              (click)="cambiarPagina(paginaActual + 1)"
+              class="btn-pagina">
+              Siguiente &raquo;
+            </button>
+          </div>
+        </div>
+        <ng-template #noPedidos>
+          <p class="no-pedidos">No se encontraron pedidos{{ filtroEstado ? ' con el estado seleccionado' : '' }}.</p>
+        </ng-template>
+      </div>
     </section>
   </div>
   

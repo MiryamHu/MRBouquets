@@ -1,17 +1,25 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
 
+export interface User {
+  id: number;
+  nombre_usuario: string;
+  nombre: string;
+  apellido: string;
+  correo: string;
+}
+
 export interface LoginData {
-  email: string;
-  password: string;
+  correo: string;
+  contrasena: string;
 }
 
 export interface GoogleLoginResponse {
   mensaje: string;
-  usuario: any;
+  usuario: User;
 }
 
 export interface RegisterData {
@@ -27,63 +35,163 @@ export interface RegisterData {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/auth`;
-
+  private readonly USER_STORAGE_KEY = 'auth_user';
+  private readonly SESSION_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutos
+  private apiUrl = environment.apiUrl;
+  private userSubject: BehaviorSubject<User | null>;
+  private sessionCheckTimer: any;
+  
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: any
-  ) {}
+  ) {
+    this.userSubject = new BehaviorSubject<User | null>(
+      this.isBrowser() ? this.getStoredUser() : null
+    );
+    
+    if (this.isBrowser() && this.isLoggedIn()) {
+      this.startSessionCheck();
+    }
+  }
 
   private isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }
 
+  private getStoredUser(): User | null {
+    const stored = localStorage.getItem(this.USER_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : null;
+  }
+
+  private setStoredUser(user: User | null): void {
+    if (this.isBrowser()) {
+      if (user) {
+        localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
+      } else {
+        localStorage.removeItem(this.USER_STORAGE_KEY);
+      }
+      this.userSubject.next(user);
+    }
+  }
+
+  private getHttpOptions() {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      withCredentials: true
+    };
+  }
+
+  private startSessionCheck(): void {
+    if (this.sessionCheckTimer) {
+      clearInterval(this.sessionCheckTimer);
+    }
+    
+    this.sessionCheckTimer = setInterval(() => {
+      this.checkSession().subscribe({
+        error: () => {
+          console.error('Sesión expirada o inválida');
+          this.handleSessionExpired();
+        }
+      });
+    }, this.SESSION_CHECK_INTERVAL);
+  }
+
+  private checkSession(): Observable<any> {
+    console.log('Verificando estado de sesión...');
+    return this.http.get(
+      `${this.apiUrl}/auth/check-session.php`,
+      this.getHttpOptions()
+    ).pipe(
+      tap(response => {
+        console.log('Respuesta de verificación de sesión:', response);
+      })
+    );
+  }
+
+  private handleSessionExpired(): void {
+    console.log('Manejando sesión expirada');
+    this.setStoredUser(null);
+    if (this.sessionCheckTimer) {
+      clearInterval(this.sessionCheckTimer);
+    }
+    // Emitir evento de sesión expirada
+    window.dispatchEvent(new CustomEvent('session-expired'));
+  }
+
   login(data: LoginData): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login.php`, data).pipe(
-      tap(res => {
-        if (this.isBrowser() && (res.user || res.usuario)) {
-          const u = res.user ?? res.usuario;
-          localStorage.setItem('auth_user', JSON.stringify(u));
+    return this.http.post(
+      `${this.apiUrl}/auth/login.php`,
+      data,
+      this.getHttpOptions()
+    ).pipe(
+      tap((response: any) => {
+        if (response.usuario) {
+          this.setStoredUser(response.usuario);
+          // Verificar inmediatamente la sesión después del login
+          this.checkSession().subscribe({
+            next: () => {
+              console.log('Sesión verificada después del login');
+              this.startSessionCheck();
+            },
+            error: (err) => {
+              console.error('Error al verificar sesión después del login:', err);
+              this.handleSessionExpired();
+            }
+          });
         }
       })
     );
   }
 
-  googleLogin(id_token: string): Observable<GoogleLoginResponse> {
-    return this.http
-      .post<GoogleLoginResponse>(`${this.apiUrl}/google-login.php`, { id_token })
-      .pipe(
-        tap(res => {
-          if (this.isBrowser() && res.usuario) {
-            localStorage.setItem('auth_user', JSON.stringify(res.usuario));
-          }
-        })
-      );
+  logout(): void {
+    if (this.sessionCheckTimer) {
+      clearInterval(this.sessionCheckTimer);
+    }
+    
+    this.http.post(
+      `${this.apiUrl}/auth/logout.php`,
+      {},
+      this.getHttpOptions()
+    ).subscribe({
+      complete: () => {
+        this.setStoredUser(null);
+      }
+    });
   }
 
-  logout(): void {
-    if (this.isBrowser()) {
-      localStorage.removeItem('auth_user');
-    }
+  getUser(): User | null {
+    return this.userSubject.value;
   }
 
   isLoggedIn(): boolean {
-    return this.isBrowser() && localStorage.getItem('auth_user') !== null;
+    return !!this.userSubject.value;
   }
 
-  getUser(): any {
-    if (!this.isBrowser()) {
-      return null;
-    }
-    const data = localStorage.getItem('auth_user');
-    return data ? JSON.parse(data) : null;
+  googleLogin(id_token: string): Observable<GoogleLoginResponse> {
+    return this.http.post<GoogleLoginResponse>(
+      `${this.apiUrl}/auth/google-login.php`,
+      { id_token },
+      { withCredentials: true }
+    ).pipe(
+      tap(res => {
+        if (res.usuario) {
+          this.setStoredUser(res.usuario);
+        }
+      })
+    );
   }
 
   register(data: RegisterData): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register.php`, data).pipe(
+    return this.http.post<any>(
+      `${this.apiUrl}/auth/register.php`,
+      data,
+      this.getHttpOptions()
+    ).pipe(
       tap(res => {
-        if (this.isBrowser() && res.usuario) {
-          localStorage.setItem('auth_user', JSON.stringify(res.usuario));
+        if (res.usuario) {
+          this.setStoredUser(res.usuario);
         }
       })
     );
