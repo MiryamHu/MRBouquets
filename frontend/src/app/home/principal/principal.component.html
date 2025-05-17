@@ -53,32 +53,60 @@
       {{ error }}
     </div>
 
-    <!-- Productos -->
+    <!-- Productos Regulares -->
     <div *ngIf="!loading && !error" class="grid-destacados">
-      <article class="tarjeta-bouquet" *ngFor="let producto of productos">
+      <article class="tarjeta-bouquet" *ngFor="let producto of productosRegulares">
         <img [src]="producto.img" [alt]="producto.nombre">
         <h3>{{ producto.nombre }}</h3>
         <p>{{ producto.descripcion }}</p>
         <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-        <button class="boton"
-                (click)="onAddToCart(producto)">
+        <button class="boton" (click)="onAddToCart(producto)">
           Agregar al carrito
         </button>
       </article>
-      
     </div>
-    <!-- Modal de invitación a login -->
-<div class="modal-backdrop" *ngIf="showLoginModal">
-  <div class="modal-contenido">
-    <h3>¡Ups!</h3>
-    <p>Para añadir productos al carrito debes iniciar sesión.</p>
-    <button class="boton" (click)="goLogin()">Ir a Login</button>
-    <button class="boton cerrar" (click)="showLoginModal = false">Cerrar</button>
-  </div>
-</div>
-
   </section>
-  
+
+  <!-- Sección de Ocasiones Especiales -->
+  <section class="seccion-ocasiones">
+    <h2 class="titulo-seccion">Ocasiones Especiales</h2>
+    <div class="carrusel-ocasiones" #carrusel>
+      <div class="carrusel-contenedor" [style.transform]="'translateX(' + slideOffset + '%)'">
+        <div class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasiones">
+          <div class="ocasion-imagen">
+            <img [src]="ocasion.img" [alt]="ocasion.nombre">
+            <div class="ocasion-overlay">
+              <i [class]="getIconForOcasion(ocasion)"></i>
+            </div>
+          </div>
+          <div class="ocasion-contenido">
+            <h3>{{ ocasion.nombre }}</h3>
+            <p class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</p>
+            <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
+              Agregar al carrito
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controles del carrusel -->
+      <div class="carrusel-controles">
+        <button class="control-btn prev" (click)="prevSlide()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="indicadores">
+          <span *ngFor="let ocasion of productosOcasiones; let i = index" 
+                [class.activo]="currentSlide === i"
+                (click)="goToSlide(i)">
+          </span>
+        </div>
+        <button class="control-btn next" (click)="nextSlide()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- Sección de novedades -->
   <section class="seccion-novedades">
     <h2 class="titulo-seccion">Novedades</h2>
@@ -107,4 +135,14 @@
       <li><a href="https://www.tiktok.com/">TikTok</a></li>
     </ul>
   </footer>
+</div>
+
+<!-- Modal de invitación a login -->
+<div class="modal-backdrop" *ngIf="showLoginModal">
+  <div class="modal-contenido">
+    <h3>¡Ups!</h3>
+    <p>Para añadir productos al carrito debes iniciar sesión.</p>
+    <button class="boton" (click)="goLogin()">Ir a Login</button>
+    <button class="boton cerrar" (click)="showLoginModal = false">Cerrar</button>
+  </div>
 </div>

@@ -209,3 +209,184 @@
   color: #333;
   border: none;
 }
+
+/* Sección de Ocasiones Especiales */
+.seccion-ocasiones {
+  padding: 4rem 2rem;
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+}
+
+.carrusel-ocasiones {
+  position: relative;
+  max-width: 1200px;
+  margin: 2rem auto;
+  overflow: hidden;
+}
+
+.carrusel-contenedor {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.tarjeta-ocasion {
+  min-width: calc(25% - 2rem);
+  margin: 1rem;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tarjeta-ocasion:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.ocasion-imagen {
+  position: relative;
+  padding-top: 100%;
+  overflow: hidden;
+}
+
+.ocasion-imagen img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.ocasion-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 64, 129, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ocasion-overlay i {
+  font-size: 3rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tarjeta-ocasion:hover .ocasion-overlay {
+  opacity: 1;
+}
+
+.tarjeta-ocasion:hover .ocasion-imagen img {
+  transform: scale(1.1);
+}
+
+.ocasion-contenido {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.ocasion-contenido h3 {
+  margin: 0 0 1rem;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.ocasion-contenido .precio {
+  color: #ff4081;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.boton-ocasion {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: #ff4081;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.boton-ocasion:hover {
+  background: #f50057;
+  transform: translateY(-2px);
+}
+
+/* Controles del carrusel */
+.carrusel-controles {
+  position: absolute;
+  bottom: -2rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.control-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #ff4081;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.control-btn:hover {
+  color: #f50057;
+}
+
+.indicadores {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.indicadores span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ddd;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicadores span.activo {
+  background: #ff4081;
+  transform: scale(1.2);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .tarjeta-ocasion {
+    min-width: calc(33.333% - 2rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .tarjeta-ocasion {
+    min-width: calc(50% - 2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .tarjeta-ocasion {
+    min-width: calc(100% - 2rem);
+  }
+  
+  .seccion-ocasiones {
+    padding: 2rem 1rem;
+  }
+}

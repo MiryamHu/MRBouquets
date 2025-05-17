@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID, OnInit } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -12,38 +12,62 @@ import { RamosService, Ramo } from '../../services/ramos.service';
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })
-export class PrincipalComponent implements OnInit {
-  productos: Ramo[] = [];
+export class PrincipalComponent implements OnInit, OnDestroy {
+  productosRegulares: Ramo[] = [];
+  productosOcasiones: Ramo[] = [];
   showLoginModal = false;
   isBrowser: boolean;
   error: string = '';
   loading: boolean = true;
 
+  // Variables para el carrusel
+  currentSlide: number = 0;
+  slideOffset: number = 0;
+  autoSlideInterval: any;
+
   constructor(
     public auth: AuthService,
-    private cartService: CartService,
     private ramosService: RamosService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
+    private cartService: CartService
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnInit(): void {
     this.loadRamos();
+    if (this.isBrowser) {
+      this.startAutoSlide();
+    }
+  }
+
+  ngOnDestroy() {
+    this.stopAutoSlide();
   }
 
   private loadRamos(): void {
     this.loading = true;
-    this.ramosService.getRamos().subscribe({
+    // Cargar ramos regulares
+    this.ramosService.getRamosRegulares().subscribe({
       next: (ramos) => {
-        this.productos = ramos;
+        this.productosRegulares = ramos;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error al cargar los ramos:', err);
+        console.error('Error al cargar los ramos regulares:', err);
         this.error = 'Error al cargar los productos. Por favor, intente más tarde.';
         this.loading = false;
+      }
+    });
+
+    // Cargar ramos de ocasiones especiales
+    this.ramosService.getRamosOcasiones().subscribe({
+      next: (ramos) => {
+        this.productosOcasiones = ramos;
+      },
+      error: (err) => {
+        console.error('Error al cargar los ramos de ocasiones:', err);
       }
     });
   }
@@ -59,15 +83,78 @@ export class PrincipalComponent implements OnInit {
   }
 
   onAddToCart(producto: Ramo): void {
-    if (this.auth.isLoggedIn()) {
-      this.cartService.add(producto);
-    } else {
+    if (!this.auth.isLoggedIn()) {
       this.showLoginModal = true;
+      return;
     }
+    this.cartService.add(producto);
   }
 
   goLogin(): void {
     this.showLoginModal = false;
     this.router.navigate(['/login']);
+  }
+
+  // Métodos del carrusel
+  public startAutoSlide(): void {
+    if (this.isBrowser) {
+      this.autoSlideInterval = setInterval(() => {
+        this.nextSlide();
+      }, 3000);
+    }
+  }
+
+  public stopAutoSlide(): void {
+    if (this.autoSlideInterval) {
+      clearInterval(this.autoSlideInterval);
+    }
+  }
+
+  public nextSlide(): void {
+    const totalSlides = this.productosOcasiones.length;
+    this.currentSlide = (this.currentSlide + 1) % totalSlides;
+    this.updateSlideOffset();
+    this.resetAutoplay();
+  }
+
+  public prevSlide(): void {
+    const totalSlides = this.productosOcasiones.length;
+    this.currentSlide = (this.currentSlide - 1 + totalSlides) % totalSlides;
+    this.updateSlideOffset();
+    this.resetAutoplay();
+  }
+
+  public goToSlide(index: number): void {
+    const totalSlides = this.productosOcasiones.length;
+    if (index >= 0 && index < totalSlides) {
+      this.currentSlide = index;
+      this.updateSlideOffset();
+      this.resetAutoplay();
+    }
+  }
+
+  private updateSlideOffset(): void {
+    this.slideOffset = -this.currentSlide * 100;
+  }
+
+  private resetAutoplay(): void {
+    if (this.isBrowser) {
+      this.stopAutoSlide();
+      this.startAutoSlide();
+    }
+  }
+
+  public getIconForOcasion(ocasion: Ramo): string {
+    const nombreLower = ocasion.nombre.toLowerCase();
+    if (nombreLower.includes('cumpleaños')) {
+      return 'fas fa-birthday-cake';
+    } else if (nombreLower.includes('aniversario')) {
+      return 'fas fa-heart';
+    } else if (nombreLower.includes('graduación')) {
+      return 'fas fa-graduation-cap';
+    } else if (nombreLower.includes('pésame') || nombreLower.includes('condolencias')) {
+      return 'fas fa-dove';
+    }
+    return 'fas fa-gift'; // Ícono por defecto
   }
 }
