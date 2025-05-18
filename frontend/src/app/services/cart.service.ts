@@ -6,6 +6,7 @@ import { Ramo } from './ramos.service';
 export interface CartItem extends Omit<Ramo, 'precio'> {
   price: number;
   quantity: number;
+  img: string;  // Asegurarnos de que img esté definido explícitamente
 }
 
 @Injectable({
@@ -28,11 +29,12 @@ export class CartService {
     if (existing) {
       existing.quantity++;
     } else {
-      // Convertir precio a price al agregar al carrito
+      // Convertir precio a price al agregar al carrito y mantener img
       const cartItem: CartItem = {
         ...ramo,
         price: ramo.precio,
-        quantity: 1
+        quantity: 1,
+        img: ramo.img  // Asegurarnos de copiar la propiedad img
       };
       delete (cartItem as any).precio; // Eliminar la propiedad precio
       this.items.push(cartItem);
