@@ -1,7 +1,23 @@
 <?php
 require_once '../conexion.php';
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
+
+// Manejar solicitud OPTIONS para CORS preflight
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header("Access-Control-Allow-Origin: http://localhost:4200");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Max-Age: 86400");        // Cache preflight por 24 horas
+    header("Content-Length: 0");
+    header("HTTP/1.1 200 OK");
+    exit();
+}
+
+// Configuración CORS para solicitudes normales
+header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);

@@ -37,7 +37,7 @@
 
   <!-- Sección banner -->
   <section class="seccion-banner">
-    <img src="img/bienvenida.png" alt="Banner Principal" class="banner-img">
+    <img src="http://localhost/MRBouquets/frontend/public/img/bienvenida.png" alt="Banner Principal" class="banner-img">
   </section>
 
   <!-- Sección de destacados -->
@@ -56,7 +56,8 @@
     <!-- Productos Regulares -->
     <div *ngIf="!loading && !error" class="grid-destacados">
       <article class="tarjeta-bouquet" *ngFor="let producto of productosRegulares">
-        <img [src]="producto.img" [alt]="producto.nombre">
+        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + producto.img" 
+             [alt]="producto.nombre">
         <h3>{{ producto.nombre }}</h3>
         <p>{{ producto.descripcion }}</p>
         <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
@@ -74,7 +75,8 @@
       <div class="carrusel-contenedor" [style.transform]="'translateX(' + slideOffset + '%)'">
         <div class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasiones">
           <div class="ocasion-imagen">
-            <img [src]="ocasion.img" [alt]="ocasion.nombre">
+            <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
+                 [alt]="ocasion.nombre">
             <div class="ocasion-overlay">
               <i [class]="getIconForOcasion(ocasion)"></i>
             </div>
