@@ -69,68 +69,116 @@
   
   /* Sección de destacados */
   .seccion-destacados {
-    padding: 2rem;
-    background: #fff;
+    padding: 4rem 2rem;
+    background: linear-gradient(to bottom, #fff5f8, #ffffff);
   }
   .titulo-seccion {
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-size: 2rem;
     color: #d6336c;
+    font-weight: 600;
+    position: relative;
+  }
+  .titulo-seccion::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: #ff4081;
+    border-radius: 2px;
   }
   .grid-destacados {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
   }
   .tarjeta-bouquet {
-    border: 1px solid #e0e0e0;
-    border-radius: 0.5rem;
+    border: none;
+    border-radius: 15px;
     overflow: hidden;
     text-align: center;
-    background: #fafafa;
+    background: white;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+  .tarjeta-bouquet:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
   .tarjeta-bouquet img {
     width: 100%;
-    height: auto;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px 15px 0 0;
+    transition: transform 0.5s ease;
+  }
+  .tarjeta-bouquet:hover img {
+    transform: scale(1.05);
   }
   .tarjeta-bouquet h3 {
-    margin: 0.5rem 0;
+    margin: 1.2rem 1rem 0.5rem;
+    font-size: 1.3rem;
+    color: #333;
+    font-weight: 600;
   }
   .tarjeta-bouquet p {
-    flex: 1;
-    padding: 0 1rem;
-    font-size: 0.9rem;
+    margin: 0 1rem;
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+    flex-grow: 1;
+    padding-bottom: 1rem;
+  }
+  .tarjeta-bouquet .precio {
+    display: block;
+    font-size: 1.4rem;
+    color: #ff4081;
+    font-weight: 700;
+    margin: 0.5rem 0;
   }
   .tarjeta-bouquet .boton {
     margin: 1rem;
-    background: #d6336c;
-    color: #fff;
-    text-decoration: none;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
+    padding: 0.8rem 1.5rem;
+    background: #ff4081;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .tarjeta-bouquet .boton:hover {
+    background: #f50057;
+    transform: translateY(-2px);
   }
   
-  /* Sección de novedades */
-  .seccion-novedades {
-    padding: 2rem;
-    background: #f0f0f0;
-  }
-  .grid-novedades {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-  }
-  .bloque-novedad {
-    background: #fff;
-    padding: 1rem;
-    border-radius: 0.5rem;
+  /* Estado de carga */
+  .text-center {
     text-align: center;
+    padding: 2rem;
   }
-  .bloque-novedad h4 {
-    margin-bottom: 0.5rem;
-    color: #d6336c;
+  .text-center p {
+    font-size: 1.1rem;
+    color: #666;
+  }
+  
+  /* Mensaje de error */
+  .alert-danger {
+    background-color: #fee;
+    color: #c00;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: center;
   }
   
   /* Pie de página */
@@ -151,6 +199,39 @@
   .lista-redes a {
     color: #fff;
     text-decoration: none;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1200px) {
+    .grid-destacados {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+  }
+  @media (max-width: 768px) {
+    .seccion-destacados {
+      padding: 3rem 1.5rem;
+    }
+    .grid-destacados {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .tarjeta-bouquet img {
+      height: 250px;
+    }
+  }
+  @media (max-width: 480px) {
+    .seccion-destacados {
+      padding: 2rem 1rem;
+    }
+    .grid-destacados {
+      grid-template-columns: 1fr;
+    }
+    .titulo-seccion {
+      font-size: 1.75rem;
+    }
+    .tarjeta-bouquet img {
+      height: 200px;
+    }
   }
   
   /* Responsive: tablet */
