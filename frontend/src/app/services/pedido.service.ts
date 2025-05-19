@@ -1,4 +1,3 @@
-// src/app/services/pedido.service.ts
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
@@ -11,9 +10,7 @@ export interface PedidoResponse {
   id_pedido: number;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class PedidoService {
   private apiUrl = `${environment.apiUrl}/pedido.php`;
 
@@ -26,14 +23,13 @@ export class PedidoService {
     return isPlatformBrowser(this.platformId);
   }
 
-  confirmOrder(total: number, items: CartItem[]): Observable<PedidoResponse> {
+  confirmOrder(total: number, items: CartItem[], id_direccion: number): Observable<PedidoResponse> {
     return this.http.post<PedidoResponse>(
-      this.apiUrl, 
-      { total, items },
+      this.apiUrl,
+      { total, items, id_direccion },
       { withCredentials: true }
     ).pipe(
       tap(res => {
-        // si quieres guardar el último pedido en localStorage
         if (this.isBrowser()) {
           localStorage.setItem('last_order', JSON.stringify(res));
         }

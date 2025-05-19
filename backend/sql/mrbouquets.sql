@@ -19,13 +19,16 @@ CREATE TABLE usuarios (
 
 CREATE TABLE direcciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    calle VARCHAR(255) NOT NULL,
-    ciudad VARCHAR(100) NOT NULL,
-    codigo_postal VARCHAR(20) NOT NULL,
-    pais VARCHAR(50) NOT NULL,
-    telefono VARCHAR(20),
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
+    usuario_id INT NOT NULL,
+    calle VARCHAR(100) NOT NULL,
+    numero VARCHAR(10) NOT NULL,
+    piso VARCHAR(10),
+    puerta VARCHAR(10),
+    codigo_postal CHAR(5) NOT NULL,
+    localidad VARCHAR(50) NOT NULL,
+    provincia VARCHAR(50) NOT NULL,
+    pais VARCHAR(50) DEFAULT 'España',
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
 
@@ -64,11 +67,20 @@ CREATE TABLE ramo_promociones (
 CREATE TABLE pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
+    id_direccion INT NOT NULL,
     fecha_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
     precio_total DECIMAL(10,2) NOT NULL,
     estado ENUM('pendiente','confirmado','en_proceso','entregado','cancelado') DEFAULT 'pendiente',
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
+    CONSTRAINT fk_pedidos_usuario
+      FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
+    CONSTRAINT fk_pedidos_direccion
+      FOREIGN KEY (id_direccion) REFERENCES direcciones(id)
+      ON DELETE RESTRICT
+      ON UPDATE CASCADE
 );
+
 
 
 CREATE TABLE detalle_pedidos (

@@ -1,89 +1,91 @@
 <?php
+// ======================================================================
+//  CONFIGURACIÓN GLOBAL DE SESIÓN
+// ======================================================================
+
 // Asegurarnos de que PHP pueda enviar cookies
-ini_set('session.use_cookies', '1');
+ini_set('session.use_cookies',      '1');
 ini_set('session.use_only_cookies', '1');
-ini_set('session.use_strict_mode', '1');
-ini_set('session.cookie_httponly', '1');
+ini_set('session.use_strict_mode',  '1');
+ini_set('session.cookie_httponly',  '1');
 
 // Configuración específica para desarrollo local
-$isSecure = false; // Cambiar a true en producción con HTTPS
-$sameSite = 'Lax';  // Puede ser 'Strict' en producción
+$isSecure = false;   // Cambia a true en producción (HTTPS)
+$sameSite = 'Lax';   // 'Strict' en producción si lo prefieres
+$domain   = 'localhost';
 
-// Obtener el dominio base
-$domain = 'localhost';
-
-// Configuración de la cookie de sesión
+// Cookie de sesión
 session_set_cookie_params([
-    'lifetime' => 3600,
-    'path' => '/',
-    'domain' => $domain,
-    'secure' => $isSecure,
+    'lifetime' => 3600,   // 1 h — ajusta a tu gusto (0 = sesión del navegador)
+    'path'     => '/',    // <──  IMPORTANTE: toda la web
+    'domain'   => $domain,
+    'secure'   => $isSecure,
     'httponly' => true,
     'samesite' => $sameSite
 ]);
 
-// Establecer el nombre de la sesión
+// Nombre coherente en TODOS los scripts
 session_name('MRBSESSID');
 
-// Función para iniciar una sesión limpia
+// ======================================================================
+//  FUNCIÓN AUXILIAR
+//  – Reanuda la sesión si existe                 (peticiones normales)
+//  – Reinicia y regenera ID sólo cuando es necesario (login, logout…)
+// ======================================================================
 function start_clean_session() {
-    error_log("=== Iniciando start_clean_session ===");
-    error_log("Session status antes: " . session_status());
-    error_log("Cookies antes: " . print_r($_COOKIE, true));
-    
-    // Eliminar cookies antiguas si existen
+    error_log("=== start_clean_session ===");
+
+    /* ── 0) Eliminar posible cookie legacy PHPSESSID ────────────────── */
     if (isset($_COOKIE['PHPSESSID'])) {
-        error_log("Eliminando cookie PHPSESSID antigua");
         setcookie('PHPSESSID', '', 1, '/', 'localhost');
         unset($_COOKIE['PHPSESSID']);
     }
-    
-    // Si hay una sesión activa, guardar datos importantes
+
+    /* ── 1) CASO NORMAL: el navegador ya trae MRBSESSID ─────────────── */
+    if (session_status() === PHP_SESSION_NONE && isset($_COOKIE[session_name()])) {
+        session_start();
+        error_log("Sesión reanudada → ID: " . session_id());
+
+        // Inicializa campos la primera vez
+        if (empty($_SESSION['initialized'])) {
+            $_SESSION['initialized'] = true;
+            $_SESSION['created']     = time();
+        }
+        $_SESSION['last_activity'] = time();
+        return;             // ⬅️  ¡Listo! no se toca la cookie
+    }
+
+    /* ── 2) CASO REINICIO (login, logout, sesiones corruptas…) ─────── */
     $old_session_data = [];
     if (session_status() === PHP_SESSION_ACTIVE) {
-        error_log("Guardando datos de sesión actual");
-        $old_session_data = $_SESSION;
+        $old_session_data = $_SESSION;     // guarda si te hace falta
         session_destroy();
         session_write_close();
     }
-    
-    // Limpiar cualquier cookie de sesión existente
+
+    // Forzar borrado de cookie anterior sólo en reinicio
     if (isset($_COOKIE[session_name()])) {
-        error_log("Eliminando cookie de sesión actual");
         setcookie(session_name(), '', 1, '/', 'localhost');
         unset($_COOKIE[session_name()]);
     }
-    
-    // Iniciar nueva sesión
-    if (!session_start()) {
-        error_log("Error crítico al iniciar sesión");
-        throw new Exception("No se pudo iniciar la sesión");
-    }
-    
-    // Restaurar datos importantes si existían
-    if (!empty($old_session_data)) {
-        error_log("Restaurando datos de sesión anteriores");
+
+    // Nueva sesión
+    session_start();
+
+    // Restaurar datos importantes si los había guardado
+    if ($old_session_data) {
         $_SESSION = array_merge($_SESSION, $old_session_data);
     }
-    
-    // Regenerar ID por seguridad
+
+    // Regenerar ID por seguridad la primera vez
     if (empty($_SESSION['initialized'])) {
-        $old_session_id = session_id();
-        if (!session_regenerate_id(true)) {
-            error_log("Error al regenerar ID de sesión");
-            throw new Exception("No se pudo regenerar el ID de sesión");
-        }
-        error_log("ID de sesión regenerado. Antiguo: $old_session_id, Nuevo: " . session_id());
+        $old = session_id();
+        session_regenerate_id(true);
+        error_log("ID regenerado: $old → " . session_id());
         $_SESSION['initialized'] = true;
-        $_SESSION['created'] = time();
-        $_SESSION['last_activity'] = time();
-    } else {
-        $_SESSION['last_activity'] = time();
+        $_SESSION['created']     = time();
     }
-    
-    // Log final
-    error_log("=== Estado final de la sesión ===");
-    error_log("Session ID: " . session_id());
-    error_log("SESSION: " . print_r($_SESSION, true));
-    error_log("COOKIES: " . print_r($_COOKIE, true));
-} 
+    $_SESSION['last_activity'] = time();
+
+    error_log("Session ready. ID: " . session_id());
+}

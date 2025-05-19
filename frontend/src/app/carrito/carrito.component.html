@@ -1,13 +1,20 @@
 <div class="cart-container">
+  <!-- ───── Cabecera ───── -->
   <div class="cart-header">
     <h2>Carrito de Compras</h2>
     <button class="btn-clear" (click)="clearCart()">Vaciar Carrito</button>
     <button class="btn-close" (click)="continueShopping()">×</button>
   </div>
 
+  <!-- ───── Lista de productos ───── -->
   <div class="cart-items">
     <div class="cart-item" *ngFor="let item of items">
-      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img" [alt]="item.nombre" class="item-img">
+      <img
+        class="item-img"
+        [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img"
+        [alt]="item.nombre"
+      />
+
       <div class="item-details">
         <h3>{{ item.nombre }}</h3>
         <p>{{ item.descripcion }}</p>
@@ -15,15 +22,18 @@
           {{ item.quantity * item.price | currency:'EUR':'symbol':'1.2-2' }}
         </span>
       </div>
+
       <div class="quantity-controls">
         <button (click)="decrement(item)">–</button>
         <span>{{ item.quantity }}</span>
         <button (click)="increment(item)">+</button>
       </div>
+
       <button class="btn-remove" (click)="removeItem(item.id)">🗑️</button>
     </div>
   </div>
 
+  <!-- ───── Resumen ───── -->
   <div class="summary">
     <div class="line">
       <span>Subtotal</span>
@@ -39,16 +49,47 @@
     </div>
   </div>
 
+  <!-- ───── Acciones ───── -->
   <button class="btn-primary full-width" (click)="proceedToCheckout()">
     Proceder al Pago
   </button>
   <button class="btn-secondary full-width" (click)="continueShopping()">
     Seguir Comprando
   </button>
-  <div class="modal-backdrop" *ngIf="showModal">
+
+  <!-- ───── Modal: Selección de dirección ───── -->
+  <div class="modal-backdrop" *ngIf="showAddressModal">
+    <div class="modal">
+      <h3>Selecciona una dirección de envío</h3>
+
+     <select
+      name="direccion"                     
+      [(ngModel)]="selectedDireccionId">
+      <option *ngFor="let d of direcciones" [ngValue]="d.id"> 
+        {{ d.calle }} {{ d.numero }}, {{ d.localidad }}
+      </option>
+    </select>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="showAddressModal = false">
+          Cancelar
+        </button>
+        <button
+          class="btn-primary"
+          (click)="confirmarDireccion()"
+          [disabled]="!selectedDireccionId"
+        >
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── Modal: Pedido confirmado ───── -->
+  <div class="modal-backdrop" *ngIf="showSuccessModal">
     <div class="modal">
       <p>Su pedido está confirmado, gracias por su compra.</p>
-      <button class="btn-primary" (click)="closeModal()">Cerrar</button>
+      <button class="btn-primary" (click)="closeSuccessModal()">Cerrar</button>
     </div>
   </div>
 </div>
