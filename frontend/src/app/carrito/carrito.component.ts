@@ -1,33 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule }           from '@angular/common';
-import { RouterModule, Router }   from '@angular/router';
-import { PedidoService }          from '../services/pedido.service';
-import { CartService, CartItem }  from '../services/cart.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import { PedidoService } from '../services/pedido.service';
+import { CartService, CartItem } from '../services/cart.service';
+import { DireccionesService, Direccion } from '../services/direcciones.service';
 import { Ramo } from '../services/ramos.service';
+import { FormsModule }        from '@angular/forms'; 
 
 @Component({
   selector: 'app-carrito',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './carrito.component.html',
   styleUrls: ['./carrito.component.css']
 })
 export class CarritoComponent implements OnInit {
   items: CartItem[] = [];
   subtotal = 0;
-  showModal = false;
+
+  /* ---------- Dirección ---------- */
+  direcciones: Direccion[] = [];
+  selectedDireccionId: number | null = null;
+  showAddressModal = false;
+  showSuccessModal = false;
 
   constructor(
     private cartService: CartService,
     private pedidoService: PedidoService,
+    private direccionesService: DireccionesService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    // Siempre nos suscribimos al servicio; no hace falta isBrowser
     this.cartService.items$.subscribe(items => {
       this.items = items;
       this.calculateSubtotal();
@@ -42,11 +46,7 @@ export class CarritoComponent implements OnInit {
   }
 
   increment(item: CartItem): void {
-    // Convertir CartItem a Ramo
-    const ramo: Ramo = {
-      ...item,
-      precio: item.price
-    };
+    const ramo: Ramo = { ...item, precio: item.price };
     this.cartService.add(ramo);
   }
 
@@ -70,26 +70,52 @@ export class CarritoComponent implements OnInit {
     this.calculateSubtotal();
   }
 
+  /* ====== Checkout ====== */
   proceedToCheckout(): void {
-    this.pedidoService.confirmOrder(this.subtotal, this.items).subscribe({
-      next: () => {
-        this.cartService.clearCart();
-        this.calculateSubtotal();
-        this.showModal = true;
+    if (!this.items.length) { return; }
+    this.loadDirecciones();
+  }
+
+  private loadDirecciones(): void {
+    this.direccionesService.getDirecciones().subscribe({
+      next: ds => {
+        this.direcciones = ds;
+        this.selectedDireccionId = ds.length ? ds[0].id : null;
+        this.showAddressModal = true;
       },
-      error: (error) => {
-        console.error('Error al procesar el pedido:', error);
-        alert('Hubo un error al confirmar tu pedido. Intenta de nuevo.');
-      }
+      error: () => alert('No se pudieron cargar las direcciones')
     });
   }
+
+  confirmarDireccion(): void {
+  console.log('ID elegido =', this.selectedDireccionId);   // ⬅️ línea de debug
+  if (this.selectedDireccionId == null) { return; }
+
+  const idDir = Number(this.selectedDireccionId);
+
+  this.pedidoService.confirmOrder(this.subtotal, this.items, idDir).subscribe({
+    next: () => {
+      console.log('Pedido confirmado ✓');                  // ⬅️ línea de debug
+      this.cartService.clearCart();
+      this.calculateSubtotal();
+      this.showAddressModal = false;
+      this.showSuccessModal = true;
+    },
+    error: (err) => {
+      console.error('Error HTTP', err);                    // ⬅️ log completo
+      alert('Hubo un error al confirmar tu pedido');
+    }
+  });
+}
+
+
 
   continueShopping(): void {
     this.router.navigate(['/']);
   }
 
-  closeModal(): void {
-    this.showModal = false;
+  closeSuccessModal(): void {
+    this.showSuccessModal = false;
     this.router.navigate(['/']);
   }
 }

@@ -287,3 +287,65 @@ select:focus {
     }
 }
   
+/* ---------- DIRECCIONES ---------- */
+.direcciones {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  margin-bottom: 2rem;
+}
+
+.direcciones-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.btn-add, .btn-remove {
+  background: #e91e63;
+  color: #fff;
+  border: none;
+  padding: .4rem .9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color .3s;
+}
+
+.btn-add:hover, .btn-remove:hover { background: #d81557; }
+
+.lista-direcciones {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.direccion-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.dir-info p { margin: 0; }
+
+.form-direccion {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+  gap: .8rem;
+  margin-top: 1.5rem;
+}
+
+.form-direccion input {
+  padding: .5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-direccion button {
+  grid-column: 1 / -1;
+}
