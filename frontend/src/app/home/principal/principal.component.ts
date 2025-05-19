@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -35,10 +35,28 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    if (this.isBrowser) {
+      const sections = document.querySelectorAll('.seccion-destacados, .seccion-ocasiones, .seccion-novedades');
+      
+      sections.forEach((section: Element) => {
+        const rect = section.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        if (rect.top < windowHeight * 0.85) {
+          section.classList.add('visible');
+        }
+      });
+    }
+  }
+
   ngOnInit(): void {
     this.loadRamos();
     if (this.isBrowser) {
       this.startAutoSlide();
+      // Trigger initial check
+      setTimeout(() => this.onWindowScroll(), 100);
     }
   }
 
