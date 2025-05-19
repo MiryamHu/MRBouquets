@@ -61,6 +61,11 @@
         <h3>{{ producto.nombre }}</h3>
         <p>{{ producto.descripcion }}</p>
         <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+        <div class="control-cantidad">
+          <button type="button" (click)="decrementarCantidad(producto.id)">-</button>
+          <input type="number" min="1" max="99" [(ngModel)]="cantidades[producto.id]" />
+          <button type="button" (click)="incrementarCantidad(producto.id)">+</button>
+        </div>
         <div class="botones-tarjeta">
           <button class="boton-ver" (click)="verDetalles(producto)">
             Ver detalles
@@ -83,6 +88,11 @@
         <h3>{{ ocasion.nombre }}</h3>
         <p class="descripcion">{{ ocasion.descripcion }}</p>
         <span class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+        <div class="control-cantidad">
+          <button type="button" (click)="decrementarCantidad(ocasion.id)">-</button>
+          <input type="number" min="1" max="99" [(ngModel)]="cantidades[ocasion.id]" />
+          <button type="button" (click)="incrementarCantidad(ocasion.id)">+</button>
+        </div>
         <div class="botones-tarjeta">
           <button class="boton-ver" (click)="verDetalles(ocasion)">
             Ver detalles
@@ -161,6 +171,14 @@
         <div class="detalle" *ngIf="ramoSeleccionado.disponibilidad">
           <span class="etiqueta">Disponibilidad:</span>
           <span class="valor disponible">Disponible</span>
+        </div>
+        <div class="detalle">
+          <span class="etiqueta">Cantidad:</span>
+          <div class="control-cantidad">
+            <button type="button" (click)="decrementarCantidad(ramoSeleccionado.id)">-</button>
+            <input type="number" min="1" max="99" [(ngModel)]="cantidades[ramoSeleccionado.id]" />
+            <button type="button" (click)="incrementarCantidad(ramoSeleccionado.id)">+</button>
+          </div>
         </div>
       </div>
       <button class="boton-agregar" (click)="onAddToCart(ramoSeleccionado)">

@@ -4,11 +4,12 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { RamosService, Ramo } from '../../services/ramos.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-principal',
   standalone: true,
-  imports: [ CommonModule, RouterModule ],
+  imports: [ CommonModule, RouterModule, FormsModule ],
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })
@@ -20,6 +21,7 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   error: string = '';
   loading: boolean = true;
   ramoSeleccionado: Ramo | null = null;
+  cantidades: { [key: number]: number } = {};
 
   constructor(
     public auth: AuthService,
@@ -70,6 +72,10 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     this.ramosService.getRamosRegulares().subscribe({
       next: (ramos) => {
         this.productosRegulares = ramos;
+        // Inicializar cantidades para ramos regulares
+        ramos.forEach(ramo => {
+          this.cantidades[ramo.id] = 1;
+        });
         this.loading = false;
       },
       error: (err) => {
@@ -83,6 +89,10 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     this.ramosService.getRamosOcasiones().subscribe({
       next: (ramos) => {
         this.productosOcasiones = ramos;
+        // Inicializar cantidades para ramos de ocasiones
+        ramos.forEach(ramo => {
+          this.cantidades[ramo.id] = 1;
+        });
       },
       error: (err) => {
         console.error('Error al cargar los ramos de ocasiones:', err);
@@ -100,12 +110,31 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
+  incrementarCantidad(id: number): void {
+    if (this.cantidades[id] < 99) {
+      this.cantidades[id]++;
+    }
+  }
+
+  decrementarCantidad(id: number): void {
+    if (this.cantidades[id] > 1) {
+      this.cantidades[id]--;
+    }
+  }
+
   onAddToCart(producto: Ramo): void {
     if (!this.auth.isLoggedIn()) {
       this.showLoginModal = true;
       return;
     }
-    this.cartService.add(producto);
+    const cantidad = this.cantidades[producto.id] || 1;
+    for (let i = 0; i < cantidad; i++) {
+      this.cartService.add(producto);
+    }
+    // Cerrar el modal de detalles si está abierto
+    this.ramoSeleccionado = null;
+    // Redirigir al carrito
+    this.router.navigate(['/carrito']);
   }
 
   goLogin(): void {

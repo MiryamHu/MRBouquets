@@ -904,3 +904,91 @@
     border-radius: 15px;
     box-shadow: 0 0 0 1px rgba(255, 64, 129, 0.15);
 }
+
+.control-cantidad {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 1.5rem;
+}
+
+.control-cantidad button {
+  background: #ff4081;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.control-cantidad button:hover {
+  background: #d6336c;
+  transform: scale(1.1);
+}
+
+.control-cantidad button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.control-cantidad input {
+  width: 60px;
+  height: 30px;
+  text-align: center;
+  border: 2px solid #ff4081;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333;
+  -moz-appearance: textfield;
+}
+
+.control-cantidad input::-webkit-outer-spin-button,
+.control-cantidad input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ajustes para el responsive del control de cantidad */
+@media (max-width: 768px) {
+  .control-cantidad {
+    margin: 0.75rem 1rem;
+  }
+  
+  .control-cantidad button {
+    width: 25px;
+    height: 25px;
+    font-size: 1rem;
+  }
+  
+  .control-cantidad input {
+    width: 50px;
+    height: 25px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Ajuste de los botones de acción para acomodar el control de cantidad */
+.tarjeta-bouquet .botones-tarjeta,
+.tarjeta-ocasion .botones-tarjeta {
+  flex-direction: column;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.tarjeta-bouquet .boton,
+.tarjeta-ocasion .boton-ocasion {
+  width: 100%;
+  margin: 0;
+}
+
+.tarjeta-bouquet .boton-ver,
+.tarjeta-ocasion .boton-ver {
+  width: 100%;
+}
