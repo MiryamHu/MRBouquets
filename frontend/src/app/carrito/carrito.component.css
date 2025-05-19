@@ -1,139 +1,169 @@
+/* En modo minimal (panel lateral) no dejamos espacio arriba */
+:host([minimal]) .cart-container {
+  margin-top: 0 !important;
+}
+
+/* En modo completo (sin minimal) sí dejamos espacio para el header */
+:host(:not([minimal])) .cart-container {
+  margin-top: 130px !important;
+}
+
 .cart-container {
-    width: 100%;
-    max-width: 400px;
-    background: #fff;
-    padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .cart-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .cart-header h2 {
-    margin: 0;
-  }
-  .btn-clear,
-  .btn-close {
-    background: transparent;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    color: #333;
-  }
-  
-  .cart-items {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-height: 300px;
-    overflow-y: auto;
-  }
-  
-  .cart-item {
-    display: grid;
-    grid-template-columns: 60px 1fr auto auto;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .item-img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 0.25rem;
-  }
-  .item-details h3 {
-    margin: 0;
-    font-size: 1rem;
-  }
-  .item-details p {
-    margin: 0.25rem 0;
-    font-size: 0.875rem;
-    color: #666;
-  }
-  .item-price {
-    font-weight: bold;
-    font-size: 0.95rem;
-  }
-  
-  .quantity-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-  .quantity-controls button {
-    width: 24px;
-    height: 24px;
-    border: 1px solid #d6336c;
-    background: transparent;
-    color: #d6336c;
-    cursor: pointer;
-    border-radius: 0.25rem;
-  }
-  .quantity-controls span {
-    width: 24px;
-    text-align: center;
-  }
-  
-  .btn-remove {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #d6336c;
-  }
-  
-  .summary {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .summary .line {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.95rem;
-  }
-  .summary .total {
-    font-weight: bold;
-    font-size: 1.1rem;
-  }
-  
-  .btn-primary {
-    background: #d6336c;
-    color: #fff;
-    border: none;
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.3s;
-  }
-  .btn-primary:hover {
-    background: #c12b5a;
-  }
-  
-  .btn-secondary {
-    background: transparent;
-    color: #333;
-    border: 1px solid #333;
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.3s, color 0.3s;
-  }
-  .btn-secondary:hover {
-    background: #f8f8f8;
-  }
-  
-  .full-width {
-    width: 100%;
-  }
-  
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #fff;
+  height: 100%;
+}
+
+
+.cart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cart-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.cart-actions{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.btn-clear,
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  /* Ajuste de alto para scroll si hay muchos items */
+  flex: 1;
+  overflow-y: auto;
+}
+.cart-item {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+.item-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+}
+.item-details {
+  min-width: 0;
+}
+.item-details h3,
+.item-details p {
+  word-break: break-word;
+}
+
+.item-details {
+  min-width: 0;
+}
+.item-details h3,
+.item-details p {
+  word-break: break-word;
+}
+.item-details p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+  color: #666;
+}
+.item-price {
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.quantity-controls button {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #d6336c;
+  background: transparent;
+  color: #d6336c;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+.quantity-controls span {
+  width: 24px;
+  text-align: center;
+}
+
+.btn-remove {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #d6336c;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.summary .line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+.summary .total {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Mantén intactas estas reglas de botones */
+.btn-primary {
+  background: #d6336c;
+  color: #fff;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+.btn-primary:hover {
+  background: #c12b5a;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #333;
+  border: 1px solid #333;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s, color 0.3s;
+}
+.btn-secondary:hover {
+  background: #f8f8f8;
+}
+
+.full-width {
+  width: 100%;
+}
 
 .modal-backdrop {
   position: fixed;

@@ -1,5 +1,3 @@
-// src/app/seguridad/login/login.component.ts
-
 import {
   Component,
   NgZone,
@@ -11,7 +9,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { AuthService, LoginData, GoogleLoginResponse } from '../../services/auth.service';
+import { AuthService, LoginData, GoogleLoginResponse, RegisterData } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -36,9 +34,12 @@ declare const google: any;
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
+  registroForm!: FormGroup;
   error = '';
+  mensaje = '';
   googleClientId = environment.googleClientId;
+  isLoginMode = true;
 
   constructor(
     private fb: FormBuilder,
@@ -51,23 +52,38 @@ export class LoginComponent implements OnInit {
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', Validators.required]
     });
+    this.registroForm = this.fb.group({
+      nombre_usuario: ['', Validators.required],
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      correo: ['', [Validators.required, Validators.email]],
+      contrasena: ['', [Validators.required, Validators.minLength(6)]],
+      telefono: ['']
+    });
   }
+
+  
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      // Definimos callback de Google
       window['handleCredentialResponse'] = (resp: any) => {
-        try {
-          this.ngZone.run(() => this.onGoogleSignIn(resp.credential));
-        } catch (e) {
-          console.error('Error interno en handleCredentialResponse:', e);
-          this.error = 'Error interno al procesar respuesta de Google';
-        }
+        this.ngZone.run(() => this.onGoogleSignIn(resp.credential));
       };
+
+      setTimeout(() => {
+        google.accounts.id.initialize({
+          client_id: this.googleClientId,
+          callback: (response: any) => window['handleCredentialResponse'](response)
+        });
+        google.accounts.id.renderButton(
+          document.getElementById('googleButton'),
+          { theme: 'outline', size: 'large' }
+        );
+      }, 0);
     }
   }
 
-  onSubmit(): void {
+  onLoginSubmit(): void {
     if (this.loginForm.invalid) return;
 
     const data: LoginData = {
@@ -76,15 +92,15 @@ export class LoginComponent implements OnInit {
     };
 
     this.auth.login(data).subscribe({
-      next: (res: any) => {
-        console.log('Login exitoso:', res);
-        localStorage.setItem('auth_user', JSON.stringify(res.usuario));
-        this.router.navigate(['/']);
+      next: () => {
+        const role = this.auth.getRol();
+        if (role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: err => {
-        // Logging detallado en consola
-        console.error('Error en login tradicional:', err);
-        // Mensaje simplificado para UI
         const serverMsg = err.error?.error || err.message || 'desconocido';
         this.error = `Error al iniciar sesión (${err.status}): ${serverMsg}`;
       }
@@ -115,4 +131,25 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
+   toggleMode() {
+    this.isLoginMode = !this.isLoginMode;
+  }
+  
+  onRegisterSubmit(): void {
+      if (this.registroForm.invalid) return;
+  
+      const data: RegisterData = this.registroForm.value;
+      this.auth.register(data).subscribe({
+        next: res => {
+          this.mensaje = res.mensaje;
+          this.error = '';
+          setTimeout(() => this.router.navigate(['/login']), 1000);
+        },
+        error: err => {
+          this.error = err.error?.error || 'Error en el registro';
+          this.mensaje = '';
+        }
+      });
+    }
 }

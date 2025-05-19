@@ -1,0 +1,29 @@
+.admin-container {
+    padding: 16px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.btn-logout {
+    background: #e53935;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-logout:hover {
+    background: #d32f2f;
+}
+.admin-nav a {
+    margin-right: 8px;
+    text-decoration: none;
+    color: #3f51b5;
+}
+.admin-nav a:hover {
+    text-decoration: underline;
+}

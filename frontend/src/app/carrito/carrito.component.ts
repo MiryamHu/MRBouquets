@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Optional } from '@angular/core';
 import { CommonModule }           from '@angular/common';
 import { RouterModule, Router }   from '@angular/router';
 import { PedidoService }          from '../services/pedido.service';
 import { CartService, CartItem }  from '../services/cart.service';
+import { MatDialogRef,  MatDialogModule}from '@angular/material/dialog';
+import { MatStepperModule }    from '@angular/material/stepper';
 import { Ramo } from '../services/ramos.service';
 
 @Component({
@@ -10,12 +12,23 @@ import { Ramo } from '../services/ramos.service';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    MatDialogModule,
+    MatStepperModule
   ],
   templateUrl: './carrito.component.html',
   styleUrls: ['./carrito.component.css']
 })
 export class CarritoComponent implements OnInit {
+    /** Si viene true desde fuera forzamos la vista minimal */
+  @Input() minimal = false;
+
+/** mezcla isDialog (dialogRef presente) o minimal forzado */
+get showMinimalView(): boolean {
+  return this.minimal || this.isDialog;
+}
+
+  isDialog: boolean;
   items: CartItem[] = [];
   subtotal = 0;
   showModal = false;
@@ -23,8 +36,32 @@ export class CarritoComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private pedidoService: PedidoService,
-    private router: Router
-  ) {}
+    private router: Router,
+    @Optional() private dialogRef: MatDialogRef<CarritoComponent>
+  ) {
+    this.isDialog = !!dialogRef;
+  }
+
+  close() {
+    if (this.isDialog) {
+      this.dialogRef!.close();
+    } else {
+      this.router.navigate(['/']);  // o donde quieras volver
+    }
+  }
+
+ goToPage(): void {
+    // Si estamos en el panel lateral (minimal), cerramos el sidenav
+    if (this.minimal) {
+      this.cartService.close();
+    }
+    // Si estuviera abierto como diálogo, lo cerramos
+    else if (this.isDialog) {
+      this.dialogRef!.close();
+    }
+    // Y siempre navegamos a /carrito
+    this.router.navigate(['/carrito']);
+  }
 
   ngOnInit(): void {
     // Siempre nos suscribimos al servicio; no hace falta isBrowser
@@ -84,9 +121,17 @@ export class CarritoComponent implements OnInit {
     });
   }
 
-  continueShopping(): void {
-    this.router.navigate(['/']);
+ continueShopping(): void {
+    // En minimal cerramos el sidenav
+    if (this.minimal) {
+      this.cartService.close();
+    } 
+    // En vista completa navegamos a home
+    else {
+      this.router.navigate(['/']);
+    }
   }
+
 
   closeModal(): void {
     this.showModal = false;

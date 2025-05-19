@@ -1,0 +1,165 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ========================= */
+/* Contenedor padre (header) */
+/* ========================= */
+.encabezado {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* ============================= */
+/* FILA SUPERIOR (logo/usuario) */
+/* ============================= */
+.encabezado-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  background: #f8f8f8;
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+}
+
+/* Headroom.js inyecta estas clases sobre .encabezado-top */
+.encabezado-top.header--unpinned {
+  transform: translateY(-100%);
+}
+.encabezado-top.header--pinned {
+  transform: translateY(0);
+}
+
+/* ============================= */
+/* FILA INFERIOR (navegación)   */
+/* ============================= */
+.encabezado-bottom {
+  background-color: #e8d2da;
+  border-top: 1px solid #e0e0e0;
+  padding: 1rem 2rem;
+  /* por defecto, justo bajo el top ocultable */
+  position: relative;
+  z-index: 900;
+}
+
+/* ============================= */
+/* Cuando el top está oculto,    */
+/* fijamos el bottom en top:0    */
+/* ============================= */
+.encabezado-top.header--unpinned + .encabezado-bottom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+/* ============================= */
+/* Empujar contenido principal   */
+/* ============================= */
+/* Debes ajustar --header-height al alto TOTAL del header (top+bottom) */
+:root {
+  --header-top-h: calc(0.75rem*2 + 50px);   /* padding*2 + imagen */
+  --header-bottom-h: calc(1rem*2 + 1px);    /* padding*2 + border */
+  --header-height: calc(var(--header-top-h) + var(--header-bottom-h));
+}
+body {
+  margin-top: var(--header-height);
+}
+
+/* ============================= */
+/* Navegación interna            */
+/* ============================= */
+.navegacion .lista-navegacion {
+  list-style: none;
+  display: flex;
+  justify-content: space-evenly;
+}
+.navegacion .lista-navegacion a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+.navegacion .lista-navegacion a:hover {
+  color: #d6336c;
+}
+
+/* ============================= */
+/* Contenido de la fila superior */
+/* ============================= */
+.logo img {
+  max-height: 50px;
+}
+.acciones-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.acciones-usuario .saludo {
+  font-weight: 500;
+  color: #333;
+}
+.acciones-usuario .link-plain,
+.acciones-usuario .boton {
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #d6336c;
+  border-radius: 0.25rem;
+  color: #d6336c;
+  transition: background 0.3s, color 0.3s;
+}
+.acciones-usuario .boton-principal {
+  background: #d6336c;
+  color: #fff;
+}
+.acciones-usuario .link-plain:hover,
+.acciones-usuario .boton:hover,
+.acciones-usuario .boton-principal:hover {
+  background: #c12b5a;
+  color: #fff;
+}
+
+
+/* ============================= */
+/* Responsive                    */
+/* ============================= */
+@media (max-width: 768px) {
+  .encabezado-top {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .encabezado-bottom {
+    padding: 0.5rem 1rem;
+  }
+  :root {
+    --header-top-h: calc(0.75rem*2 + 50px);
+    --header-bottom-h: calc(0.5rem*2 + 1px);
+    --header-height: calc(var(--header-top-h) + var(--header-bottom-h));
+  }
+  body {
+    margin-top: var(--header-height);
+  }
+}
+
+@media (max-width: 480px) {
+  .acciones-usuario {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .acciones-usuario .saludo {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .navegacion .lista-navegacion {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

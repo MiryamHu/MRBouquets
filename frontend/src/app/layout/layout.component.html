@@ -1,0 +1,9 @@
+<!-- src/app/layout/layout.component.html -->
+<app-menu 
+    [auth]="auth" 
+    [userName]="userName" 
+    (logoutEvent)="logout()">
+</app-menu>
+
+<router-outlet></router-outlet>
+

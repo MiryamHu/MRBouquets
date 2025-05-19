@@ -41,6 +41,7 @@ export class RegistroComponent {
     });
   }
 
+
   onSubmit(): void {
     if (this.registroForm.invalid) return;
 

@@ -21,13 +21,13 @@ CREATE INDEX idx_ramos_activo ON ramos(activo);
 
 -- Insertar algunos datos de ejemplo
 INSERT INTO ramos (nombre, descripcion, precio, img, tipo_flor, color, disponible) VALUES
-('Ramo Primaveral', 'Hermoso ramo con flores de temporada', 39.99, '/assets/images/ramo-primaveral.jpg', 'Tulipanes', 'Rosa', true),
-('Ramo Romántico', 'Rosas rojas con acabado elegante', 49.99, '/assets/images/ramo-romantico.jpg', 'Rosas', 'Rojo', true),
-('Ramo Silvestre', 'Flores silvestres variadas', 29.99, '/assets/images/ramo-silvestre.jpg', 'Margaritas', 'Multicolor', true),
-('Ramo Exótico', 'Combinación de flores tropicales', 59.99, '/assets/images/ramo-exotico.jpg', 'Orquídeas', 'Morado', true),
-('Ramo Clásico', 'Rosas blancas con gypsophila', 44.99, '/assets/images/ramo-clasico.jpg', 'Rosas', 'Blanco', true),
-('Ramo Girasoles', 'Girasoles con flores silvestres', 34.99, '/assets/images/ramo-girasoles.jpg', 'Girasoles', 'Amarillo', true),
-('Ramo Delicado', 'Flores en tonos pastel', 39.99, '/assets/images/ramo-delicado.jpg', 'Peonías', 'Rosa Pastel', true),
-('Ramo Campestre', 'Flores de campo variadas', 32.99, '/assets/images/ramo-campestre.jpg', 'Margaritas', 'Multicolor', true),
-('Ramo Elegante', 'Rosas y liliums', 54.99, '/assets/images/ramo-elegante.jpg', 'Lilium', 'Blanco y Rosa', true),
-('Ramo Tropical', 'Flores exóticas coloridas', 64.99, '/assets/images/ramo-tropical.jpg', 'Ave del Paraíso', 'Naranja', true); 
+('Ramo Primaveral', 'Hermoso ramo con flores de temporada', 39.99, '/img/ramo-primaveral.jpg', 'Tulipanes', 'Rosa', true),
+('Ramo Romántico', 'Rosas rojas con acabado elegante', 49.99, '/img/ramo-romantico.jpg', 'Rosas', 'Rojo', true),
+('Ramo Silvestre', 'Flores silvestres variadas', 29.99, '/img/ramo-silvestre.jpg', 'Margaritas', 'Multicolor', true),
+('Ramo Exótico', 'Combinación de flores tropicales', 59.99, '/img/ramo-exotico.jpg', 'Orquídeas', 'Morado', true),
+('Ramo Clásico', 'Rosas blancas con gypsophila', 44.99, '/img/ramo-clasico.jpg', 'Rosas', 'Blanco', true),
+('Ramo Girasoles', 'Girasoles con flores silvestres', 34.99, '/img/ramo-girasoles.jpg', 'Girasoles', 'Amarillo', true),
+('Ramo Delicado', 'Flores en tonos pastel', 39.99, '/img/ramo-delicado.jpg', 'Peonías', 'Rosa Pastel', true),
+('Ramo Campestre', 'Flores de campo variadas', 32.99, '/img/ramo-campestre.jpg', 'Margaritas', 'Multicolor', true),
+('Ramo Elegante', 'Rosas y liliums', 54.99, '/img/ramo-elegante.jpg', 'Lilium', 'Blanco y Rosa', true),
+('Ramo Tropical', 'Flores exóticas coloridas', 64.99, '/img/ramo-tropical.jpg', 'Ave del Paraíso', 'Naranja', true); 
