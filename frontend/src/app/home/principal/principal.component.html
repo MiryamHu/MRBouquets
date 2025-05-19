@@ -61,9 +61,14 @@
         <h3>{{ producto.nombre }}</h3>
         <p>{{ producto.descripcion }}</p>
         <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-        <button class="boton" (click)="onAddToCart(producto)">
-          Agregar al carrito
-        </button>
+        <div class="botones-tarjeta">
+          <button class="boton-ver" (click)="verDetalles(producto)">
+            Ver detalles
+          </button>
+          <button class="boton" (click)="onAddToCart(producto)">
+            Agregar al carrito
+          </button>
+        </div>
       </article>
     </div>
   </section>
@@ -84,9 +89,14 @@
           <div class="ocasion-contenido">
             <h3>{{ ocasion.nombre }}</h3>
             <p class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</p>
-            <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
-              Agregar al carrito
-            </button>
+            <div class="botones-tarjeta">
+              <button class="boton-ver" (click)="verDetalles(ocasion)">
+                Ver detalles
+              </button>
+              <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
+                Agregar al carrito
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -149,5 +159,37 @@
     <p>Para añadir productos al carrito debes iniciar sesión.</p>
     <button class="boton" (click)="goLogin()">Ir a Login</button>
     <button class="boton cerrar" (click)="showLoginModal = false">Cerrar</button>
+  </div>
+</div>
+
+<!-- Modal de detalles del ramo -->
+<div class="modal-detalles" *ngIf="ramoSeleccionado" (click)="cerrarDetalles()">
+  <div class="modal-contenido-detalles" (click)="$event.stopPropagation()">
+    <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
+    <div class="modal-imagen">
+      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramoSeleccionado.img" 
+           [alt]="ramoSeleccionado.nombre">
+    </div>
+    <div class="modal-info">
+      <h2>{{ ramoSeleccionado.nombre }}</h2>
+      <p class="descripcion">{{ ramoSeleccionado.descripcion }}</p>
+      <div class="detalles-adicionales">
+        <div class="detalle">
+          <span class="etiqueta">Precio:</span>
+          <span class="valor precio">{{ ramoSeleccionado.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="detalle" *ngIf="ramoSeleccionado.categoria">
+          <span class="etiqueta">Categoría:</span>
+          <span class="valor">{{ ramoSeleccionado.categoria }}</span>
+        </div>
+        <div class="detalle" *ngIf="ramoSeleccionado.disponibilidad">
+          <span class="etiqueta">Disponibilidad:</span>
+          <span class="valor disponible">Disponible</span>
+        </div>
+      </div>
+      <button class="boton-agregar" (click)="onAddToCart(ramoSeleccionado)">
+        Agregar al carrito
+      </button>
+    </div>
   </div>
 </div>

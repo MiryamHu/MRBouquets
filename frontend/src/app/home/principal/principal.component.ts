@@ -25,6 +25,8 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   slideOffset: number = 0;
   autoSlideInterval: any;
 
+  ramoSeleccionado: Ramo | null = null;
+
   constructor(
     public auth: AuthService,
     private ramosService: RamosService,
@@ -174,5 +176,21 @@ export class PrincipalComponent implements OnInit, OnDestroy {
       return 'fas fa-dove';
     }
     return 'fas fa-gift'; // Ícono por defecto
+  }
+
+  verDetalles(ramo: Ramo): void {
+    this.ramoSeleccionado = ramo;
+    // Detener el autoplay del carrusel cuando se abre el modal
+    if (this.isBrowser) {
+      this.stopAutoSlide();
+    }
+  }
+
+  cerrarDetalles(): void {
+    this.ramoSeleccionado = null;
+    // Reanudar el autoplay del carrusel cuando se cierra el modal
+    if (this.isBrowser) {
+      this.startAutoSlide();
+    }
   }
 }
