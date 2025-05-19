@@ -41,6 +41,16 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   onWindowScroll() {
     if (this.isBrowser) {
       const sections = document.querySelectorAll('.seccion-destacados, .seccion-ocasiones, .seccion-novedades');
+      const banner = document.querySelector('.seccion-banner');
+      
+      if (banner) {
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+          banner.classList.add('scrolled');
+        } else {
+          banner.classList.remove('scrolled');
+        }
+      }
       
       sections.forEach((section: Element) => {
         const rect = section.getBoundingClientRect();
