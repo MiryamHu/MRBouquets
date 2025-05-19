@@ -1,43 +1,27 @@
 <div class="contenedor-principal">
-  <!-- Encabezado -->
-  <header class="encabezado">
-    <div class="logo">
-      <h1>MRbouquets</h1>
-    </div>
-    <nav class="navegacion">
-      <ul class="lista-navegacion">
-        <li><a routerLink="/">Inicio</a></li>
-        <li><a routerLink="/catalogo">Catálogo</a></li>
-        <li><a routerLink="/contacto">Contacto</a></li>
-      </ul>
-    </nav>
 
-    <!-- Acciones de usuario -->
-    <!-- Acciones de usuario -->
-<div class="acciones-usuario">
-    <!-- Si está logueado -->
-    <ng-container *ngIf="auth.isLoggedIn(); else anon">
-      <span class="saludo">Hola, {{ userName }}</span>
-      <!-- Enlace al carrito sólo para usuarios logueados -->
-      <a routerLink="/perfil" class="boton">👤 Mi Perfil</a>
-      <a routerLink="/carrito" class="boton">
-        🛒 Mi carrito
-      </a>
-      <button class="boton cerrar-sesion" (click)="logout()">
-        Cerrar sesión
-      </button>
-    </ng-container>
-    <!-- Si no está logueado -->
-    <ng-template #anon>
-      <a routerLink="/login">Iniciar sesión</a>
-      <a routerLink="/registro" class="boton boton-principal">Registro</a>
-    </ng-template>
-  </div>
-  </header>
 
   <!-- Sección banner -->
   <section class="seccion-banner">
-    <img src="http://localhost/MRBouquets/frontend/public/img/bienvenida.png" alt="Banner Principal" class="banner-img">
+
+    <!-- <img src="img/bienvenida.png" alt="Banner Principal" class="banner-img"> -->
+    <div class="banner-text">
+      <h1>Evoca el sentimiento de regalar y la belleza de las flores</h1>
+      <button mat-raised-button color="primary"  [routerLink]="['/catalogo']"> 
+          Ver Catálogo
+        </button>
+    </div>
+    <div class="banner-video">
+        <video
+          src="img/salida-sin-audio.mp4"
+          autoplay
+          muted 
+          loop
+          playsinline
+          webkit-playsinline
+          class="video-bg"
+        ></video>
+    </div>
   </section>
 
   <!-- Sección de destacados -->
@@ -97,7 +81,7 @@
   </section>
 
   <!-- Sección de Ocasiones Especiales -->
-  <section class="seccion-ocasiones">
+    <section class="seccion-ocasiones">
     <h2 class="titulo-seccion">Ocasiones Especiales</h2>
     <div class="carrusel-container">
       <button 
@@ -140,6 +124,7 @@
       </button>
     </div>
   </section>
+
 
   <!-- Sección de novedades -->
   <section class="seccion-novedades">

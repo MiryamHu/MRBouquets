@@ -1,7 +1,18 @@
+<mat-sidenav-container class="app-sidenav-container">
+
+  <!-- PANEL LATERAL: Carrito -->
+<mat-sidenav #cartDrawer position="end" mode="over" class="cart-sidenav">
+  <!-- Solo invocas el carrito, sin footer extra -->
+  <app-carrito
+    [minimal]="true"
+    (close)="cartDrawer.close()">
+  </app-carrito>
+</mat-sidenav>
 
 
-<header class="encabezado">
-   
-  </header>
-  
-  <router-outlet></router-outlet>
+  <!-- Contenido dinámico de la app -->
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

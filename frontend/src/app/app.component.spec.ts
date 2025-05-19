@@ -1,29 +1,56 @@
-import { TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+// src/app/app.component.ts
+import {
+  Component,
+  AfterViewInit,
+  ViewChild
+} from '@angular/core';
+import { CommonModule }                        from '@angular/common';
+import {
+  RouterModule,
+  RouterOutlet,
+  Router
+} from '@angular/router';
 
-describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
-  });
+import {
+  MatSidenavModule,
+  MatSidenav
+} from '@angular/material/sidenav';
+import { MatButtonModule }                     from '@angular/material/button';
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+import { CartService }                         from './services/cart.service';
+import { CarritoComponent }                    from './carrito/carrito.component';
 
-  it(`should have the 'frontend' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('frontend');
-  });
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    RouterOutlet,      // para <router-outlet>
+    MatSidenavModule,  // para <mat-sidenav-container> y MatSidenav
+    MatButtonModule,   // para mat-button, mat-raised-button
+    CarritoComponent   // <app-carrito> con su @Input() minimal
+  ],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements AfterViewInit {
+  @ViewChild('cartDrawer') drawer!: MatSidenav;
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, frontend');
-  });
-});
+  constructor(
+    private cartService: CartService,
+    private router: Router
+  ) {}
+
+  ngAfterViewInit() {
+    this.cartService.toggleSidenav.subscribe(action => {
+      if (action === 'open')  this.drawer.open();
+      if (action === 'close') this.drawer.close();
+    });
+  }
+
+  goToCart() {
+    this.drawer.close();
+    this.router.navigate(['/carrito']);
+  }
+}

@@ -10,13 +10,13 @@ export interface User {
   nombre: string;
   apellido: string;
   correo: string;
+  rol: 'cliente' | 'admin';
 }
 
 export interface LoginData {
   correo: string;
   contrasena: string;
 }
-
 export interface GoogleLoginResponse {
   mensaje: string;
   usuario: User;
@@ -163,6 +163,10 @@ export class AuthService {
 
   getUser(): User | null {
     return this.userSubject.value;
+  }
+
+  getRol(): 'cliente' | 'admin' | null {
+    return this.getUser()?.rol ?? null;
   }
 
   isLoggedIn(): boolean {
