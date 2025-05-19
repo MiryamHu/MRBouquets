@@ -13,6 +13,8 @@ export interface Ramo {
   tipo_flor: string;
   color: string;
   disponible: boolean;
+  activo?: boolean;
+  es_ocasion_especial?: boolean;
 }
 
 @Injectable({
@@ -31,6 +33,18 @@ export class RamosService {
         }
         throw new Error('Error al obtener los ramos');
       })
+    );
+  }
+
+  getRamosRegulares(): Observable<Ramo[]> {
+    return this.getRamos().pipe(
+      map(ramos => ramos.filter(ramo => !ramo.es_ocasion_especial))
+    );
+  }
+
+  getRamosOcasiones(): Observable<Ramo[]> {
+    return this.getRamos().pipe(
+      map(ramos => ramos.filter(ramo => ramo.es_ocasion_especial))
     );
   }
 } 

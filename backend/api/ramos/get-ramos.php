@@ -25,7 +25,8 @@ try {
             img,
             tipo_flor,
             color,
-            disponible
+            disponible,
+            es_ocasion_especial
         FROM ramos
         WHERE activo = 1
         ORDER BY nombre ASC
@@ -43,6 +44,7 @@ try {
         $row['id'] = (int)$row['id'];
         $row['precio'] = (float)$row['precio'];
         $row['disponible'] = (bool)$row['disponible'];
+        $row['es_ocasion_especial'] = (bool)$row['es_ocasion_especial'];
         
         $ramos[] = $row;
     }

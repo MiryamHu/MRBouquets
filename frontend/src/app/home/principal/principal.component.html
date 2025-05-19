@@ -37,7 +37,7 @@
 
   <!-- Sección banner -->
   <section class="seccion-banner">
-    <img src="img/bienvenida.png" alt="Banner Principal" class="banner-img">
+    <img src="http://localhost/MRBouquets/frontend/public/img/bienvenida.png" alt="Banner Principal" class="banner-img">
   </section>
 
   <!-- Sección de destacados -->
@@ -53,21 +53,172 @@
       {{ error }}
     </div>
 
-    <!-- Productos -->
-    <div *ngIf="!loading && !error" class="grid-destacados">
-      <article class="tarjeta-bouquet" *ngFor="let producto of productos">
-        <img [src]="producto.img" [alt]="producto.nombre">
-        <h3>{{ producto.nombre }}</h3>
-        <p>{{ producto.descripcion }}</p>
-        <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-        <button class="boton"
-                (click)="onAddToCart(producto)">
-          Agregar al carrito
-        </button>
-      </article>
-      
+    <!-- Productos Regulares -->
+    <div *ngIf="!loading && !error" class="carrusel-container">
+      <button 
+        *ngIf="showPrevRegulares" 
+        class="carrusel-control prev" 
+        (click)="prevRegulares()"
+        aria-label="Anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <div class="grid-destacados">
+        <article class="tarjeta-bouquet" *ngFor="let producto of productosRegularesVisibles">
+          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + producto.img" 
+               [alt]="producto.nombre">
+          <h3>{{ producto.nombre }}</h3>
+          <p>{{ producto.descripcion }}</p>
+          <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <div class="control-cantidad">
+            <button type="button" (click)="decrementarCantidad(producto.id)">-</button>
+            <input type="number" min="1" max="99" [(ngModel)]="cantidades[producto.id]" />
+            <button type="button" (click)="incrementarCantidad(producto.id)">+</button>
+          </div>
+          <div class="botones-tarjeta">
+            <button class="boton-ver" (click)="verDetalles(producto)">
+              Ver detalles
+            </button>
+            <button class="boton" (click)="onAddToCart(producto)">
+              Agregar al carrito
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <button 
+        *ngIf="showNextRegulares" 
+        class="carrusel-control next" 
+        (click)="nextRegulares()"
+        aria-label="Siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </button>
     </div>
-    <!-- Modal de invitación a login -->
+  </section>
+
+  <!-- Sección de Ocasiones Especiales -->
+  <section class="seccion-ocasiones">
+    <h2 class="titulo-seccion">Ocasiones Especiales</h2>
+    <div class="carrusel-container">
+      <button 
+        *ngIf="showPrevOcasiones" 
+        class="carrusel-control prev" 
+        (click)="prevOcasiones()"
+        aria-label="Anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <div class="grid-ocasiones">
+        <article class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasionesVisibles">
+          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
+               [alt]="ocasion.nombre">
+          <h3>{{ ocasion.nombre }}</h3>
+          <p class="descripcion">{{ ocasion.descripcion }}</p>
+          <span class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <div class="control-cantidad">
+            <button type="button" (click)="decrementarCantidad(ocasion.id)">-</button>
+            <input type="number" min="1" max="99" [(ngModel)]="cantidades[ocasion.id]" />
+            <button type="button" (click)="incrementarCantidad(ocasion.id)">+</button>
+          </div>
+          <div class="botones-tarjeta">
+            <button class="boton-ver" (click)="verDetalles(ocasion)">
+              Ver detalles
+            </button>
+            <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
+              Agregar al carrito
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <button 
+        *ngIf="showNextOcasiones" 
+        class="carrusel-control next" 
+        (click)="nextOcasiones()"
+        aria-label="Siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Sección de novedades -->
+  <section class="seccion-novedades">
+    <h2 class="titulo-seccion">Novedades</h2>
+    <div class="grid-novedades">
+      <div class="bloque-novedad">
+        <i class="fas fa-flower-daffodil icono-novedad"></i>
+        <h4>Lanzamiento Primavera</h4>
+        <p>Explora nuestra nueva colección de ramos de temporada con un 15% de descuento. Flores frescas y diseños exclusivos para celebrar la primavera.</p>
+      </div>
+      <div class="bloque-novedad">
+        <i class="fas fa-gift icono-novedad"></i>
+        <h4>Bouquets para cada ocasión</h4>
+        <p>Descubre nuestra amplia selección de ramos personalizados para cada momento especial. Desde cumpleaños hasta bodas, tenemos el bouquet perfecto.</p>
+      </div>
+      <div class="bloque-novedad">
+        <i class="fas fa-truck icono-novedad"></i>
+        <h4>Envío Gratis</h4>
+        <p>En todos los pedidos superiores a 60€ dentro de Madrid. Entrega el mismo día para pedidos realizados antes de las 14:00h.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pie de página -->
+  <footer class="pie-pagina">
+    <div class="pie-pagina-contenido">
+      <div class="columna-footer">
+        <h4>Sobre MRbouquets</h4>
+        <p class="descripcion-footer">
+          Creamos bouquets únicos que transmiten emociones. Nuestros arreglos florales son diseñados con amor y cuidado, 
+          utilizando las flores más frescas para entregar belleza y alegría directamente a tu puerta.
+        </p>
+        <div class="redes-sociales">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok">
+            <i class="bi bi-tiktok"></i>
+          </a>
+          <a href="https://pinterest.com/" target="_blank" rel="noopener" aria-label="Pinterest">
+            <i class="bi bi-pinterest"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="columna-footer">
+        <h4>Servicio al Cliente</h4>
+        <div class="info-contacto">
+          <p><i class="bi bi-headset"></i> +34 912 345 678</p>
+          <p><i class="bi bi-envelope"></i> info&#64;mrbouquets.com</p>
+          <p><i class="bi bi-clock"></i> Lun-Sáb: 9:00-20:00</p>
+          <p><i class="bi bi-truck"></i> Entrega en 24h</p>
+          <p><i class="bi bi-flower1"></i> Flores 100% frescas</p>
+        </div>
+      </div>
+
+      <div class="columna-footer enlaces-rapidos">
+        <h4>Enlaces Útiles</h4>
+        <div class="grid-enlaces">
+          <a href="/catalogo"><i class="bi bi-flower3"></i> Catálogo</a>
+          <a href="/ocasiones"><i class="bi bi-gift"></i> Ocasiones</a>
+          <a href="/cuidados"><i class="bi bi-droplet"></i> Cuidado Floral</a>
+          <a href="/envios"><i class="bi bi-box-seam"></i> Envíos</a>
+          <a href="/garantia"><i class="bi bi-shield-check"></i> Garantía</a>
+          <a href="/faq"><i class="bi bi-question-circle"></i> FAQ</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2024 MRbouquets. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- Modal de invitación a login -->
 <div class="modal-backdrop" *ngIf="showLoginModal">
   <div class="modal-contenido">
     <h3>¡Ups!</h3>
@@ -77,34 +228,42 @@
   </div>
 </div>
 
-  </section>
-  
-  <!-- Sección de novedades -->
-  <section class="seccion-novedades">
-    <h2 class="titulo-seccion">Novedades</h2>
-    <div class="grid-novedades">
-      <div class="bloque-novedad">
-        <h4>Lanzamiento Primavera</h4>
-        <p>Explora nuestros ramos de temporada con un 15% de descuento.</p>
-      </div>
-      <div class="bloque-novedad">
-        <h4>Bouquets para cada ocasión</h4>
-        <p>Ahora puedes elegir cada ocasión para tus ramos.</p>
-      </div>
-      <div class="bloque-novedad">
-        <h4>Envío Gratis</h4>
-        <p>En pedidos superiores a 60€ dentro de Madrid.</p>
-      </div>
+<!-- Modal de detalles del ramo -->
+<div class="modal-detalles" *ngIf="ramoSeleccionado" (click)="cerrarDetalles()">
+  <div class="modal-contenido-detalles" (click)="$event.stopPropagation()">
+    <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
+    <div class="modal-imagen">
+      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramoSeleccionado.img" 
+           [alt]="ramoSeleccionado.nombre">
     </div>
-  </section>
-
-  <!-- Pie de página -->
-  <footer class="pie-pagina">
-    <p>© 2025 MRbouquets. Todos los derechos reservados.</p>
-    <ul class="lista-redes">
-      <li><a href="https://www.facebook.com/">Facebook</a></li>
-      <li><a href="https://www.instagram.com/">Instagram</a></li>
-      <li><a href="https://www.tiktok.com/">TikTok</a></li>
-    </ul>
-  </footer>
+    <div class="modal-info">
+      <h2>{{ ramoSeleccionado.nombre }}</h2>
+      <p class="descripcion">{{ ramoSeleccionado.descripcion }}</p>
+      <div class="detalles-adicionales">
+        <div class="detalle">
+          <span class="etiqueta">Precio:</span>
+          <span class="valor precio">{{ ramoSeleccionado.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="detalle" *ngIf="ramoSeleccionado.categoria">
+          <span class="etiqueta">Categoría:</span>
+          <span class="valor">{{ ramoSeleccionado.categoria }}</span>
+        </div>
+        <div class="detalle" *ngIf="ramoSeleccionado.disponibilidad">
+          <span class="etiqueta">Disponibilidad:</span>
+          <span class="valor disponible">Disponible</span>
+        </div>
+        <div class="detalle">
+          <span class="etiqueta">Cantidad:</span>
+          <div class="control-cantidad">
+            <button type="button" (click)="decrementarCantidad(ramoSeleccionado.id)">-</button>
+            <input type="number" min="1" max="99" [(ngModel)]="cantidades[ramoSeleccionado.id]" />
+            <button type="button" (click)="incrementarCantidad(ramoSeleccionado.id)">+</button>
+          </div>
+        </div>
+      </div>
+      <button class="boton-agregar" (click)="onAddToCart(ramoSeleccionado)">
+        Agregar al carrito
+      </button>
+    </div>
+  </div>
 </div>
