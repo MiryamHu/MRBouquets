@@ -1,19 +1,6 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+* {    margin: 0;    padding: 0;    box-sizing: border-box;  }html, body {    margin: 0;    padding: 0;    width: 100%;    height: 100%;    overflow-x: hidden;}
   
-  /* Tipografía y contenedor general */
-  body {
-    font-family: Arial, sans-serif;
-    color: #333;
-  }
-  .contenedor-principal {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    min-height: 100vh;
-  }
+  /* Tipografía y contenedor general */  body {    font-family: Arial, sans-serif;    color: #333;    margin: 0;    padding: 0;    overflow-x: hidden;  }  .contenedor-principal {    display: grid;    grid-template-rows: auto 1fr auto;    min-height: 100vh;    margin: 0;    padding: 0;  }
   
   /* Encabezado */
   .encabezado {
@@ -153,17 +140,7 @@
     opacity: 1;
   }
   
-  /* Sección de banner */
-  .seccion-banner {
-    display: grid;
-    width: 100%;
-  }
-  .banner-img {
-    width: 100%;
-    height: 380px;
-    object-fit: cover;    
-    display: block;
-  }
+  /* Sección de banner */.seccion-banner {    display: block;    width: 100vw;    height: calc(100vh - 72px);    overflow: hidden;    margin: 0;    padding: 0;    position: relative;    left: 50%;    transform: translateX(-50%);}.banner-img {    width: 100%;    height: 100%;    object-fit: cover;    display: block;    margin: 0;    padding: 0;    vertical-align: top;}
   
   /* Sección de destacados */
   .seccion-destacados {
@@ -406,9 +383,7 @@
       width: calc(50% - 0.25rem);
       justify-content: center;
     }
-    .banner-img {
-      height: 200px;  
-    }
+        .seccion-banner {      height: calc(100vh - 120px); /* Ajustamos la altura para móviles debido al navbar más alto */    }    .banner-img {      height: 100%;    }
   }
   /* Modal de login */
 .modal-backdrop {
