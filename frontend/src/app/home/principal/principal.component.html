@@ -77,32 +77,21 @@
   <section class="seccion-ocasiones">
     <h2 class="titulo-seccion">Ocasiones Especiales</h2>
     <div class="grid-ocasiones">
-      <div class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasiones">
-        <div class="ocasion-imagen">
-          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
-               [alt]="ocasion.nombre">
-          <div class="ocasion-overlay">
-            <i [class]="getIconForOcasion(ocasion)"></i>
-          </div>
+      <article class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasiones">
+        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
+             [alt]="ocasion.nombre">
+        <h3>{{ ocasion.nombre }}</h3>
+        <p class="descripcion">{{ ocasion.descripcion }}</p>
+        <span class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+        <div class="botones-tarjeta">
+          <button class="boton-ver" (click)="verDetalles(ocasion)">
+            Ver detalles
+          </button>
+          <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
+            Agregar al carrito
+          </button>
         </div>
-        <div class="ocasion-contenido">
-          <div class="ocasion-categoria">
-            <i [class]="getIconForOcasion(ocasion)"></i>
-            <span>{{ ocasion.categoria || 'Ocasión Especial' }}</span>
-          </div>
-          <h3>{{ ocasion.nombre }}</h3>
-          <p class="descripcion">{{ ocasion.descripcion }}</p>
-          <p class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</p>
-          <div class="botones-tarjeta">
-            <button class="boton-ver" (click)="verDetalles(ocasion)">
-              Ver detalles
-            </button>
-            <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
-              Agregar al carrito
-            </button>
-          </div>
-        </div>
-      </div>
+      </article>
     </div>
   </section>
 
