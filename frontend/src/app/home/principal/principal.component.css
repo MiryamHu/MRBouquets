@@ -17,42 +17,102 @@
   
   /* Encabezado */
   .encabezado {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    background: #f8f8f8;
-    gap: 1rem;
+    padding: 0.75rem 4rem;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(214, 51, 108, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
   .logo h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     color: #d6336c;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0;
+    transition: color 0.3s ease;
+  }
+  .logo h1:hover {
+    color: #ff4081;
   }
   .navegacion .lista-navegacion {
     list-style: none;
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
   }
   .navegacion .lista-navegacion a {
     text-decoration: none;
-    color: #333;
+    color: #555;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.35rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  .navegacion .lista-navegacion a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #ff4081;
+    transition: width 0.3s ease;
+  }
+  .navegacion .lista-navegacion a:hover {
+    color: #ff4081;
+  }
+  .navegacion .lista-navegacion a:hover::after {
+    width: 100%;
+  }
+  .acciones-usuario {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .acciones-usuario .saludo {
+    color: #555;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
   }
   .acciones-usuario .boton {
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    border: 1px solid #d6336c;
-    border-radius: 0.25rem;
-    color: #d6336c;
-    transition: background 0.3s, color 0.3s;
+    padding: 0.5rem 1.25rem;
+    border: 2px solid #ff4081;
+    border-radius: 50px;
+    color: #ff4081;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .acciones-usuario .boton:hover {
+    background: #ff4081;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 64, 129, 0.2);
   }
   .acciones-usuario .boton-principal {
-    background: #d6336c;
+    background: #ff4081;
     color: #fff;
   }
-  .acciones-usuario .boton:hover,
   .acciones-usuario .boton-principal:hover {
-    background: #c12b5a;
-    color: #fff;
+    background: #d6336c;
+    border-color: #d6336c;
+  }
+  .acciones-usuario .cerrar-sesion {
+    background: transparent;
+    border: 2px solid #ff4081;
+    cursor: pointer;
   }
   
   /* Sección de banner */
@@ -237,10 +297,25 @@
   /* Responsive: tablet */
   @media (max-width: 768px) {
     .encabezado {
-      grid-template-columns: 1fr auto;
+      padding: 0.75rem 1rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .navegacion {
+      order: 3;
+      width: 100%;
+      margin-top: 0.75rem;
+    }
+    .navegacion .lista-navegacion {
+      justify-content: center;
+      gap: 1rem;
     }
     .acciones-usuario {
-      display: none;
+      gap: 0.75rem;
+    }
+    .acciones-usuario .boton {
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
     }
     .banner-img {
       height: 300px;  
@@ -257,6 +332,12 @@
     }
     .navegacion .lista-navegacion {
       flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .acciones-usuario {
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 0.5rem;
     }
     .banner-img {
