@@ -1189,3 +1189,106 @@
 .tarjeta-ocasion .boton-ver {
   width: 100%;
 }
+
+/* Estilos del carrusel */
+.carrusel-container {
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.carrusel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #ff4081;
+  color: white;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.carrusel-control:hover {
+  background: #d6336c;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carrusel-control.prev {
+  left: 0;
+}
+
+.carrusel-control.next {
+  right: 0;
+}
+
+.carrusel-control i {
+  line-height: 1;
+}
+
+/* Ajustes para el grid dentro del carrusel */
+.grid-destacados,
+.grid-ocasiones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+/* Responsive del carrusel */
+@media (max-width: 1200px) {
+  .grid-destacados,
+  .grid-ocasiones {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .grid-destacados,
+  .grid-ocasiones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .grid-destacados,
+  .grid-ocasiones {
+    grid-template-columns: 1fr;
+  }
+
+  .carrusel-container {
+    padding: 0 30px;
+  }
+
+  .carrusel-control {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Animación suave para el cambio de productos */
+.tarjeta-bouquet,
+.tarjeta-ocasion {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

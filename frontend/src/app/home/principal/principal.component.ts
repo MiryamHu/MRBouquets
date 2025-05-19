@@ -22,6 +22,11 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   ramoSeleccionado: Ramo | null = null;
   cantidades: { [key: number]: number } = {};
+  
+  // Propiedades para el carrusel
+  currentIndexRegulares = 0;
+  currentIndexOcasiones = 0;
+  itemsPerPage = 4;
 
   constructor(
     public auth: AuthService,
@@ -31,6 +36,62 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     private cartService: CartService
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+
+  // Métodos para el carrusel de productos regulares
+  get productosRegularesVisibles(): Ramo[] {
+    return this.productosRegulares.slice(
+      this.currentIndexRegulares,
+      this.currentIndexRegulares + this.itemsPerPage
+    );
+  }
+
+  get productosOcasionesVisibles(): Ramo[] {
+    return this.productosOcasiones.slice(
+      this.currentIndexOcasiones,
+      this.currentIndexOcasiones + this.itemsPerPage
+    );
+  }
+
+  nextRegulares(): void {
+    if (this.currentIndexRegulares + this.itemsPerPage < this.productosRegulares.length) {
+      this.currentIndexRegulares += this.itemsPerPage;
+    }
+  }
+
+  prevRegulares(): void {
+    if (this.currentIndexRegulares > 0) {
+      this.currentIndexRegulares -= this.itemsPerPage;
+    }
+  }
+
+  nextOcasiones(): void {
+    if (this.currentIndexOcasiones + this.itemsPerPage < this.productosOcasiones.length) {
+      this.currentIndexOcasiones += this.itemsPerPage;
+    }
+  }
+
+  prevOcasiones(): void {
+    if (this.currentIndexOcasiones > 0) {
+      this.currentIndexOcasiones -= this.itemsPerPage;
+    }
+  }
+
+  // Getters para controlar la visibilidad de los botones de navegación
+  get showPrevRegulares(): boolean {
+    return this.currentIndexRegulares > 0;
+  }
+
+  get showNextRegulares(): boolean {
+    return this.currentIndexRegulares + this.itemsPerPage < this.productosRegulares.length;
+  }
+
+  get showPrevOcasiones(): boolean {
+    return this.currentIndexOcasiones > 0;
+  }
+
+  get showNextOcasiones(): boolean {
+    return this.currentIndexOcasiones + this.itemsPerPage < this.productosOcasiones.length;
   }
 
   @HostListener('window:scroll', ['$event'])

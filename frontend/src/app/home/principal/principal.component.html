@@ -54,54 +54,90 @@
     </div>
 
     <!-- Productos Regulares -->
-    <div *ngIf="!loading && !error" class="grid-destacados">
-      <article class="tarjeta-bouquet" *ngFor="let producto of productosRegulares">
-        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + producto.img" 
-             [alt]="producto.nombre">
-        <h3>{{ producto.nombre }}</h3>
-        <p>{{ producto.descripcion }}</p>
-        <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-        <div class="control-cantidad">
-          <button type="button" (click)="decrementarCantidad(producto.id)">-</button>
-          <input type="number" min="1" max="99" [(ngModel)]="cantidades[producto.id]" />
-          <button type="button" (click)="incrementarCantidad(producto.id)">+</button>
-        </div>
-        <div class="botones-tarjeta">
-          <button class="boton-ver" (click)="verDetalles(producto)">
-            Ver detalles
-          </button>
-          <button class="boton" (click)="onAddToCart(producto)">
-            Agregar al carrito
-          </button>
-        </div>
-      </article>
+    <div *ngIf="!loading && !error" class="carrusel-container">
+      <button 
+        *ngIf="showPrevRegulares" 
+        class="carrusel-control prev" 
+        (click)="prevRegulares()"
+        aria-label="Anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <div class="grid-destacados">
+        <article class="tarjeta-bouquet" *ngFor="let producto of productosRegularesVisibles">
+          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + producto.img" 
+               [alt]="producto.nombre">
+          <h3>{{ producto.nombre }}</h3>
+          <p>{{ producto.descripcion }}</p>
+          <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <div class="control-cantidad">
+            <button type="button" (click)="decrementarCantidad(producto.id)">-</button>
+            <input type="number" min="1" max="99" [(ngModel)]="cantidades[producto.id]" />
+            <button type="button" (click)="incrementarCantidad(producto.id)">+</button>
+          </div>
+          <div class="botones-tarjeta">
+            <button class="boton-ver" (click)="verDetalles(producto)">
+              Ver detalles
+            </button>
+            <button class="boton" (click)="onAddToCart(producto)">
+              Agregar al carrito
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <button 
+        *ngIf="showNextRegulares" 
+        class="carrusel-control next" 
+        (click)="nextRegulares()"
+        aria-label="Siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </button>
     </div>
   </section>
 
   <!-- Sección de Ocasiones Especiales -->
   <section class="seccion-ocasiones">
     <h2 class="titulo-seccion">Ocasiones Especiales</h2>
-    <div class="grid-ocasiones">
-      <article class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasiones">
-        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
-             [alt]="ocasion.nombre">
-        <h3>{{ ocasion.nombre }}</h3>
-        <p class="descripcion">{{ ocasion.descripcion }}</p>
-        <span class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-        <div class="control-cantidad">
-          <button type="button" (click)="decrementarCantidad(ocasion.id)">-</button>
-          <input type="number" min="1" max="99" [(ngModel)]="cantidades[ocasion.id]" />
-          <button type="button" (click)="incrementarCantidad(ocasion.id)">+</button>
-        </div>
-        <div class="botones-tarjeta">
-          <button class="boton-ver" (click)="verDetalles(ocasion)">
-            Ver detalles
-          </button>
-          <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
-            Agregar al carrito
-          </button>
-        </div>
-      </article>
+    <div class="carrusel-container">
+      <button 
+        *ngIf="showPrevOcasiones" 
+        class="carrusel-control prev" 
+        (click)="prevOcasiones()"
+        aria-label="Anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <div class="grid-ocasiones">
+        <article class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasionesVisibles">
+          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
+               [alt]="ocasion.nombre">
+          <h3>{{ ocasion.nombre }}</h3>
+          <p class="descripcion">{{ ocasion.descripcion }}</p>
+          <span class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <div class="control-cantidad">
+            <button type="button" (click)="decrementarCantidad(ocasion.id)">-</button>
+            <input type="number" min="1" max="99" [(ngModel)]="cantidades[ocasion.id]" />
+            <button type="button" (click)="incrementarCantidad(ocasion.id)">+</button>
+          </div>
+          <div class="botones-tarjeta">
+            <button class="boton-ver" (click)="verDetalles(ocasion)">
+              Ver detalles
+            </button>
+            <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
+              Agregar al carrito
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <button 
+        *ngIf="showNextOcasiones" 
+        class="carrusel-control next" 
+        (click)="nextOcasiones()"
+        aria-label="Siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </button>
     </div>
   </section>
 
