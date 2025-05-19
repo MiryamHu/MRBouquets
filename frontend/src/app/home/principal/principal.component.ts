@@ -19,12 +19,6 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   isBrowser: boolean;
   error: string = '';
   loading: boolean = true;
-
-  // Variables para el carrusel
-  currentSlide: number = 0;
-  slideOffset: number = 0;
-  autoSlideInterval: any;
-
   ramoSeleccionado: Ramo | null = null;
 
   constructor(
@@ -65,15 +59,9 @@ export class PrincipalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadRamos();
-    if (this.isBrowser) {
-      this.startAutoSlide();
-      // Trigger initial check
-      setTimeout(() => this.onWindowScroll(), 100);
-    }
   }
 
   ngOnDestroy() {
-    this.stopAutoSlide();
   }
 
   private loadRamos(): void {
@@ -125,55 +113,6 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
-  // Métodos del carrusel
-  public startAutoSlide(): void {
-    if (this.isBrowser) {
-      this.autoSlideInterval = setInterval(() => {
-        this.nextSlide();
-      }, 3000);
-    }
-  }
-
-  public stopAutoSlide(): void {
-    if (this.autoSlideInterval) {
-      clearInterval(this.autoSlideInterval);
-    }
-  }
-
-  public nextSlide(): void {
-    const totalSlides = this.productosOcasiones.length;
-    this.currentSlide = (this.currentSlide + 1) % totalSlides;
-    this.updateSlideOffset();
-    this.resetAutoplay();
-  }
-
-  public prevSlide(): void {
-    const totalSlides = this.productosOcasiones.length;
-    this.currentSlide = (this.currentSlide - 1 + totalSlides) % totalSlides;
-    this.updateSlideOffset();
-    this.resetAutoplay();
-  }
-
-  public goToSlide(index: number): void {
-    const totalSlides = this.productosOcasiones.length;
-    if (index >= 0 && index < totalSlides) {
-      this.currentSlide = index;
-      this.updateSlideOffset();
-      this.resetAutoplay();
-    }
-  }
-
-  private updateSlideOffset(): void {
-    this.slideOffset = -this.currentSlide * 100;
-  }
-
-  private resetAutoplay(): void {
-    if (this.isBrowser) {
-      this.stopAutoSlide();
-      this.startAutoSlide();
-    }
-  }
-
   public getIconForOcasion(ocasion: Ramo): string {
     const nombreLower = ocasion.nombre.toLowerCase();
     if (nombreLower.includes('cumpleaños')) {
@@ -190,17 +129,9 @@ export class PrincipalComponent implements OnInit, OnDestroy {
 
   verDetalles(ramo: Ramo): void {
     this.ramoSeleccionado = ramo;
-    // Detener el autoplay del carrusel cuando se abre el modal
-    if (this.isBrowser) {
-      this.stopAutoSlide();
-    }
   }
 
   cerrarDetalles(): void {
     this.ramoSeleccionado = null;
-    // Reanudar el autoplay del carrusel cuando se cierra el modal
-    if (this.isBrowser) {
-      this.startAutoSlide();
-    }
   }
 }

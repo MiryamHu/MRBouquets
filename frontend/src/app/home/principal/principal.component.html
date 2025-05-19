@@ -76,45 +76,32 @@
   <!-- Sección de Ocasiones Especiales -->
   <section class="seccion-ocasiones">
     <h2 class="titulo-seccion">Ocasiones Especiales</h2>
-    <div class="carrusel-ocasiones" #carrusel>
-      <div class="carrusel-contenedor" [style.transform]="'translateX(' + slideOffset + '%)'">
-        <div class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasiones">
-          <div class="ocasion-imagen">
-            <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
-                 [alt]="ocasion.nombre">
-            <div class="ocasion-overlay">
-              <i [class]="getIconForOcasion(ocasion)"></i>
-            </div>
-          </div>
-          <div class="ocasion-contenido">
-            <h3>{{ ocasion.nombre }}</h3>
-            <p class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</p>
-            <div class="botones-tarjeta">
-              <button class="boton-ver" (click)="verDetalles(ocasion)">
-                Ver detalles
-              </button>
-              <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
-                Agregar al carrito
-              </button>
-            </div>
+    <div class="grid-ocasiones">
+      <div class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasiones">
+        <div class="ocasion-imagen">
+          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
+               [alt]="ocasion.nombre">
+          <div class="ocasion-overlay">
+            <i [class]="getIconForOcasion(ocasion)"></i>
           </div>
         </div>
-      </div>
-
-      <!-- Controles del carrusel -->
-      <div class="carrusel-controles">
-        <button class="control-btn prev" (click)="prevSlide()">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <div class="indicadores">
-          <span *ngFor="let ocasion of productosOcasiones; let i = index" 
-                [class.activo]="currentSlide === i"
-                (click)="goToSlide(i)">
-          </span>
+        <div class="ocasion-contenido">
+          <div class="ocasion-categoria">
+            <i [class]="getIconForOcasion(ocasion)"></i>
+            <span>{{ ocasion.categoria || 'Ocasión Especial' }}</span>
+          </div>
+          <h3>{{ ocasion.nombre }}</h3>
+          <p class="descripcion">{{ ocasion.descripcion }}</p>
+          <p class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</p>
+          <div class="botones-tarjeta">
+            <button class="boton-ver" (click)="verDetalles(ocasion)">
+              Ver detalles
+            </button>
+            <button class="boton-ocasion" (click)="onAddToCart(ocasion)">
+              Agregar al carrito
+            </button>
+          </div>
         </div>
-        <button class="control-btn next" (click)="nextSlide()">
-          <i class="fas fa-chevron-right"></i>
-        </button>
       </div>
     </div>
   </section>
