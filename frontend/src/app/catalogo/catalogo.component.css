@@ -344,3 +344,128 @@ h1 {
     flex-direction: column;
   }
 } 
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 4rem;
+  background: #ffffff;
+  box-shadow: 0 1px 6px rgba(214, 51, 108, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(214, 51, 108, 0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo h1 {
+  font-size: 1.6rem;
+  color: #ff4081;
+  font-weight: 800;
+  margin: 0;
+  transition: color 0.3s ease;
+  text-transform: uppercase;
+}
+
+.logo h1:hover { color: #d6336c; }
+
+.navegacion {
+  margin: 0 2rem;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.navegacion .lista-navegacion {
+  list-style: none;
+  display: flex;
+  gap: 2.5rem;
+  margin: 0;
+}
+
+.navegacion .lista-navegacion a {
+  text-decoration: none;
+  color: #666;
+  font-size: 0.95rem;
+  font-weight: 600;
+  position: relative;
+  padding: 0.35rem 0;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.navegacion .lista-navegacion a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 2px;
+  background: #ff4081;
+  transition: width 0.3s ease;
+}
+
+.navegacion .lista-navegacion a:hover {
+  color: #ff4081;
+}
+
+.navegacion .lista-navegacion a:hover::after {
+  width: 100%;
+}
+
+.acciones-usuario {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.acciones-usuario .saludo {
+  color: #666;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-right: 0.75rem;
+}
+
+.acciones-usuario .boton {
+  text-decoration: none;
+  padding: 0.45rem 1.1rem;
+  border: 1.5px solid #ff4081;
+  border-radius: 50px;
+  color: #ff4081;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.acciones-usuario .boton:hover {
+  background: #ff4081;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(255,64,129,0.15);
+}
+
+.acciones-usuario .boton-principal {
+  background: #ff4081;
+  color: #fff;
+  border: 1.5px solid #ff4081;
+}
+
+.acciones-usuario .boton-principal:hover {
+  background: #d6336c;
+  border-color: #d6336c;
+}
+
+.acciones-usuario .cerrar-sesion {
+  background: transparent;
+  border: 1.5px solid #ff4081;
+  cursor: pointer;
+}

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RamosService } from '../services/ramos.service';
 import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { RouterModule,Router } from '@angular/router';
 
 interface Ramo {
   id: number;
@@ -20,7 +20,7 @@ interface Ramo {
 @Component({
   selector: 'app-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './catalogo.component.html',
   styleUrls: ['./catalogo.component.css']
 })
@@ -47,9 +47,12 @@ export class CatalogoComponent implements OnInit {
   constructor(
     private ramosService: RamosService,
     private cartService: CartService,
-    private auth: AuthService,
+    public auth: AuthService,
     private router: Router
-  ) {}
+  ) {
+    console.log('DI check →',
+    { ramosService, cartService, auth, router } );
+  }
 
   ngOnInit(): void {
     this.cargarRamos();
@@ -102,8 +105,7 @@ export class CatalogoComponent implements OnInit {
       const precioMaxMatch = !this.filtros.precioMax || 
         ramo.precio <= this.filtros.precioMax;
 
-      return busquedaMatch && tipoFlorMatch && colorMatch && 
-             precioMinMatch && precioMaxMatch && ramo.disponible;
+      return busquedaMatch && tipoFlorMatch && colorMatch && precioMinMatch && precioMaxMatch && ramo.disponible;
     });
   }
 
@@ -129,5 +131,14 @@ export class CatalogoComponent implements OnInit {
   irALogin(): void {
     this.showLoginModal = false;
     this.router.navigate(['/login']);
+  }
+  get userName(): string {
+    const u = this.auth.getUser();
+    return u?.nombre_usuario ?? u?.nombre ?? '';
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/']);
   }
 } 
