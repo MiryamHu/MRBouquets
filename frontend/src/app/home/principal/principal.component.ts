@@ -76,7 +76,6 @@ export class PrincipalComponent implements OnInit, OnDestroy {
       this.currentIndexOcasiones -= this.itemsPerPage;
     }
   }
-
   // Getters para controlar la visibilidad de los botones de navegación
   get showPrevRegulares(): boolean {
     return this.currentIndexRegulares > 0;
