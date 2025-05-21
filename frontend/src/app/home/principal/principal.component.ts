@@ -170,12 +170,6 @@ export class PrincipalComponent implements OnInit {
     return u?.nombre_usuario ?? u?.nombre ?? '';
   }
 
-  // logout(): void {
-  //   this.auth.logout();
-  //   this.router.navigate(['/']);
-  // }
-
-
   incrementarCantidad(id: number): void {
     if (this.cantidades[id] < 99) {
       this.cantidades[id]++;
