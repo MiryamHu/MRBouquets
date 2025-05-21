@@ -107,6 +107,27 @@
 .quantity-controls span {
   width: 24px;
   text-align: center;
+  background-color: white;
+  padding: 2px;
+  border: 1px solid #d6336c;
+  border-radius: 0.25rem;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Asegurar que el valor sea visible */
+.quantity-controls input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  opacity: 1;
+  visibility: visible;
+  background-color: white;
+  color: #333;
+  text-align: center;
+  border: 1px solid #d6336c;
+  border-radius: 0.25rem;
+  padding: 2px;
+  width: 24px;
 }
 
 .btn-remove {

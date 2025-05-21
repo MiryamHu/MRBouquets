@@ -5,11 +5,12 @@ import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { RamosService, Ramo } from '../../services/ramos.service';
 import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-principal',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule],
+  imports: [CommonModule, RouterModule, MatButtonModule, FormsModule],
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })

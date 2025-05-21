@@ -56,7 +56,14 @@
           <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
           <div class="control-cantidad">
             <button type="button" (click)="decrementarCantidad(producto.id)">-</button>
-            <input type="number" min="1" max="99" [(ngModel)]="cantidades[producto.id]" />
+            <input 
+              type="number" 
+              min="1" 
+              max="99" 
+              [(ngModel)]="cantidades[producto.id]" 
+              [value]="cantidades[producto.id]"
+              (input)="cantidades[producto.id] = $event.target.value"
+            />
             <button type="button" (click)="incrementarCantidad(producto.id)">+</button>
           </div>
           <div class="botones-tarjeta">

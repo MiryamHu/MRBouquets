@@ -1,13 +1,13 @@
 <header class="encabezado">
   <div class="logo">
-    <h1>MRbouquets</h1>
+    <a routerLink="/"><img src="img/logo_menu_trimmed.png" alt="logo"></a>
   </div>
 
   <nav class="navegacion">
     <ul class="lista-navegacion">
-      <li><a routerLink="/">Inicio</a></li>
-      <li><a routerLink="/catalogo">Catálogo</a></li>
-      <li><a routerLink="/contacto">Contacto</a></li>
+      <li><a routerLink="/">INICIO</a></li>
+      <li><a routerLink="/catalogo">CATÁLOGO</a></li>
+      <li><a routerLink="/contacto">CONTACTO</a></li>
     </ul>
   </nav>
 
@@ -22,8 +22,7 @@
 
     <!-- Si no está logueado -->
     <ng-template #anon>
-      <a routerLink="/login">Iniciar sesión</a>
-      <a routerLink="/registro" class="boton boton-principal">Registro</a>
+      <a routerLink="/login" class="boton">Iniciar sesión</a>
     </ng-template>
   </div>
 </header>
