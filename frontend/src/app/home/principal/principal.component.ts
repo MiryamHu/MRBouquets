@@ -1,21 +1,27 @@
-import { Component, Inject, PLATFORM_ID, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { RamosService, Ramo } from '../../services/ramos.service';
-import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-principal',
   standalone: true,
-  imports: [ CommonModule, RouterModule, FormsModule ],
+  imports: [CommonModule, RouterModule, MatButtonModule],
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })
-export class PrincipalComponent implements OnInit, OnDestroy {
+
+export class PrincipalComponent implements OnInit {
   productosRegulares: Ramo[] = [];
   productosOcasiones: Ramo[] = [];
+
+  @ViewChild('videoPlayer', { static: false })
+  videoPlayer!: ElementRef<HTMLVideoElement>;
+
+
   showLoginModal = false;
   isBrowser: boolean;
   error: string = '';
@@ -119,11 +125,9 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     }
   }
 
+
   ngOnInit(): void {
     this.loadRamos();
-  }
-
-  ngOnDestroy() {
   }
 
   private loadRamos(): void {
@@ -165,11 +169,6 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     return u?.nombre_usuario ?? u?.nombre ?? '';
   }
 
-  logout(): void {
-    this.auth.logout();
-    this.router.navigate(['/']);
-  }
-
   incrementarCantidad(id: number): void {
     if (this.cantidades[id] < 99) {
       this.cantidades[id]++;
@@ -190,11 +189,12 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     const cantidad = this.cantidades[producto.id] || 1;
     for (let i = 0; i < cantidad; i++) {
       this.cartService.add(producto);
+      this.cartService.open();
     }
     // Cerrar el modal de detalles si está abierto
     this.ramoSeleccionado = null;
     // Redirigir al carrito
-    this.router.navigate(['/carrito']);
+    // this.router.navigate(['/carrito']);
   }
 
   goLogin(): void {

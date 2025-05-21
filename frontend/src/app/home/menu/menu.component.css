@@ -1,0 +1,227 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ========================= */
+/* Contenedor padre (header) */
+/* ========================= */
+.encabezado {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  /* padding: 0 2rem; */
+}
+
+/* ============================= */
+/* FILA SUPERIOR (logo/usuario) */
+/* ============================= */
+.encabezado-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding: 0.75rem 2rem; */
+  background: #f8f8f8;
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+}
+
+/* Headroom.js inyecta estas clases sobre .encabezado-top */
+.encabezado-top.header--unpinned {
+  transform: translateY(-100%);
+}
+.encabezado-top.header--pinned {
+  transform: translateY(0);
+}
+
+/* ============================= */
+/* FILA INFERIOR (navegación)   */
+/* ============================= */
+.encabezado-bottom {
+  background-color: #e8d2da;
+  border-top: 1px solid #e0e0e0;
+  padding: 1rem ;
+  /* por defecto, justo bajo el top ocultable */
+  position: relative;
+  z-index: 900;
+}
+
+/* ============================= */
+/* Cuando el top está oculto,    */
+/* fijamos el bottom en top:0    */
+/* ============================= */
+.encabezado-top.header--unpinned + .encabezado-bottom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+/* ============================= */
+/* Empujar contenido principal   */
+/* ============================= */
+/* Debes ajustar --header-height al alto TOTAL del header (top+bottom) */
+:root {
+  --header-top-h: calc(0.75rem*2 + 50px);   /* padding*2 + imagen */
+  --header-bottom-h: calc(1rem*2 + 1px);    /* padding*2 + border */
+  --header-height: calc(var(--header-top-h) + var(--header-bottom-h));
+}
+body {
+  margin-top: var(--header-height);
+}
+
+/* ============================= */
+/* Navegación interna            */
+/* ============================= */
+.navegacion {
+    
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .navegacion .lista-navegacion {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navegacion .lista-navegacion a {
+    text-decoration: none;
+    color: #666;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.35rem 0;
+    position: relative;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .navegacion .lista-navegacion a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #ff4081;
+    transition: width 0.3s ease;
+  }
+  
+  .navegacion .lista-navegacion a:hover {
+    color: #ff4081;
+  }
+  
+  .navegacion .lista-navegacion a:hover::after {
+    width: 100%;
+  }
+/* ============================= */
+/* Contenido de la fila superior */
+/* ============================= */
+.logo img {
+  max-height: 50px;
+}
+
+.acciones-usuario {
+ display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+ .acciones-usuario .saludo {
+    color: #666;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-right: 0.75rem;
+  } 
+
+
+ .acciones-usuario .boton {
+    text-decoration: none;
+    padding: 0.45rem 1.1rem;
+    border: 1.5px solid #ff4081;
+    border-radius: 50px;
+    color: #ff4081;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+  }
+  
+  .acciones-usuario .boton:hover {
+    background: #ff4081;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(255, 64, 129, 0.15);
+  }
+  
+  .acciones-usuario .boton-principal {
+    background: #ff4081;
+    color: #fff;
+    border: 1.5px solid #ff4081;
+  }
+  
+  .acciones-usuario .boton-principal:hover {
+    background: #d6336c;
+    border-color: #d6336c;
+    box-shadow: 0 3px 8px rgba(214, 51, 108, 0.2);
+  }
+  
+  .acciones-usuario .cerrar-sesion {
+    background: transparent;
+    border: 1.5px solid #ff4081;
+    cursor: pointer;
+    opacity: 0.9;
+  }
+  
+  .acciones-usuario .cerrar-sesion:hover {
+    opacity: 1;
+  }
+
+/* ============================= */
+/* Responsive                    */
+/* ============================= */
+@media (max-width: 768px) {
+  .encabezado-top {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .encabezado-bottom {
+    padding: 0.5rem 1rem;
+  }
+  :root {
+    --header-top-h: calc(0.75rem*2 + 50px);
+    --header-bottom-h: calc(0.5rem*2 + 1px);
+    --header-height: calc(var(--header-top-h) + var(--header-bottom-h));
+  }
+  body {
+    margin-top: var(--header-height);
+  }
+}
+
+@media (max-width: 480px) {
+  .acciones-usuario {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .acciones-usuario .saludo {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .navegacion .lista-navegacion {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

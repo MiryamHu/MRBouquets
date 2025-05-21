@@ -1,0 +1,13 @@
+<div class="admin-container">
+    <header class="admin-header">
+        <h2>Panel de Administración</h2>
+        <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+    </header>
+
+    <nav class="admin-nav">
+        <a routerLink="./usuarios">Usuarios</a> |
+        <a routerLink="./pedidos">Pedidos</a>
+    </nav>
+
+    <router-outlet></router-outlet>
+</div>

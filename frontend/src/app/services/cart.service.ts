@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Ramo } from './ramos.service';
 
 // Interfaz para items en el carrito, con cantidad
@@ -13,6 +13,10 @@ export interface CartItem extends Omit<Ramo, 'precio'> {
   providedIn: 'root'
 })
 export class CartService {
+
+  private toggleSidenav$ = new Subject<'open'|'close'>();
+  toggleSidenav: Observable<'open'|'close'> = this.toggleSidenav$.asObservable();
+
   // Lista interna de items
   private items: CartItem[] = [];
   // Observable para suscribirse a cambios en el carrito
@@ -58,6 +62,13 @@ export class CartService {
     this.itemsSubject.next([]);
   }
 
+    open() {
+    this.toggleSidenav$.next('open');
+  }
+
+  close() {
+    this.toggleSidenav$.next('close');
+  }
   /**
    * Obtiene una copia de los items actuales en el carrito.
    */

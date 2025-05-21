@@ -1,1 +1,34 @@
-<p>menu works!</p>
+<header class="encabezado">
+  <!-- FILA SUPERIOR: logo + acciones de usuario -->
+  <div #headerTop class="encabezado-top header--pinned">
+    <div class="logo">
+      <a routerLink="/"><img src="img/logo_menu_trimmed.png" alt="logo"></a>
+    </div>
+    <div class="acciones-usuario">
+      <ng-container *ngIf="auth.isLoggedIn(); else anon">
+        <span class="saludo">Hola, {{ userName }}</span>
+        <a routerLink="/perfil" class="boton">👤 Mi Perfil</a>
+        <a routerLink="/carrito" class="boton">🛒 Mi carrito</a>
+        <button  class="boton cerrar-sesion" (click)="logout()">🔒 Cerrar sesión</button>
+      </ng-container>
+      <ng-template #anon>
+        <a routerLink="/login" class="boton">Iniciar sesión</a>
+        <!-- <a routerLink="/registro" class="boton boton-principal">Registro</a> -->
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- FILA INFERIOR: navegación principal -->
+  <nav class="encabezado-bottom navegacion">
+    <ul class="lista-navegacion">
+      <li><a routerLink="/">INICIO</a></li>
+      <li><a routerLink="/catalogo">CATÁLOGO</a></li>
+      <!-- <li><a routerLink="/">RAMOS</a></li>
+      <li><a routerLink="/">GLOBOS</a></li>
+      <li><a routerLink="/">CANASTAS</a></li>
+      <li><a routerLink="/">OCASIONES</a></li> -->
+      <li><a routerLink="/contacto">CONTACTO</a></li>
+    </ul>
+  </nav>
+</header>
+

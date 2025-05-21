@@ -1,0 +1,12 @@
+:root {
+  --header-height: 140px; /* la altura total de tu header */
+}
+
+mat-sidenav-content {
+  padding-top: var(--header-height);
+}
+
+/* Mantén tu contenedor de sidenav al 100% de viewport */
+mat-sidenav-container {
+  height: 100vh;
+}
