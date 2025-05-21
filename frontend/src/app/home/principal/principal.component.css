@@ -2,10 +2,14 @@
 :root {
   --color-primary: #ff4081;
   --color-secondary: #d6336c;
+  --color-primary-light: #ff79b0;
+  --color-primary-dark: #c60055;
   --color-text: #333;
   --color-text-light: #666;
-  --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
+  --color-background: #fff;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.1);
   --border-radius: 15px;
   --transition: all 0.3s ease;
 }
@@ -63,6 +67,7 @@
   padding: 4rem 2rem;
   background: linear-gradient(to bottom, #fff5f8, #ffffff);
   position: relative;
+  overflow: hidden;
 }
 
 .titulo-seccion {
@@ -92,30 +97,121 @@
 .grid-novedades,
 .grid-ocasiones {
   display: grid;
-  gap: 2.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0.5rem;
+  padding: 1rem;
 }
 
-.grid-destacados { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-.grid-novedades { grid-template-columns: repeat(3, 1fr); }
+/* Tarjetas */
+.tarjeta-bouquet,
+.tarjeta-ocasion {
+  background: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 2px solid rgba(255, 64, 129, 0.15);
+  position: relative;
+}
+
+.tarjeta-bouquet:hover,
+.tarjeta-ocasion:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255, 64, 129, 0.3);
+}
+
+.tarjeta-bouquet img,
+.tarjeta-ocasion img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.tarjeta-bouquet:hover img,
+.tarjeta-ocasion:hover img {
+  transform: scale(1.05);
+}
+
+.tarjeta-bouquet h3,
+.tarjeta-ocasion h3 {
+  padding: 1rem 1.5rem 0.5rem;
+  color: var(--color-text);
+  font-size: 1.2rem;
+}
+
+.tarjeta-bouquet p,
+.tarjeta-ocasion p {
+  padding: 0 1.5rem;
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+  flex-grow: 1;
+}
+
+.tarjeta-bouquet .precio,
+.tarjeta-ocasion .precio {
+  padding: 1rem 1.5rem;
+  color: var(--color-primary);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
 
 /* Botones en tarjetas */
 .botones-tarjeta {
   display: flex;
-  gap: 0.5rem;
-  padding: 0 1.5rem 1.5rem;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  margin-top: auto;
 }
 
 .boton-ver {
-  background: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
+  flex: 1;
+  padding: 0.8rem;
+  border: 2px solid #ba005c !important;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  background: transparent !important;
+  color: #ba005c !important;
+  font-size: 1rem;
 }
 
 .boton-ver:hover {
-  background: rgba(255, 64, 129, 0.1);
+  background: #ffd9e1 !important;
+  color: #ba005c !important;
+  border-color: #ba005c !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(186, 0, 92, 0.2);
+}
+
+.boton,
+.boton-ocasion {
+  flex: 1;
+  padding: 0.8rem;
+  border: none !important;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  background: #ba005c !important;
+  color: white !important;
+  font-size: 1rem;
+}
+
+.boton:hover,
+.boton-ocasion:hover {
+  background: #74565d !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(186, 0, 92, 0.3);
 }
 
 /* Control de cantidad */
@@ -127,35 +223,39 @@
   margin: 1rem 1.5rem;
 }
 
-.control-cantidad button {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: var(--transition);
+.btn-cantidad {
+  background: #ba005c !important;
+  color: white !important;
+  border: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  font-size: 1.2rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  font-weight: bold !important;
+  box-shadow: 0 2px 8px rgba(186, 0, 92, 0.2) !important;
 }
 
-.control-cantidad button:hover {
-  background: var(--color-secondary);
-  transform: scale(1.1);
+.btn-cantidad:hover {
+  background: #74565d !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 4px 12px rgba(186, 0, 92, 0.3) !important;
 }
 
-.control-cantidad button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  transform: none;
+.btn-cantidad:disabled {
+  background: #ccc !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .control-cantidad input[type="number"] {
   width: 60px;
-  height: 30px;
+  height: 32px;
   text-align: center;
   border: 2px solid var(--color-primary);
   border-radius: 5px;
@@ -167,66 +267,93 @@
   appearance: textfield;
 }
 
-.control-cantidad input[type="number"]::-webkit-inner-spin-button,
-.control-cantidad input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.control-cantidad input[type="number"]:focus {
+  outline: none;
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 2px rgba(255, 64, 129, 0.2);
 }
 
-/* Carrusel */
-.carrusel-container {
-  position: relative;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 40px;
-}
-
-.carrusel-control {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: white;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Botón agregar al carrito en modal */
+.boton-agregar {
+  background: var(--color-primary) !important;
+  color: white !important;
+  border: none !important;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  z-index: 10;
-  box-shadow: var(--shadow-sm);
+  margin-top: auto;
+  font-size: 1.1rem;
+  width: 100%;
 }
 
-.carrusel-control:hover {
-  background: var(--color-secondary);
-  transform: translateY(-50%) scale(1.1);
+.boton-agregar:hover {
+  background: var(--color-primary-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3);
 }
-
-.carrusel-control.prev { left: 0; }
-.carrusel-control.next { right: 0; }
 
 /* Responsive */
+@media (max-width: 1200px) {
+  .grid-destacados,
+  .grid-ocasiones {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .grid-destacados,
+  .grid-ocasiones {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .principal-container { padding: 0.5rem 1rem; }
-  .seccion-banner { flex-direction: column; }
-  .banner-text { padding: 2rem; }
-  .banner-video { height: 50vh; }
-  .control-cantidad { margin: 0.75rem 1rem; }
-  .control-cantidad button { width: 25px; height: 25px; font-size: 1rem; }
-  .control-cantidad input[type="number"] { width: 50px; height: 25px; font-size: 0.9rem; }
-  .carrusel-container { padding: 0 30px; }
-  .carrusel-control { width: 30px; height: 30px; font-size: 1.2rem; }
+  .principal-container {
+    padding: 0.5rem 1rem;
+  }
+  
+  .seccion-destacados,
+  .seccion-novedades,
+  .seccion-ocasiones {
+    padding: 3rem 1.5rem;
+  }
+  
+  .grid-destacados,
+  .grid-ocasiones {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .tarjeta-bouquet img,
+  .tarjeta-ocasion img {
+    height: 200px;
+  }
+  
+  .botones-tarjeta {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 576px) {
-  .titulo-seccion { font-size: 1.5rem; }
+  .grid-destacados,
+  .grid-ocasiones {
+    grid-template-columns: 1fr;
+  }
+  
   .seccion-destacados,
   .seccion-novedades,
-  .seccion-ocasiones { padding: 2rem 1rem; }
+  .seccion-ocasiones {
+    padding: 2rem 1rem;
+  }
+  
+  .tarjeta-bouquet img,
+  .tarjeta-ocasion img {
+    height: 180px;
+  }
 }
 
 .sidenav-container {
@@ -581,12 +708,83 @@
   max-width: 50%;
   position: relative;
   overflow: hidden;
+  cursor: zoom-in;
 }
 
 .modal-imagen img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Estilos para la lupa */
+.modal-imagen.zoom-active {
+  cursor: zoom-out;
+}
+
+.modal-imagen.zoom-active img {
+  transform: scale(1.5);
+}
+
+.lupa-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lupa-icon:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.lupa-icon i {
+  font-size: 1.2rem;
+}
+
+/* Ajustes para el modal en modo zoom */
+.modal-contenido-detalles.zoom-mode {
+  max-width: 95%;
+  max-height: 95vh;
+}
+
+.modal-contenido-detalles.zoom-mode .modal-imagen {
+  max-width: 70%;
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+  .modal-contenido-detalles {
+    flex-direction: column;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-imagen {
+    max-width: 100%;
+    height: 300px;
+  }
+
+  .modal-contenido-detalles.zoom-mode .modal-imagen {
+    max-width: 100%;
+    height: 60vh;
+  }
+
+  .modal-info {
+    padding: 1.5rem;
+  }
 }
 
 .modal-info {
@@ -643,50 +841,6 @@
 .valor.disponible {
   color: #4CAF50;
   font-weight: 600;
-}
-
-.boton-agregar {
-  background: #ff4081;
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: auto;
-}
-
-.boton-agregar:hover {
-  background: #f50057;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.2);
-}
-
-@media (max-width: 768px) {
-  .modal-contenido-detalles {
-    flex-direction: column;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  .modal-imagen {
-    max-width: 100%;
-    height: 300px;
-  }
-
-  .modal-info {
-    padding: 1.5rem;
-  }
-
-  .botones-tarjeta {
-    flex-direction: column;
-  }
-
-  .boton-ver, 
-  .tarjeta-bouquet .boton {
-    width: 100%;
-  }
 }
 
 /* Mejora del contraste en los fondos de las secciones */
@@ -766,6 +920,7 @@
   justify-content: center;
   cursor: pointer;
   transition: var(--transition);
+  font-weight: bold;
 }
 
 .control-cantidad button:hover {
@@ -843,7 +998,7 @@
   width: 100%;
 }
 
-/* Estilos del carrusel */
+/* Carrusel */
 .carrusel-container {
   position: relative;
   max-width: 1400px;
@@ -886,37 +1041,15 @@
 /* Ajustes para el grid dentro del carrusel */
 .grid-destacados,
 .grid-ocasiones {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
   transition: transform 0.3s ease;
 }
 
 /* Responsive del carrusel */
-@media (max-width: 1200px) {
-  .grid-destacados,
-  .grid-ocasiones {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 992px) {
-  .grid-destacados,
-  .grid-ocasiones {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 576px) {
-  .grid-destacados,
-  .grid-ocasiones {
-    grid-template-columns: 1fr;
-  }
-
+@media (max-width: 768px) {
   .carrusel-container {
     padding: 0 30px;
   }
-
+  
   .carrusel-control {
     width: 30px;
     height: 30px;
@@ -938,5 +1071,136 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Tarjetas de ocasiones */
+.tarjeta-ocasion {
+  background: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 2px solid rgba(255, 64, 129, 0.15);
+  position: relative;
+}
+
+.tarjeta-ocasion:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255, 64, 129, 0.3);
+}
+
+.tarjeta-ocasion img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.tarjeta-ocasion:hover img {
+  transform: scale(1.05);
+}
+
+.tarjeta-ocasion h3 {
+  padding: 1rem 1.5rem 0.5rem;
+  color: var(--color-text);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.tarjeta-ocasion p {
+  padding: 0 1.5rem;
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+  flex-grow: 1;
+  line-height: 1.5;
+}
+
+.tarjeta-ocasion .precio {
+  padding: 1rem 1.5rem;
+  color: var(--color-primary);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.tarjeta-ocasion .botones-tarjeta {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  margin-top: auto;
+}
+
+.tarjeta-ocasion .boton-ver {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  flex: 1;
+}
+
+.tarjeta-ocasion .boton-ver:hover {
+  background: rgba(255, 64, 129, 0.1);
+}
+
+.tarjeta-ocasion .boton-ocasion {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  flex: 1;
+}
+
+.tarjeta-ocasion .boton-ocasion:hover {
+  background: var(--color-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.2);
+}
+
+/* Efecto de brillo en hover */
+.tarjeta-ocasion::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: 15px;
+  border: 2px solid rgba(255, 64, 129, 0);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.tarjeta-ocasion:hover::after {
+  border-color: rgba(255, 64, 129, 0.3);
+  box-shadow: 0 0 15px rgba(255, 64, 129, 0.1);
+}
+
+/* Responsive para tarjetas de ocasiones */
+@media (max-width: 768px) {
+  .tarjeta-ocasion .botones-tarjeta {
+    flex-direction: column;
+  }
+  
+  .tarjeta-ocasion .boton-ver,
+  .tarjeta-ocasion .boton-ocasion {
+    width: 100%;
+  }
+  
+  .tarjeta-ocasion img {
+    height: 200px;
   }
 }

@@ -13,16 +13,50 @@
 
 .botones-tarjeta {
   display: flex;
-  gap: 0.5rem;
-  padding: 0 1.5rem 1.5rem;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  margin-top: auto;
 }
 
 .boton-ver {
-  background: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
+  flex: 1;
+  padding: 0.8rem;
+  border: 2px solid var(--color-primary) !important;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  background: transparent !important;
+  color: var(--color-primary) !important;
+  font-size: 1rem;
 }
 
 .boton-ver:hover {
-  background: rgba(255, 64, 129, 0.1);
+  background: rgba(255, 64, 129, 0.1) !important;
+  border-color: var(--color-primary-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.2);
+}
+
+.boton,
+.boton-ocasion {
+  flex: 1;
+  padding: 0.8rem;
+  border: none !important;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  background: var(--color-primary) !important;
+  color: white !important;
+  font-size: 1rem;
+}
+
+.boton:hover,
+.boton-ocasion:hover {
+  background: var(--color-primary-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3);
 } 

@@ -35,6 +35,8 @@ export class PrincipalComponent implements OnInit {
   currentIndexOcasiones = 0;
   itemsPerPage = 4;
 
+  isZoomActive = false;
+
   constructor(
     public auth: AuthService,
     private ramosService: RamosService,
@@ -223,5 +225,21 @@ export class PrincipalComponent implements OnInit {
 
   cerrarDetalles(): void {
     this.ramoSeleccionado = null;
+  }
+
+  toggleZoom() {
+    this.isZoomActive = !this.isZoomActive;
+    const modalImagen = document.querySelector('.modal-imagen');
+    const modalContenido = document.querySelector('.modal-contenido-detalles');
+    
+    if (modalImagen && modalContenido) {
+      if (this.isZoomActive) {
+        modalImagen.classList.add('zoom-active');
+        modalContenido.classList.add('zoom-mode');
+      } else {
+        modalImagen.classList.remove('zoom-active');
+        modalContenido.classList.remove('zoom-mode');
+      }
+    }
   }
 }

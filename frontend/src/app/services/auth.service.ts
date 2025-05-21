@@ -40,6 +40,7 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
   private userSubject: BehaviorSubject<User | null>;
   private sessionCheckTimer: any;
+  public user$: Observable<User | null>;
   
   constructor(
     private http: HttpClient,
@@ -48,6 +49,9 @@ export class AuthService {
     this.userSubject = new BehaviorSubject<User | null>(
       this.isBrowser() ? this.getStoredUser() : null
     );
+    
+    // Exponer el BehaviorSubject como un Observable público
+    this.user$ = this.userSubject.asObservable();
     
     if (this.isBrowser() && this.isLoggedIn()) {
       this.startSessionCheck();

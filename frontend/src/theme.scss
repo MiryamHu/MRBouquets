@@ -1,0 +1,78 @@
+@use '@angular/material' as mat;
+
+// Define la paleta de colores personalizada
+$primary-palette: (
+  50: #fce4ec,
+  100: #f8bbd0,
+  200: #f48fb1,
+  300: #f06292,
+  400: #ec407a,
+  500: #ba005c,  // Color principal
+  600: #d81b60,
+  700: #c2185b,
+  800: #ad1457,
+  900: #880e4f,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+$accent-palette: (
+  50: #fce4ec,
+  100: #f8bbd0,
+  200: #f48fb1,
+  300: #f06292,
+  400: #ec407a,
+  500: #74565d,  // Color secundario
+  600: #d81b60,
+  700: #c2185b,
+  800: #ad1457,
+  900: #880e4f,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+// Crea el tema personalizado
+$theme: mat.define-light-theme((
+  color: (
+    primary: mat.define-palette($primary-palette, 500),
+    accent: mat.define-palette($accent-palette, 500),
+    warn: mat.define-palette(mat.$red-palette),
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
+
+// Incluye el tema
+@include mat.all-component-themes($theme);
+
+// Variables CSS personalizadas
+:root {
+  --color-primary: #ba005c;
+  --color-secondary: #74565d;
+  --color-primary-light: #ffd9e1;
+  --color-primary-dark: #8f0045;
+  --color-background: #fff8f8;
+  --color-surface: #fff8f8;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #201a1b;
+} 

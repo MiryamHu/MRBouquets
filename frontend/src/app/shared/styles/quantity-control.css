@@ -7,34 +7,38 @@
 }
 
 .control-cantidad button {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: var(--transition);
+  background: var(--color-primary) !important;
+  color: white !important;
+  border: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  font-size: 1.2rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  font-weight: bold !important;
+  box-shadow: 0 2px 8px rgba(255, 64, 129, 0.2) !important;
 }
 
 .control-cantidad button:hover {
-  background: var(--color-secondary);
-  transform: scale(1.1);
+  background: var(--color-primary-dark) !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3) !important;
 }
 
 .control-cantidad button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  transform: none;
+  background: #ccc !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .control-cantidad input[type="number"] {
   width: 60px;
-  height: 30px;
+  height: 32px;
   text-align: center;
   border: 2px solid var(--color-primary);
   border-radius: 5px;
@@ -52,8 +56,26 @@
   margin: 0;
 }
 
+.control-cantidad input[type="number"]:focus {
+  outline: none;
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 2px rgba(255, 64, 129, 0.2);
+}
+
 @media (max-width: 768px) {
-  .control-cantidad { margin: 0.75rem 1rem; }
-  .control-cantidad button { width: 25px; height: 25px; font-size: 1rem; }
-  .control-cantidad input[type="number"] { width: 50px; height: 25px; font-size: 0.9rem; }
+  .control-cantidad {
+    margin: 0.75rem 1rem;
+  }
+  
+  .control-cantidad button {
+    width: 28px;
+    height: 28px;
+    font-size: 1.1rem;
+  }
+  
+  .control-cantidad input[type="number"] {
+    width: 50px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
 } 

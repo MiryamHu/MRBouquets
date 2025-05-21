@@ -55,7 +55,7 @@
           <p>{{ producto.descripcion }}</p>
           <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
           <div class="control-cantidad">
-            <button type="button" (click)="decrementarCantidad(producto.id)">-</button>
+            <button type="button" class="btn-cantidad" (click)="decrementarCantidad(producto.id)">-</button>
             <input 
               type="number" 
               min="1" 
@@ -64,7 +64,7 @@
               [value]="cantidades[producto.id]"
               (input)="cantidades[producto.id] = $event.target.value"
             />
-            <button type="button" (click)="incrementarCantidad(producto.id)">+</button>
+            <button type="button" class="btn-cantidad" (click)="incrementarCantidad(producto.id)">+</button>
           </div>
           <div class="botones-tarjeta">
             <button class="boton-ver" (click)="verDetalles(producto)">
@@ -107,9 +107,9 @@
           <p class="descripcion">{{ ocasion.descripcion }}</p>
           <span class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
           <div class="control-cantidad">
-            <button type="button" (click)="decrementarCantidad(ocasion.id)">-</button>
+            <button type="button" class="btn-cantidad" (click)="decrementarCantidad(ocasion.id)">-</button>
             <input type="number" min="1" max="99" [(ngModel)]="cantidades[ocasion.id]" />
-            <button type="button" (click)="incrementarCantidad(ocasion.id)">+</button>
+            <button type="button" class="btn-cantidad" (click)="incrementarCantidad(ocasion.id)">+</button>
           </div>
           <div class="botones-tarjeta">
             <button class="boton-ver" (click)="verDetalles(ocasion)">
@@ -221,13 +221,16 @@
 </div>
 
 <!-- Modal de detalles del ramo -->
-<div class="modal-detalles" *ngIf="ramoSeleccionado" (click)="cerrarDetalles()">
+<div class="modal-detalles" *ngIf="ramoSeleccionado" (click)="cerrarModal($event)">
   <div class="modal-contenido-detalles" (click)="$event.stopPropagation()">
-    <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
     <div class="modal-imagen">
       <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramoSeleccionado.img" 
            [alt]="ramoSeleccionado.nombre">
+      <div class="lupa-icon" (click)="toggleZoom()">
+        <i class="fas" [ngClass]="isZoomActive ? 'fa-search-minus' : 'fa-search-plus'"></i>
+      </div>
     </div>
+    <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
     <div class="modal-info">
       <h2>{{ ramoSeleccionado.nombre }}</h2>
       <p class="descripcion">{{ ramoSeleccionado.descripcion }}</p>
@@ -247,9 +250,9 @@
         <div class="detalle">
           <span class="etiqueta">Cantidad:</span>
           <div class="control-cantidad">
-            <button type="button" (click)="decrementarCantidad(ramoSeleccionado.id)">-</button>
+            <button type="button" class="btn-cantidad" (click)="decrementarCantidad(ramoSeleccionado.id)">-</button>
             <input type="number" min="1" max="99" [(ngModel)]="cantidades[ramoSeleccionado.id]" />
-            <button type="button" (click)="incrementarCantidad(ramoSeleccionado.id)">+</button>
+            <button type="button" class="btn-cantidad" (click)="incrementarCantidad(ramoSeleccionado.id)">+</button>
           </div>
         </div>
       </div>
