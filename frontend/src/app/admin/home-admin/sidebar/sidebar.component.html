@@ -1,0 +1,61 @@
+<div class="sidebar" [class.close]="isClosed">
+  <div class="logo-details">
+    <img src="img/imagen-logo1.png" alt="">
+    <span class="logo_name">
+      <img src="img/logo_texto1.png" alt="">
+    </span>
+  </div>
+  <ul class="nav-links">
+    <li *ngFor="let item of menu; let i = index" [class.showMenu]="item.open">
+      <!-- Item sin submenú -->
+      <ng-container *ngIf="!item.submenu">
+        <a [routerLink]="item.link">
+          <i [class]="item.icon"></i>
+          <span class="link_name">{{ item.name }}</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">{{ item.name }}</a></li>
+        </ul>
+      </ng-container>
+
+      <!-- Item con submenú -->
+      <ng-container *ngIf="item.submenu">
+        <div class="iocn-link">
+          <a href="#">
+            <i [class]="item.icon"></i>
+            <span class="link_name">{{ item.name }}</span>
+          </a>
+          <i class="bx bxs-chevron-down arrow"
+             (click)="toggleSubmenu(i)"></i>
+        </div>
+        <ul class="sub-menu">
+          <li>
+            <a class="link_name" href="#">{{ item.name }}</a>
+          </li>
+          <li *ngFor="let sub of item.submenu">
+            <a href="#">{{ sub }}</a>
+          </li>
+        </ul>
+      </ng-container>
+    </li>
+
+    <!-- Perfil al final -->
+    <li class="profile-details">
+      <div class="profile-content">
+        <img src="assets/image/profile.jpg" alt="profileImg" />
+      </div>
+      <div class="name-job">
+        <div class="profile_name">Prem Shahi</div>
+        <div class="job">Web Designer</div>
+      </div>
+      <i class="bx bx-log-out"></i>
+    </li>
+  </ul>
+</div>
+
+<section class="home-section">
+  <div class="home-content">
+    <i class="bx bx-menu" (click)="toggleSidebar()"></i>
+    <span class="text">Drop Down Sidebar</span>
+  </div>
+</section>
