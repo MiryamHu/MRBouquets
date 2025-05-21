@@ -363,6 +363,11 @@ h1 {
   align-items: center;
 }
 
+.logo img {
+  max-height: 50px;
+  width: auto;
+}
+
 .logo h1 {
   font-size: 1.6rem;
   color: #ff4081;

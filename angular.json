@@ -1,0 +1,33 @@
+{
+  "projects": {
+    "frontend": {
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "styles": [
+              "src/styles.css",
+              "src/styles/global.css",
+              "src/app/shared/styles/carrusel.css",
+              "src/app/shared/styles/quantity-control.css",
+              "src/app/shared/styles/sections.css",
+              "src/app/shared/styles/grids.css"
+            ],
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "2mb",
+                "maximumError": "5mb"
+              },
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "12kb",
+                "maximumError": "15kb"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+} 

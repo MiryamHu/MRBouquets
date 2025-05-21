@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { PedidoService } from '../services/pedido.service';
@@ -165,5 +164,11 @@ continueShopping(): void {
   closeModal(): void {
     this.showSuccessModal = false;
     this.router.navigate(['/']);
+  }
+
+  closeSuccessModal(): void {
+    this.showSuccessModal = false;
+    this.cartService.clearCart(); // Vaciar el carrito
+    this.router.navigate(['/']); // Redirigir al inicio
   }
 }

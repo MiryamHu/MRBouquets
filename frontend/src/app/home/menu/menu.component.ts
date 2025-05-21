@@ -6,11 +6,12 @@ import Headroom from 'headroom.js';
 
 @Component({
   selector: 'app-menu',
+  standalone: true,
   imports: [CommonModule, RouterModule, MatButtonModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
-export class MenuComponent implements AfterViewInit{
+export class MenuComponent implements AfterViewInit {
   @Input() auth: any;
   @Input() userName: string = '';
   @Output() logoutEvent = new EventEmitter<void>();
@@ -32,7 +33,5 @@ export class MenuComponent implements AfterViewInit{
     });
     headroom.init();
   }
-  
-  
 }
 

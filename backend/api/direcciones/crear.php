@@ -43,7 +43,7 @@ $id_usuario = $_SESSION['id_usuario'];
 $input = file_get_contents('php://input');
 $data  = json_decode($input, true);
 
-$oblig = ['calle','numero','codigo_postal','localidad','provincia'];
+$oblig = ['nombre', 'calle','numero','codigo_postal','localidad','provincia'];
 foreach ($oblig as $c) {
     if (empty($data[$c])) {
         http_response_code(422);
@@ -53,6 +53,7 @@ foreach ($oblig as $c) {
 }
 
 // Campos
+$nombre        = $data['nombre'];
 $calle         = $data['calle'];
 $numero        = $data['numero'];
 $piso          = $data['piso']   ?? null;
@@ -68,13 +69,13 @@ try {
 
     $stmt = $conn->prepare("
         INSERT INTO direcciones
-        (usuario_id, calle, numero, piso, puerta, codigo_postal,
+        (usuario_id, nombre, calle, numero, piso, puerta, codigo_postal,
          localidad, provincia, pais)
-        VALUES (?,?,?,?,?,?,?,?,?)
+        VALUES (?,?,?,?,?,?,?,?,?,?)
     ");
     $stmt->bind_param(
-        "issssssss",
-        $id_usuario, $calle, $numero, $piso, $puerta,
+        "isssssssss",
+        $id_usuario, $nombre, $calle, $numero, $piso, $puerta,
         $cp, $localidad, $provincia, $pais
     );
     $stmt->execute();
@@ -90,6 +91,7 @@ try {
     echo json_encode([
         'id'            => $id,
         'usuario_id'    => $id_usuario,
+        'nombre'        => $nombre,
         'calle'         => $calle,
         'numero'        => $numero,
         'piso'          => $piso,

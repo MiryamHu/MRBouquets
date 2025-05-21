@@ -12,7 +12,7 @@
     <!-- Items -->
     <div class="cart-items">
       <div class="cart-item" *ngFor="let item of items">
-        <img [src]="item.img" [alt]="item.nombre" class="item-img">
+        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img" [alt]="item.nombre" class="item-img">
         <div class="item-details">
           <h3>{{ item.nombre }}</h3>
           <p>{{ item.descripcion }}</p>
@@ -121,16 +121,28 @@
 
   <!-- ───── Modal: Selección de dirección ───── -->
   <div class="modal-backdrop" *ngIf="showAddressModal">
-    <div class="modal">
+    <div class="modal direccion-modal">
       <h3>Selecciona una dirección de envío</h3>
-
-     <select
-      name="direccion"                     
-      [(ngModel)]="selectedDireccionId">
-      <option *ngFor="let d of direcciones" [ngValue]="d.id"> 
-        {{ d.calle }} {{ d.numero }}, {{ d.localidad }}
-      </option>
-    </select>
+      
+      <div class="direcciones-lista">
+        <div *ngFor="let d of direcciones" 
+             class="direccion-option" 
+             [class.selected]="selectedDireccionId === d.id"
+             (click)="selectedDireccionId = d.id">
+          <div class="direccion-header">
+            <span class="direccion-nombre">{{ d.nombre }}</span>
+            <div class="radio-button" [class.selected]="selectedDireccionId === d.id">
+              <div class="radio-inner"></div>
+            </div>
+          </div>
+          <div class="direccion-detalles">
+            <p>{{ d.calle }} {{ d.numero }}</p>
+            <p *ngIf="d.piso">Piso {{ d.piso }}, {{ d.puerta }}</p>
+            <p>{{ d.codigo_postal }} {{ d.localidad }}</p>
+            <p>{{ d.provincia }}, {{ d.pais }}</p>
+          </div>
+        </div>
+      </div>
 
       <div class="modal-actions">
         <button class="btn-secondary" (click)="showAddressModal = false">
@@ -139,9 +151,8 @@
         <button
           class="btn-primary"
           (click)="confirmarDireccion()"
-          [disabled]="!selectedDireccionId"
-        >
-          Confirmar
+          [disabled]="!selectedDireccionId">
+          Confirmar Dirección
         </button>
       </div>
     </div>

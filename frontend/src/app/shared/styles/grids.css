@@ -1,0 +1,28 @@
+.grid-destacados,
+.grid-novedades,
+.grid-ocasiones {
+  display: grid;
+  gap: 2.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.5rem;
+}
+
+.grid-destacados { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.grid-novedades { grid-template-columns: repeat(3, 1fr); }
+
+.botones-tarjeta {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.boton-ver {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.boton-ver:hover {
+  background: rgba(255, 64, 129, 0.1);
+} 

@@ -31,6 +31,7 @@
   <ul class="lista-direcciones" *ngIf="!loadingDirecciones && direcciones.length">
     <li class="direccion-card" *ngFor="let dir of direcciones">
       <div class="dir-info">
+        <p class="dir-nombre"><strong>{{ dir.nombre }}</strong></p>
         <p class="dir-linea1">
           {{ dir.calle }} {{ dir.numero }}
           <span *ngIf="dir.piso">, piso {{ dir.piso }}</span>
@@ -50,6 +51,7 @@
 
   <!-- Formulario nuevo -->
   <form class="form-direccion" *ngIf="mostrarFormDireccion" #fDir="ngForm" (ngSubmit)="guardarDireccion()">
+    <input ngModel name="nombre"          placeholder="Nombre (ej: Mi casa, Mi oficina)" required [(ngModel)]="nuevaDireccion.nombre">
     <input ngModel name="calle"          placeholder="Calle"          required [(ngModel)]="nuevaDireccion.calle">
     <input ngModel name="numero"         placeholder="Número"        required [(ngModel)]="nuevaDireccion.numero">
     <input ngModel name="piso"           placeholder="Piso"                       [(ngModel)]="nuevaDireccion.piso">

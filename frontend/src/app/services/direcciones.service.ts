@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 export interface Direccion {
   id: number;
   usuario_id: number;
+  nombre: string;
   calle: string;
   numero: string;
   piso?: string;

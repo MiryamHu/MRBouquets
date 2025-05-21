@@ -333,11 +333,23 @@ select:focus {
 
 .dir-info p { margin: 0; }
 
+.dir-nombre {
+  color: #e91e63;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem !important;
+}
+
 .form-direccion {
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
   gap: .8rem;
   margin-top: 1.5rem;
+}
+
+.form-direccion input[name="nombre"] {
+  grid-column: 1 / -1;
+  font-size: 1.1rem;
+  padding: 0.6rem;
 }
 
 .form-direccion input {
