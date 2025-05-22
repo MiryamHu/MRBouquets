@@ -1,18 +1,8 @@
-/* Variables globales */
-:root {
-  --color-primary: #ff4081;
-  --color-secondary: #d6336c;
-  --color-primary-light: #ff79b0;
-  --color-primary-dark: #c60055;
-  --color-text: #333;
-  --color-text-light: #666;
-  --color-background: #fff;
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
-  --shadow-lg: 0 8px 16px rgba(0,0,0,0.1);
-  --border-radius: 15px;
-  --transition: all 0.3s ease;
-}
+/* You can add global styles to this file, and also import other style files */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css");
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Reset y estilos base */
 * {
@@ -41,7 +31,7 @@
 .banner-text {
   flex: 1;
   padding: 4rem;
-  color: var(--color-secondary);
+  color: #74565d;
   font-size: 2rem;
 }
 
@@ -74,7 +64,7 @@
   text-align: center;
   margin-bottom: 3.5rem;
   font-size: 2rem;
-  color: var(--color-secondary);
+  color: #74565d;
   font-weight: 600;
   position: relative;
   padding-bottom: 1rem;
@@ -88,7 +78,7 @@
   transform: translateX(-50%);
   width: 100px;
   height: 3px;
-  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(to right, #ee5eb4, #74565d);
   border-radius: 2px;
 }
 
@@ -108,22 +98,22 @@
 .tarjeta-bouquet,
 .tarjeta-ocasion {
   background: white;
-  border-radius: var(--border-radius);
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
-  border: 2px solid rgba(255, 64, 129, 0.15);
+  border: 2px solid rgba(238, 94, 180, 0.15);
   position: relative;
 }
 
 .tarjeta-bouquet:hover,
 .tarjeta-ocasion:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(255, 64, 129, 0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: rgba(238, 94, 180, 0.3);
 }
 
 .tarjeta-bouquet img,
@@ -142,76 +132,81 @@
 .tarjeta-bouquet h3,
 .tarjeta-ocasion h3 {
   padding: 1rem 1.5rem 0.5rem;
-  color: var(--color-text);
+  color: #333;
   font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .tarjeta-bouquet p,
 .tarjeta-ocasion p {
   padding: 0 1.5rem;
-  color: var(--color-text-light);
+  color: #666;
   font-size: 0.9rem;
   flex-grow: 1;
+  line-height: 1.5;
 }
 
 .tarjeta-bouquet .precio,
 .tarjeta-ocasion .precio {
   padding: 1rem 1.5rem;
-  color: var(--color-primary);
+  color: #ee5eb4;
   font-size: 1.3rem;
   font-weight: 600;
 }
 
 /* Botones en tarjetas */
-.botones-tarjeta {
+.tarjeta-bouquet .botones-tarjeta,
+.tarjeta-ocasion .botones-tarjeta {
   display: flex;
   gap: 1rem;
   padding: 1rem 1.5rem;
   margin-top: auto;
 }
 
-.boton-ver {
+.tarjeta-bouquet .boton-ver,
+.tarjeta-ocasion .boton-ver {
   flex: 1;
   padding: 0.8rem;
-  border: 2px solid #ba005c !important;
+  border: 2px solid #ee5eb4;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   text-align: center;
-  background: transparent !important;
-  color: #ba005c !important;
+  background: transparent;
+  color: #ee5eb4;
   font-size: 1rem;
 }
 
-.boton-ver:hover {
-  background: #ffd9e1 !important;
-  color: #ba005c !important;
-  border-color: #ba005c !important;
+.tarjeta-bouquet .boton-ver:hover,
+.tarjeta-ocasion .boton-ver:hover {
+  background: #ff79b0;
+  color: #ee5eb4;
+  border-color: #ee5eb4;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(186, 0, 92, 0.2);
+  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.2);
 }
 
-.boton,
-.boton-ocasion {
+.tarjeta-bouquet .boton,
+.tarjeta-ocasion .boton-ocasion {
   flex: 1;
   padding: 0.8rem;
-  border: none !important;
+  border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   text-align: center;
-  background: #ba005c !important;
-  color: white !important;
+  background: #ee5eb4;
+  color: white;
   font-size: 1rem;
 }
 
-.boton:hover,
-.boton-ocasion:hover {
-  background: #74565d !important;
+.tarjeta-bouquet .boton:hover,
+.tarjeta-ocasion .boton-ocasion:hover {
+  background: #74565d;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(186, 0, 92, 0.3);
+  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.3);
 }
 
 /* Control de cantidad */
@@ -224,43 +219,43 @@
 }
 
 .btn-cantidad {
-  background: #ba005c !important;
-  color: white !important;
-  border: none !important;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 50% !important;
-  font-size: 1.2rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  transition: var(--transition) !important;
-  font-weight: bold !important;
-  box-shadow: 0 2px 8px rgba(186, 0, 92, 0.2) !important;
+  background: #ee5eb4;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(238, 94, 180, 0.2);
 }
 
 .btn-cantidad:hover {
-  background: #74565d !important;
-  transform: scale(1.1) !important;
-  box-shadow: 0 4px 12px rgba(186, 0, 92, 0.3) !important;
+  background: #74565d;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.3);
 }
 
 .btn-cantidad:disabled {
-  background: #ccc !important;
-  cursor: not-allowed !important;
-  transform: none !important;
-  box-shadow: none !important;
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .control-cantidad input[type="number"] {
   width: 60px;
   height: 32px;
   text-align: center;
-  border: 2px solid var(--color-primary);
+  border: 2px solid #ee5eb4;
   border-radius: 5px;
   font-size: 1rem;
-  color: var(--color-text);
+  color: #333;
   background-color: white;
   padding: 0 5px;
   -moz-appearance: textfield;
@@ -269,29 +264,29 @@
 
 .control-cantidad input[type="number"]:focus {
   outline: none;
-  border-color: var(--color-primary-dark);
-  box-shadow: 0 0 0 2px rgba(255, 64, 129, 0.2);
+  border-color: #da19addd;
+  box-shadow: 0 0 0 2px rgba(238, 94, 180, 0.2);
 }
 
 /* Botón agregar al carrito en modal */
 .boton-agregar {
-  background: var(--color-primary) !important;
-  color: white !important;
-  border: none !important;
+  background: #ee5eb4;
+  color: white;
+  border: none;
   padding: 1rem 2rem;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   margin-top: auto;
   font-size: 1.1rem;
   width: 100%;
 }
 
 .boton-agregar:hover {
-  background: var(--color-primary-dark) !important;
+  background: #da19addd;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.3);
 }
 
 /* Responsive */
@@ -745,7 +740,7 @@
 }
 
 .lupa-icon:hover {
-  background: var(--color-primary);
+  background: #ee5eb4;
   color: white;
   transform: scale(1.1);
 }
@@ -908,7 +903,7 @@
 }
 
 .control-cantidad button {
-  background: var(--color-primary);
+  background: #ee5eb4;
   color: white;
   border: none;
   width: 30px;
@@ -919,12 +914,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-weight: bold;
 }
 
 .control-cantidad button:hover {
-  background: var(--color-secondary);
+  background: #74565d;
   transform: scale(1.1);
 }
 
@@ -938,10 +933,10 @@
   width: 60px;
   height: 30px;
   text-align: center;
-  border: 2px solid var(--color-primary);
+  border: 2px solid #ee5eb4;
   border-radius: 5px;
   font-size: 1rem;
-  color: var(--color-text);
+  color: #333;
   background-color: white;
   padding: 0 5px;
   -moz-appearance: textfield;
@@ -957,8 +952,8 @@
 /* Asegurar que el valor sea visible en todos los navegadores */
 .control-cantidad input[type="number"]:focus {
   outline: none;
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 0 2px rgba(255, 64, 129, 0.2);
+  border-color: #da19addd;
+  box-shadow: 0 0 0 2px rgba(238, 94, 180, 0.2);
 }
 
 /* Ajustes para el responsive del control de cantidad */
@@ -1014,20 +1009,20 @@
   height: 40px;
   border: none;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: #ee5eb4;
   color: white;
   font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   z-index: 10;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .carrusel-control:hover {
-  background: var(--color-secondary);
+  background: #74565d;
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -1077,21 +1072,21 @@
 /* Tarjetas de ocasiones */
 .tarjeta-ocasion {
   background: white;
-  border-radius: var(--border-radius);
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
-  border: 2px solid rgba(255, 64, 129, 0.15);
+  border: 2px solid rgba(238, 94, 180, 0.15);
   position: relative;
 }
 
 .tarjeta-ocasion:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(255, 64, 129, 0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: rgba(238, 94, 180, 0.3);
 }
 
 .tarjeta-ocasion img {
@@ -1107,14 +1102,14 @@
 
 .tarjeta-ocasion h3 {
   padding: 1rem 1.5rem 0.5rem;
-  color: var(--color-text);
+  color: #333;
   font-size: 1.2rem;
   font-weight: 600;
 }
 
 .tarjeta-ocasion p {
   padding: 0 1.5rem;
-  color: var(--color-text-light);
+  color: #666;
   font-size: 0.9rem;
   flex-grow: 1;
   line-height: 1.5;
@@ -1122,7 +1117,7 @@
 
 .tarjeta-ocasion .precio {
   padding: 1rem 1.5rem;
-  color: var(--color-primary);
+  color: #ee5eb4;
   font-size: 1.3rem;
   font-weight: 600;
 }
@@ -1136,38 +1131,38 @@
 
 .tarjeta-ocasion .boton-ver {
   background: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
+  color: #ee5eb4;
+  border: 2px solid #ee5eb4;
   padding: 0.8rem;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   text-align: center;
   flex: 1;
 }
 
 .tarjeta-ocasion .boton-ver:hover {
-  background: rgba(255, 64, 129, 0.1);
+  background: rgba(238, 94, 180, 0.1);
 }
 
 .tarjeta-ocasion .boton-ocasion {
-  background: var(--color-primary);
+  background: #ee5eb4;
   color: white;
   border: none;
   padding: 0.8rem;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   text-align: center;
   flex: 1;
 }
 
 .tarjeta-ocasion .boton-ocasion:hover {
-  background: var(--color-secondary);
+  background: #74565d;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.2);
+  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.2);
 }
 
 /* Efecto de brillo en hover */
@@ -1204,3 +1199,4 @@
     height: 200px;
   }
 }
+
