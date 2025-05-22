@@ -65,22 +65,44 @@ export class LoginComponent implements OnInit {
   
 
   ngOnInit(): void {
+    // if (isPlatformBrowser(this.platformId)) {
+    //   window['handleCredentialResponse'] = (resp: any) => {
+    //     this.ngZone.run(() => this.onGoogleSignIn(resp.credential));
+    //   };
+
+    //   setTimeout(() => {
+    //     google.accounts.id.initialize({
+    //       client_id: this.googleClientId,
+    //       callback: (response: any) => window['handleCredentialResponse'](response)
+    //     });
+    //     google.accounts.id.renderButton(
+    //       document.getElementById('googleButton'),
+    //       { theme: 'outline', size: 'large' }
+    //     );
+    //   }, 0);
+    // }
+  }
+
+  ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       window['handleCredentialResponse'] = (resp: any) => {
         this.ngZone.run(() => this.onGoogleSignIn(resp.credential));
       };
 
-      setTimeout(() => {
-        google.accounts.id.initialize({
-          client_id: this.googleClientId,
-          callback: (response: any) => window['handleCredentialResponse'](response)
-        });
-        google.accounts.id.renderButton(
-          document.getElementById('googleButton'),
-          { theme: 'outline', size: 'large' }
-        );
-      }, 0);
+      google.accounts.id.initialize({
+        client_id: this.googleClientId,
+        callback: (response: any) => window['handleCredentialResponse'](response)
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('googleButton'),
+        { theme: 'outline', size: 'large' }
+      );
     }
+  }
+
+  handleCredentialResponse(response: any) {
+    console.log('ID Token recibido:', response.credential);
+    this.onGoogleSignIn(response.credential);
   }
 
   onLoginSubmit(): void {

@@ -21,13 +21,19 @@ export class PedidosService {
   constructor(private http: HttpClient) { }
 
   getPedidosUsuario(): Observable<Pedido[]> {
-    return this.http.get<{success: boolean, data: Pedido[]}>(`${this.apiUrl}/pedidos/get-pedidos-usuario.php`).pipe(
+    return this.http.get<Pedido[]>(`${this.apiUrl}/pedidos/get-pedidos-usuario.php`, { withCredentials: true }).pipe(
       map(response => {
-        if (response.success) {
-          return response.data;
+        // Si la respuesta es directamente un array de pedidos, sólo retorna response
+        // Si tu backend devuelve otro formato, ajusta esta lógica
+        if (Array.isArray(response)) {
+          return response;
+        }
+        // Si el backend devuelve { success: boolean, data: Pedido[] }
+        if ((response as any).success) {
+          return (response as any).data;
         }
         throw new Error('Error al obtener los pedidos');
       })
     );
   }
-} 
+}
