@@ -4,7 +4,7 @@ require_once __DIR__ . '/../session_config.php';
 // Configurar CORS
 header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Methods: GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json");
 
@@ -14,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Iniciar sesión
-session_name('MRBSESSID');
-session_start();
+// Iniciar sesión -- no se debe volver a llamar cuando ya se esta llamando en sesion_config
+// session_name('MRBSESSID');
+// session_start();
 
 // Verificar si la sesión está activa y válida
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['last_activity'])) {
@@ -44,4 +44,5 @@ echo json_encode([
     'status' => 'active',
     'user_id' => $_SESSION['id_usuario'],
     'last_activity' => $_SESSION['last_activity']
-]); 
+]);
+exit;

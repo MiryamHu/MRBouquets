@@ -3,6 +3,20 @@
 //  CONFIGURACIÓN GLOBAL DE SESIÓN
 // ======================================================================
 
+//Cors
+header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Manejar preflight OPTIONS
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+// Configuración sesión
+session_name('MRBSESSID');
+
 // Asegurarnos de que PHP pueda enviar cookies
 ini_set('session.use_cookies',      '1');
 ini_set('session.use_only_cookies', '1');
@@ -24,8 +38,10 @@ session_set_cookie_params([
     'samesite' => $sameSite
 ]);
 
+session_start();
+
 // Nombre coherente en TODOS los scripts
-session_name('MRBSESSID');
+// session_name('MRBSESSID');
 
 // ======================================================================
 //  FUNCIÓN AUXILIAR

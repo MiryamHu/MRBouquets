@@ -6,34 +6,23 @@
 // ─────────────────────────────────────
 require_once __DIR__ . '/../session_config.php';
 require_once __DIR__ . '/../conexion.php';
-
-// Si usas un nombre de sesión personalizado, mantenlo igual
-session_name('MRBSESSID');
-start_clean_session();        // o ⇒ if (session_status() === PHP_SESSION_NONE) session_start();
-
-// ─────────────────────────────────────
-// CORS
-// ─────────────────────────────────────
-header("Access-Control-Allow-Origin: http://localhost:4200");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Credentials: true");
-header("Content-Type: application/json");
-
-// Pre-flight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
     exit;
 }
 
-// ─────────────────────────────────────
-// AUTENTICACIÓN
-// ─────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['error' => 'Método no permitido']);
+    exit;
+}
+
 if (!isset($_SESSION['id_usuario'])) {
     http_response_code(401);
     echo json_encode(['error' => 'No autenticado']);
     exit;
 }
+
 
 $id_usuario = $_SESSION['id_usuario'];
 

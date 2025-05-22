@@ -69,28 +69,36 @@ if ($user = $res->fetch_assoc()) {
 } else {
     // Usuario nuevo: insertamos con todos los campos
     $insert = $conn->prepare("
-      INSERT INTO usuarios
-        (nombre_usuario, nombre, apellido, correo, contrasena)
-      VALUES (?,?,?,?,?)
-    ");
-    $insert->bind_param(
-      "sssss",
-      $nombre_usuario,
-      $name,
-      $apellido,
-      $email,
-      $contrasena
-    );
-    $insert->execute();
+  INSERT INTO usuarios
+    (nombre_usuario, nombre, apellido, correo, contrasena)
+  VALUES (?,?,?,?,?)
+");
+$insert->bind_param(
+  "sssss",
+  $nombre_usuario,
+  $name,
+  $apellido,
+  $email,
+  $contrasena
+);
 
-    // Construimos el array a devolver
-    $user = [
-      'id'             => $insert->insert_id,
-      'nombre_usuario' => $nombre_usuario,
-      'nombre'         => $name,
-      'apellido'       => $apellido,
-      'correo'         => $email
-    ];
+$success = $insert->execute();
+if (!$success) {
+    $error_msg = $insert->error;
+    error_log("Error al insertar usuario Google: " . $error_msg);
+
+    http_response_code(500);
+    echo json_encode(['error' => "Error al insertar usuario: $error_msg"]);
+    exit;
+}
+
+$user = [
+  'id'             => $insert->insert_id,
+  'nombre_usuario' => $nombre_usuario,
+  'nombre'         => $name,
+  'apellido'       => $apellido,
+  'correo'         => $email
+];
 
     $insert->close();
 }

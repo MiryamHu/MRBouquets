@@ -20,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-session_name('MRBSESSID');
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// session_name('MRBSESSID');
+// if (session_status() === PHP_SESSION_NONE) {
+//     session_start();
+// }
 
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     http_response_code(401);
@@ -52,7 +52,7 @@ if (empty($data['total']) || empty($data['items']) || empty($data['id_direccion'
 }
 
 $id_usuario   = $_SESSION['id_usuario'];
-$precio_total = $data['total'];
+$precio_total = floatval($data['total']);
 $items        = $data['items'];
 $id_direccion = (int) $data['id_direccion'];
 
@@ -73,6 +73,14 @@ try {
         INSERT INTO pedidos (id_usuario, id_direccion, precio_total, estado)
         VALUES (?, ?, ?, 'confirmado')
     ");
+
+    if ($stmt === false) {
+    error_log("Error en prepare(): " . $conn->error);
+    http_response_code(500);
+    echo json_encode(['error' => 'Error interno del servidor']);
+    exit;
+}
+
     $stmt->bind_param("iid", $id_usuario, $id_direccion, $precio_total);
     $stmt->execute();
 

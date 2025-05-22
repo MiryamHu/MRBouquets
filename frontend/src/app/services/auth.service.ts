@@ -79,12 +79,13 @@ export class AuthService {
   }
 
   private getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-  }
+  return {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    }),
+    withCredentials: true
+  };
+}
 
   private startSessionCheck(): void {
     if (this.sessionCheckTimer) {
