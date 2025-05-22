@@ -51,19 +51,7 @@ $accent-palette: (
   )
 );
 
-// Crea el tema personalizado
-$theme: mat.define-light-theme((
-  color: (
-    primary: mat.define-palette($primary-palette, 500),
-    accent: mat.define-palette($accent-palette, 500),
-    warn: mat.define-palette(mat.$red-palette),
-  ),
-  typography: mat.define-typography-config(),
-  density: 0,
-));
 
-// Incluye el tema
-@include mat.all-component-themes($theme);
 
 // Variables CSS personalizadas
 :root {
