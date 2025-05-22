@@ -21,9 +21,7 @@ export class PedidosService {
   constructor(private http: HttpClient) { }
 
   getPedidosUsuario(): Observable<Pedido[]> {
-    return this.http.get<{success: boolean, data: Pedido[]}>(`${this.apiUrl}/pedidos/get-pedidos-usuario.php`, {
-      withCredentials: true
-    }).pipe(
+    return this.http.get<{success: boolean, data: Pedido[]}>(`${this.apiUrl}/pedidos/get-pedidos-usuario.php`).pipe(
       map(response => {
         if (response.success) {
           return response.data;

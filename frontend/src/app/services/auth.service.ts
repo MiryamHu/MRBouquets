@@ -17,10 +17,6 @@ export interface LoginData {
   correo: string;
   contrasena: string;
 }
-export interface GoogleLoginResponse {
-  mensaje: string;
-  usuario: User;
-}
 
 export interface RegisterData {
   nombre_usuario: string;
@@ -28,7 +24,12 @@ export interface RegisterData {
   apellido: string;
   correo: string;
   contrasena: string;
-  telefono?: string;
+}
+
+export interface GoogleLoginResponse {
+  mensaje: string;
+  usuario: User;
+  session_id: string;
 }
 
 @Injectable({
@@ -50,7 +51,6 @@ export class AuthService {
       this.isBrowser() ? this.getStoredUser() : null
     );
     
-    // Exponer el BehaviorSubject como un Observable público
     this.user$ = this.userSubject.asObservable();
     
     if (this.isBrowser() && this.isLoggedIn()) {
@@ -81,9 +81,8 @@ export class AuthService {
   private getHttpOptions() {
     return {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      withCredentials: true
+        'Content-Type': 'application/json'
+      })
     };
   }
 
@@ -120,7 +119,6 @@ export class AuthService {
     if (this.sessionCheckTimer) {
       clearInterval(this.sessionCheckTimer);
     }
-    // Emitir evento de sesión expirada
     window.dispatchEvent(new CustomEvent('session-expired'));
   }
 
@@ -133,7 +131,6 @@ export class AuthService {
       tap((response: any) => {
         if (response.usuario) {
           this.setStoredUser(response.usuario);
-          // Verificar inmediatamente la sesión después del login
           this.checkSession().subscribe({
             next: () => {
               console.log('Sesión verificada después del login');
@@ -181,7 +178,7 @@ export class AuthService {
     return this.http.post<GoogleLoginResponse>(
       `${this.apiUrl}/auth/google-login.php`,
       { id_token },
-      { withCredentials: true }
+      this.getHttpOptions()
     ).pipe(
       tap(res => {
         if (res.usuario) {

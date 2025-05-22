@@ -25,16 +25,16 @@ export class DireccionesService {
 
   /** Todas las direcciones del usuario logueado */
   getDirecciones(): Observable<Direccion[]> {
-    return this.http.get<Direccion[]>(`${this.apiUrl}/listar.php`, { withCredentials: true });
+    return this.http.get<Direccion[]>(`${this.apiUrl}/listar.php`);
   }
 
   /** Crear nueva dirección  */
   addDireccion(dir: Omit<Direccion, 'id' | 'usuario_id'>): Observable<Direccion> {
-    return this.http.post<Direccion>(`${this.apiUrl}/crear.php`, dir, { withCredentials: true });
+    return this.http.post<Direccion>(`${this.apiUrl}/crear.php`, dir);
   }
 
   /** Eliminar */
   deleteDireccion(id: number) {
-    return this.http.delete(`${this.apiUrl}/eliminar.php?id=${id}`, { withCredentials: true });
+    return this.http.delete(`${this.apiUrl}/eliminar.php?id=${id}`);
   }
 }

@@ -12,7 +12,7 @@ ini_set('session.cookie_httponly',  '1');
 // Configuración específica para desarrollo local
 $isSecure = false;   // Cambia a true en producción (HTTPS)
 $sameSite = 'Lax';   // 'Strict' en producción si lo prefieres
-$domain   = 'localhost';
+$domain   = '';      // Dejamos vacío para que funcione tanto en localhost como en 127.0.0.1
 
 // Cookie de sesión
 session_set_cookie_params([
