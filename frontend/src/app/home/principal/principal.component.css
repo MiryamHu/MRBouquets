@@ -158,6 +158,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .tarjeta-bouquet .botones-tarjeta,
 .tarjeta-ocasion .botones-tarjeta {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
   padding: 1rem 1.5rem;
   margin-top: auto;
@@ -165,31 +166,29 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .tarjeta-bouquet .boton-ver,
 .tarjeta-ocasion .boton-ver {
-  flex: 1;
+  width: 100%;
   padding: 0.8rem;
-  border: 2px solid #ee5eb4;
+  border: 2px solid #ff4081;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
   background: transparent;
-  color: #ee5eb4;
+  color: #ff4081;
   font-size: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .tarjeta-bouquet .boton-ver:hover,
 .tarjeta-ocasion .boton-ver:hover {
-  background: #ff79b0;
-  color: #ee5eb4;
-  border-color: #ee5eb4;
+  background: rgba(255, 64, 129, 0.1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.2);
 }
 
 .tarjeta-bouquet .boton,
 .tarjeta-ocasion .boton-ocasion {
-  flex: 1;
+  width: 100%;
   padding: 0.8rem;
   border: none;
   border-radius: 8px;
@@ -197,16 +196,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
-  background: #ee5eb4;
+  background: #ff4081;
   color: white;
   font-size: 1rem;
 }
 
 .tarjeta-bouquet .boton:hover,
 .tarjeta-ocasion .boton-ocasion:hover {
-  background: #74565d;
+  background: #ff6b9c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.2);
 }
 
 /* Control de cantidad */
@@ -218,8 +217,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   margin: 1rem 1.5rem;
 }
 
-.btn-cantidad {
-  background: #ee5eb4;
+.control-cantidad button {
+  background: #ff4081;
   color: white;
   border: none;
   width: 32px;
@@ -232,27 +231,24 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: bold;
-  box-shadow: 0 2px 8px rgba(238, 94, 180, 0.2);
 }
 
-.btn-cantidad:hover {
-  background: #74565d;
+.control-cantidad button:hover {
+  background: #ff6b9c;
   transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.3);
 }
 
-.btn-cantidad:disabled {
+.control-cantidad button:disabled {
   background: #ccc;
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
 }
 
 .control-cantidad input[type="number"] {
   width: 60px;
   height: 32px;
   text-align: center;
-  border: 2px solid #ee5eb4;
+  border: 2px solid #ff4081;
   border-radius: 5px;
   font-size: 1rem;
   color: #333;
@@ -264,8 +260,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .control-cantidad input[type="number"]:focus {
   outline: none;
-  border-color: #da19addd;
-  box-shadow: 0 0 0 2px rgba(238, 94, 180, 0.2);
+  border-color: #ff6b9c;
+  box-shadow: 0 0 0 2px rgba(255, 64, 129, 0.2);
+}
+
+/* Ajustes para el responsive del control de cantidad */
+@media (max-width: 768px) {
+  .control-cantidad {
+    margin: 0.75rem 1rem;
+  }
+  
+  .control-cantidad button {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+  
+  .control-cantidad input[type="number"] {
+    width: 50px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
 }
 
 /* Botón agregar al carrito en modal */
@@ -651,9 +666,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .modal-contenido-detalles {
   background: white;
-  border-radius: 15px;
-  max-width: 1000px;
-  width: 90%;
+  border-radius: 20px;
+  max-width: 1200px;
+  width: 95%;
   max-height: 90vh;
   display: flex;
   position: relative;
@@ -678,40 +693,40 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   max-width: 50%;
   position: relative;
   overflow: hidden;
-  cursor: zoom-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
 }
 
 .modal-imagen img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
   transition: transform 0.3s ease;
-}
-
-.modal-imagen:hover img {
-  transform: scale(1.02);
 }
 
 .modal-info {
   flex: 1;
-  padding: 2rem;
+  padding: 2.5rem;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   max-height: 90vh;
+  background: white;
 }
 
 .modal-info h2 {
   color: #333;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
   font-weight: 600;
+  line-height: 1.2;
 }
 
 .modal-info .descripcion {
   color: #666;
-  line-height: 1.6;
+  line-height: 1.8;
   margin-bottom: 2rem;
   font-size: 1.1rem;
 }
@@ -719,110 +734,95 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .detalles-adicionales {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 1.2rem;
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: #f8f8f8;
+  border-radius: 12px;
 }
 
 .detalle {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.8rem 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detalle:last-child {
+  border-bottom: none;
 }
 
 .etiqueta {
   color: #666;
   font-weight: 600;
+  font-size: 1.1rem;
 }
 
 .valor {
   color: #333;
+  font-size: 1.1rem;
 }
 
 .valor.precio {
   color: #ff4081;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 700;
 }
 
 .valor.disponible {
   color: #4CAF50;
   font-weight: 600;
+  font-size: 1.1rem;
 }
 
-/* Mejora del contraste en los fondos de las secciones */
-.seccion-destacados {
-    background: linear-gradient(to bottom, #fff5f8, #ffffff);
-    position: relative;
-    overflow: hidden;
-    padding: 4rem 2rem;
+/* Botón cerrar modal */
+.cerrar-modal {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: white;
+  border: none;
+  font-size: 1.8rem;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1002;
 }
 
-.seccion-ocasiones {
-    background: linear-gradient(to bottom, #ffffff, #fff5f8);
-    position: relative;
-    padding: 4rem 2rem;
+.cerrar-modal:hover {
+  background: #ff4081;
+  color: white;
+  transform: rotate(90deg);
 }
 
-/* Mejora del efecto hover en las tarjetas */
-.tarjeta-bouquet::after,
-.tarjeta-ocasion::after {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    right: -1px;
-    bottom: -1px;
-    border-radius: 15px;
-    border: 2px solid rgba(255, 64, 129, 0);
-    transition: all 0.3s ease;
-    pointer-events: none;
-}
-
-.tarjeta-bouquet:hover::after,
-.tarjeta-ocasion:hover::after {
-    border-color: rgba(255, 64, 129, 0.3);
-    box-shadow: 0 0 15px rgba(255, 64, 129, 0.1);
-}
-
-/* Mejora adicional del contraste */
-.tarjeta-bouquet,
-.tarjeta-ocasion {
-    position: relative;
-    z-index: 1;
-}
-
-.tarjeta-bouquet::before,
-.tarjeta-ocasion::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: white;
-    z-index: -1;
-    border-radius: 15px;
-    box-shadow: 0 0 0 1px rgba(255, 64, 129, 0.15);
-}
-
+/* Control de cantidad en modal */
 .control-cantidad {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin: 1rem 1.5rem;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f8f8f8;
+  border-radius: 12px;
 }
 
 .control-cantidad button {
-  background: #ee5eb4;
+  background: #ff4081;
   color: white;
   border: none;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -832,7 +832,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .control-cantidad button:hover {
-  background: #74565d;
+  background: #ff6b9c;
   transform: scale(1.1);
 }
 
@@ -843,12 +843,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .control-cantidad input[type="number"] {
-  width: 60px;
-  height: 30px;
+  width: 70px;
+  height: 35px;
   text-align: center;
-  border: 2px solid #ee5eb4;
-  border-radius: 5px;
-  font-size: 1rem;
+  border: 2px solid #ff4081;
+  border-radius: 8px;
+  font-size: 1.1rem;
   color: #333;
   background-color: white;
   padding: 0 5px;
@@ -856,471 +856,83 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   appearance: textfield;
 }
 
-.control-cantidad input[type="number"]::-webkit-inner-spin-button,
-.control-cantidad input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Asegurar que el valor sea visible en todos los navegadores */
 .control-cantidad input[type="number"]:focus {
   outline: none;
-  border-color: #da19addd;
-  box-shadow: 0 0 0 2px rgba(238, 94, 180, 0.2);
+  border-color: #ff6b9c;
+  box-shadow: 0 0 0 2px rgba(255, 64, 129, 0.2);
 }
 
-/* Ajustes para el responsive del control de cantidad */
-@media (max-width: 768px) {
-  .control-cantidad {
-    margin: 0.75rem 1rem;
-  }
-  
-  .control-cantidad button {
-    width: 25px;
-    height: 25px;
-    font-size: 1rem;
-  }
-  
-  .control-cantidad input[type="number"] {
-    width: 50px;
-    height: 25px;
-    font-size: 0.9rem;
-  }
-}
-
-/* Ajuste de los botones de acción para acomodar el control de cantidad */
-.tarjeta-bouquet .botones-tarjeta,
-.tarjeta-ocasion .botones-tarjeta {
-  flex-direction: column;
-  padding: 0 1.5rem 1.5rem;
-}
-
-.tarjeta-bouquet .boton,
-.tarjeta-ocasion .boton-ocasion {
-  width: 100%;
-  margin: 0;
-}
-
-.tarjeta-bouquet .boton-ver,
-.tarjeta-ocasion .boton-ver {
-  width: 100%;
-}
-
-/* Carrusel */
-.carrusel-container {
-  position: relative;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 40px;
-}
-
-.carrusel-control {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 50%;
-  background: #ee5eb4;
+/* Botón agregar al carrito en modal */
+.boton-agregar {
+  background: #ff4081;
   color: white;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  z-index: 10;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.carrusel-control:hover {
-  background: #74565d;
-  transform: translateY(-50%) scale(1.1);
-}
-
-.carrusel-control.prev { left: 0; }
-.carrusel-control.next { right: 0; }
-
-.carrusel-control i {
-  line-height: 1;
-}
-
-/* Ajustes para el grid dentro del carrusel */
-.grid-destacados,
-.grid-ocasiones {
-  transition: transform 0.3s ease;
-}
-
-/* Responsive del carrusel */
-@media (max-width: 768px) {
-  .carrusel-container {
-    padding: 0 30px;
-  }
-  
-  .carrusel-control {
-    width: 30px;
-    height: 30px;
-    font-size: 1.2rem;
-  }
-}
-
-/* Animación suave para el cambio de productos */
-.tarjeta-bouquet,
-.tarjeta-ocasion {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Tarjetas de ocasiones */
-.tarjeta-ocasion {
-  background: white;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  border: 2px solid rgba(238, 94, 180, 0.15);
-  position: relative;
-}
-
-.tarjeta-ocasion:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border-color: rgba(238, 94, 180, 0.3);
-}
-
-.tarjeta-ocasion img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.tarjeta-ocasion:hover img {
-  transform: scale(1.05);
-}
-
-.tarjeta-ocasion h3 {
-  padding: 1rem 1.5rem 0.5rem;
-  color: #333;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.tarjeta-ocasion p {
-  padding: 0 1.5rem;
-  color: #666;
-  font-size: 0.9rem;
-  flex-grow: 1;
-  line-height: 1.5;
-}
-
-.tarjeta-ocasion .precio {
-  padding: 1rem 1.5rem;
-  color: #ee5eb4;
-  font-size: 1.3rem;
-  font-weight: 600;
-}
-
-.tarjeta-ocasion .botones-tarjeta {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem 1.5rem;
   margin-top: auto;
+  font-size: 1.2rem;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.tarjeta-ocasion .boton-ver {
-  background: transparent;
-  color: #ee5eb4;
-  border: 2px solid #ee5eb4;
-  padding: 0.8rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  flex: 1;
-}
-
-.tarjeta-ocasion .boton-ver:hover {
-  background: rgba(238, 94, 180, 0.1);
-}
-
-.tarjeta-ocasion .boton-ocasion {
-  background: #ee5eb4;
-  color: white;
-  border: none;
-  padding: 0.8rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  flex: 1;
-}
-
-.tarjeta-ocasion .boton-ocasion:hover {
-  background: #74565d;
+.boton-agregar:hover {
+  background: #ff6b9c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.2);
+  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3);
 }
 
-/* Efecto de brillo en hover */
-.tarjeta-ocasion::after {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  border-radius: 15px;
-  border: 2px solid rgba(255, 64, 129, 0);
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
-.tarjeta-ocasion:hover::after {
-  border-color: rgba(255, 64, 129, 0.3);
-  box-shadow: 0 0 15px rgba(255, 64, 129, 0.1);
-}
-
-/* Responsive para tarjetas de ocasiones */
-@media (max-width: 768px) {
-  .tarjeta-ocasion .botones-tarjeta {
-    flex-direction: column;
-  }
-  
-  .tarjeta-ocasion .boton-ver,
-  .tarjeta-ocasion .boton-ocasion {
-    width: 100%;
-  }
-  
-  .tarjeta-ocasion img {
-    height: 200px;
-  }
-}
-
-/* Sección de Novedades */
-.seccion-novedades {
-  padding: 4rem 2rem;
-  background: linear-gradient(to bottom, #fff5f8, #ffffff);
-  position: relative;
-  overflow: hidden;
-}
-
-.bloque-novedad {
-  background: white;
-  border-radius: 15px;
-  padding: 2rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  border: 2px solid rgba(238, 94, 180, 0.15);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.bloque-novedad:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border-color: rgba(238, 94, 180, 0.3);
-}
-
-.bloque-novedad h4 {
-  color: #ee5eb4;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.bloque-novedad p {
-  color: #666;
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  flex-grow: 1;
-}
-
-.bloque-novedad .boton {
-  background: #ee5eb4;
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  align-self: flex-start;
-}
-
-.bloque-novedad .boton:hover {
-  background: #74565d;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(238, 94, 180, 0.3);
-}
-
-.grid-novedades {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
+/* Responsive del modal */
 @media (max-width: 992px) {
-  .grid-novedades {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+  .modal-contenido-detalles {
+    flex-direction: column;
+    max-height: 95vh;
+  }
+
+  .modal-imagen {
+    max-width: 100%;
+    height: 300px;
+  }
+
+  .modal-info {
+    padding: 1.5rem;
+  }
+
+  .modal-info h2 {
+    font-size: 1.8rem;
   }
 }
 
 @media (max-width: 576px) {
-  .seccion-novedades {
-    padding: 3rem 1rem;
+  .modal-detalles {
+    padding: 1rem;
   }
 
-  .grid-novedades {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .modal-contenido-detalles {
+    width: 100%;
   }
 
-  .bloque-novedad {
-    padding: 1.5rem;
-  }
-
-  .bloque-novedad h4 {
-    font-size: 1.2rem;
-  }
-}
-
-/* Estilos para el zoom */
-.zoom-lens {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  border: 2px solid #ff4081;
-  background-color: rgba(255, 64, 129, 0.1);
-  cursor: none;
-  display: none;
-  pointer-events: none;
-  z-index: 1000;
-  border-radius: 50%;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3);
-}
-
-.zoom-container {
-  position: fixed;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  width: 400px;
-  height: 400px;
-  border: 2px solid #ff4081;
-  border-radius: 8px;
-  overflow: hidden;
-  display: none;
-  z-index: 1001;
-  background: white;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.zoom-image {
-  width: 100%;
-  height: 100%;
-  background-repeat: no-repeat;
-  pointer-events: none;
-  transform-origin: 0 0;
-}
-
-/* Estilos para la lupa */
-.lupa-icon {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 2;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: none;
-  padding: 0;
-}
-
-.lupa-icon:hover {
-  background: #ee5eb4;
-  color: white;
-  transform: scale(1.1);
-}
-
-.lupa-icon.active {
-  background: #ee5eb4;
-  color: white;
-}
-
-.lupa-icon i {
-  font-size: 1.2rem;
-}
-
-/* Botón cerrar modal */
-.cerrar-modal {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: white;
-  border: none;
-  font-size: 2rem;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-}
-
-.cerrar-modal:hover {
-  background: #ff4081;
-  color: white;
-  transform: rotate(90deg);
-}
-
-/* Ajustes para dispositivos móviles */
-@media (max-width: 768px) {
-  .zoom-container {
-    display: none !important;
-  }
-  
-  .zoom-lens {
-    display: none !important;
-  }
-  
   .modal-imagen {
-    cursor: default;
+    height: 250px;
+  }
+
+  .modal-info {
+    padding: 1rem;
+  }
+
+  .modal-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .detalles-adicionales {
+    padding: 1rem;
+  }
+
+  .control-cantidad {
+    padding: 0.8rem;
   }
 }
 

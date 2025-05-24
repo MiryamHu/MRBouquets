@@ -202,8 +202,6 @@ export class PrincipalComponent implements OnInit {
     }
     // Cerrar el modal de detalles si está abierto
     this.ramoSeleccionado = null;
-    // Redirigir al carrito
-    // this.router.navigate(['/carrito']);
   }
 
   goLogin(): void {
