@@ -15,9 +15,9 @@
 }
 
 /* En modo completo (sin minimal) sí dejamos espacio para el header */
-:host(:not([minimal])) .cart-container {
+/* :host(:not([minimal])) .cart-container {
   margin-top: 130px !important;
-}
+} */
 
 .cart-container {
   width: 100%;

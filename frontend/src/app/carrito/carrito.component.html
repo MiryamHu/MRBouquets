@@ -12,7 +12,7 @@
     <!-- Items -->
     <div class="cart-items">
       <div class="cart-item" *ngFor="let item of items">
-        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img" [alt]="item.nombre" class="item-img">
+        <img [src]="'http://localhost/MRBouquets/frontend/public/' + item.img" [alt]="item.nombre" class="item-img">
         <div class="item-details">
           <h3>{{ item.nombre }}</h3>
           <p>{{ item.descripcion }}</p>
@@ -73,7 +73,7 @@
     <div class="cart-item" *ngFor="let item of items">
       <img
         class="item-img"
-        [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img"
+        [src]="'http://localhost/MRBouquets/frontend/public/' + item.img"
         [alt]="item.nombre"
       />
 
