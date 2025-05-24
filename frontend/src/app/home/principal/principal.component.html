@@ -49,7 +49,8 @@
 
       <div class="grid-destacados">
         <article class="tarjeta-bouquet" *ngFor="let producto of productosRegularesVisibles">
-          <img [src]="producto.img" [alt]="producto.nombre" />
+          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + producto.img" 
+               [alt]="producto.nombre">
           <h3>{{ producto.nombre }}</h3>
           <p>{{ producto.descripcion }}</p>
           <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
@@ -100,7 +101,7 @@
 
       <div class="grid-ocasiones">
         <article class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasionesVisibles">
-          <img [src]="ocasion.img" 
+          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
                [alt]="ocasion.nombre">
           <h3>{{ ocasion.nombre }}</h3>
           <p class="descripcion">{{ ocasion.descripcion }}</p>
@@ -225,9 +226,8 @@
     <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
     
     <div class="modal-imagen">
-      <img [src]="'http://localhost/MRBouquets/frontend/public/' + ramoSeleccionado.img" 
+      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramoSeleccionado.img" 
            [alt]="ramoSeleccionado.nombre">
-
       <button class="lupa-icon" [class.active]="isZoomActive" (click)="toggleZoom()">
         <i class="bi" [class.bi-zoom-in]="!isZoomActive" [class.bi-zoom-out]="isZoomActive"></i>
       </button>
