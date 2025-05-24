@@ -1,0 +1,14 @@
+app-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* altura fija del menú */
+  z-index: 1000; /* para que esté encima */
+}
+
+.content-container {
+  padding-top: 70px; /* mismo alto que el menú */
+  box-sizing: border-box;
+}
+

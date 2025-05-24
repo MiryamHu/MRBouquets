@@ -49,8 +49,7 @@
 
       <div class="grid-destacados">
         <article class="tarjeta-bouquet" *ngFor="let producto of productosRegularesVisibles">
-          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + producto.img" 
-               [alt]="producto.nombre">
+          <img [src]="producto.img" [alt]="producto.nombre" />
           <h3>{{ producto.nombre }}</h3>
           <p>{{ producto.descripcion }}</p>
           <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
@@ -101,7 +100,7 @@
 
       <div class="grid-ocasiones">
         <article class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasionesVisibles">
-          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
+          <img [src]="ocasion.img" 
                [alt]="ocasion.nombre">
           <h3>{{ ocasion.nombre }}</h3>
           <p class="descripcion">{{ ocasion.descripcion }}</p>
@@ -224,8 +223,8 @@
 <div class="modal-detalles" *ngIf="ramoSeleccionado" (click)="cerrarModal($event)">
   <div class="modal-contenido-detalles" (click)="$event.stopPropagation()">
     <div class="modal-imagen">
-      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramoSeleccionado.img" 
-           [alt]="ramoSeleccionado.nombre">
+      <img [src]="'http://localhost/MRBouquets/frontend/public/' + ramoSeleccionado.img" 
+          [alt]="ramoSeleccionado.nombre">
       <div class="lupa-icon" (click)="toggleZoom()">
         <i class="fas" [ngClass]="isZoomActive ? 'fa-search-minus' : 'fa-search-plus'"></i>
       </div>
