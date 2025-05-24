@@ -221,43 +221,41 @@
 </div>
 
 <!-- Modal de detalles del ramo -->
-<div class="modal-detalles" *ngIf="ramoSeleccionado" (click)="cerrarModal($event)">
-  <div class="modal-contenido-detalles" (click)="$event.stopPropagation()">
+<div class="modal-detalles" *ngIf="ramoSeleccionado">
+  <div class="modal-contenido-detalles">
+    <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
+    
     <div class="modal-imagen">
       <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramoSeleccionado.img" 
            [alt]="ramoSeleccionado.nombre">
-      <div class="lupa-icon" (click)="toggleZoom()">
-        <i class="fas" [ngClass]="isZoomActive ? 'fa-search-minus' : 'fa-search-plus'"></i>
-      </div>
+      <button class="lupa-icon" [class.active]="isZoomActive" (click)="toggleZoom()">
+        <i class="bi" [class.bi-zoom-in]="!isZoomActive" [class.bi-zoom-out]="isZoomActive"></i>
+      </button>
     </div>
-    <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
+    
     <div class="modal-info">
       <h2>{{ ramoSeleccionado.nombre }}</h2>
       <p class="descripcion">{{ ramoSeleccionado.descripcion }}</p>
+      
       <div class="detalles-adicionales">
         <div class="detalle">
           <span class="etiqueta">Precio:</span>
           <span class="valor precio">{{ ramoSeleccionado.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
         </div>
-        <div class="detalle" *ngIf="ramoSeleccionado.categoria">
-          <span class="etiqueta">Categoría:</span>
-          <span class="valor">{{ ramoSeleccionado.categoria }}</span>
-        </div>
-        <div class="detalle" *ngIf="ramoSeleccionado.disponibilidad">
-          <span class="etiqueta">Disponibilidad:</span>
-          <span class="valor disponible">Disponible</span>
-        </div>
         <div class="detalle">
-          <span class="etiqueta">Cantidad:</span>
-          <div class="control-cantidad">
-            <button type="button" class="btn-cantidad" (click)="decrementarCantidad(ramoSeleccionado.id)">-</button>
-            <input type="number" min="1" max="99" [(ngModel)]="cantidades[ramoSeleccionado.id]" />
-            <button type="button" class="btn-cantidad" (click)="incrementarCantidad(ramoSeleccionado.id)">+</button>
-          </div>
+          <span class="etiqueta">Disponibilidad:</span>
+          <span class="valor disponible">En stock</span>
         </div>
       </div>
+      
+      <div class="control-cantidad">
+        <button (click)="decrementarCantidad(ramoSeleccionado.id)" [disabled]="cantidades[ramoSeleccionado.id] <= 1">-</button>
+        <input type="number" [(ngModel)]="cantidades[ramoSeleccionado.id]" min="1" max="99" readonly>
+        <button (click)="incrementarCantidad(ramoSeleccionado.id)" [disabled]="cantidades[ramoSeleccionado.id] >= 99">+</button>
+      </div>
+      
       <button class="boton-agregar" (click)="onAddToCart(ramoSeleccionado)">
-        Agregar al carrito
+        Agregar al Carrito
       </button>
     </div>
   </div>

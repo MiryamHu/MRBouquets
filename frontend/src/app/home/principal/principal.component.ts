@@ -37,6 +37,12 @@ export class PrincipalComponent implements OnInit {
 
   isZoomActive = false;
 
+  private zoomLevel = 2.5; // Nivel de zoom
+  private isZooming = false;
+  private zoomContainer: HTMLElement | null = null;
+  private zoomImage: HTMLElement | null = null;
+  private zoomLens: HTMLElement | null = null;
+
   constructor(
     public auth: AuthService,
     private ramosService: RamosService,
@@ -229,17 +235,124 @@ export class PrincipalComponent implements OnInit {
 
   toggleZoom() {
     this.isZoomActive = !this.isZoomActive;
-    const modalImagen = document.querySelector('.modal-imagen');
-    const modalContenido = document.querySelector('.modal-contenido-detalles');
+    const modalImagen = document.querySelector('.modal-imagen') as HTMLElement;
     
-    if (modalImagen && modalContenido) {
+    if (modalImagen) {
       if (this.isZoomActive) {
-        modalImagen.classList.add('zoom-active');
-        modalContenido.classList.add('zoom-mode');
+        // Asegurarnos de que la imagen esté cargada antes de inicializar el zoom
+        const img = modalImagen.querySelector('img');
+        if (img) {
+          if (img.complete) {
+            this.initializeZoom(modalImagen);
+          } else {
+            img.onload = () => {
+              this.initializeZoom(modalImagen);
+            };
+          }
+        }
       } else {
-        modalImagen.classList.remove('zoom-active');
-        modalContenido.classList.remove('zoom-mode');
+        this.cleanupZoom();
       }
     }
+  }
+
+  private handleMouseMove(e: MouseEvent) {
+    if (!this.isZooming || !this.zoomLens || !this.zoomContainer || !this.zoomImage) return;
+
+    const container = e.currentTarget as HTMLElement;
+    const rect = container.getBoundingClientRect();
+    const img = container.querySelector('img');
+    
+    if (!img) return;
+
+    // Calcular posición del lente
+    const lensSize = 150; // Tamaño del lente de zoom
+    let x = e.clientX - rect.left - lensSize / 2;
+    let y = e.clientY - rect.top - lensSize / 2;
+    
+    // Mantener el lente dentro de los límites
+    x = Math.max(0, Math.min(x, rect.width - lensSize));
+    y = Math.max(0, Math.min(y, rect.height - lensSize));
+    
+    // Calcular el factor de zoom basado en el tamaño de la imagen original
+    const zoomFactor = img.naturalWidth / rect.width;
+    
+    // Actualizar posición del lente
+    this.zoomLens.style.display = 'block';
+    this.zoomLens.style.left = `${x}px`;
+    this.zoomLens.style.top = `${y}px`;
+    
+    // Actualizar vista ampliada
+    this.zoomContainer.style.display = 'block';
+    this.zoomImage.style.backgroundImage = `url(${img.src})`;
+    this.zoomImage.style.backgroundSize = `${img.naturalWidth}px ${img.naturalHeight}px`;
+    this.zoomImage.style.backgroundPosition = `-${x * zoomFactor}px -${y * zoomFactor}px`;
+  }
+
+  private initializeZoom(container: HTMLElement) {
+    // Limpiar cualquier zoom existente
+    this.cleanupZoom();
+
+    // Crear elementos para el zoom
+    this.zoomContainer = document.createElement('div');
+    this.zoomContainer.className = 'zoom-container';
+    this.zoomContainer.style.display = 'none';
+    
+    this.zoomLens = document.createElement('div');
+    this.zoomLens.className = 'zoom-lens';
+    this.zoomLens.style.display = 'none';
+    
+    this.zoomImage = document.createElement('div');
+    this.zoomImage.className = 'zoom-image';
+    
+    // Configurar el contenedor
+    container.style.position = 'relative';
+    container.appendChild(this.zoomLens);
+    container.appendChild(this.zoomContainer);
+    this.zoomContainer.appendChild(this.zoomImage);
+    
+    // Configurar eventos
+    const boundHandleMouseMove = this.handleMouseMove.bind(this);
+    container.addEventListener('mousemove', boundHandleMouseMove);
+    
+    container.addEventListener('mouseenter', () => {
+      if (this.isZoomActive) {
+        this.isZooming = true;
+        const img = container.querySelector('img');
+        if (img) {
+          img.style.cursor = 'none';
+        }
+      }
+    });
+    
+    container.addEventListener('mouseleave', () => {
+      this.isZooming = false;
+      if (this.zoomLens) {
+        this.zoomLens.style.display = 'none';
+      }
+      if (this.zoomContainer) {
+        this.zoomContainer.style.display = 'none';
+      }
+      const img = container.querySelector('img');
+      if (img) {
+        img.style.cursor = 'zoom-in';
+      }
+    });
+  }
+
+  private cleanupZoom() {
+    if (this.zoomLens) {
+      this.zoomLens.remove();
+      this.zoomLens = null;
+    }
+    if (this.zoomContainer) {
+      this.zoomContainer.remove();
+      this.zoomContainer = null;
+    }
+    this.zoomImage = null;
+  }
+
+  ngOnDestroy() {
+    this.cleanupZoom();
   }
 }
