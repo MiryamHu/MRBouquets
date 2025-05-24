@@ -124,7 +124,15 @@
     <div class="modal direccion-modal">
       <h3>Selecciona una dirección de envío</h3>
       
-      <div class="direcciones-lista">
+      <div *ngIf="direcciones.length === 0" class="no-direcciones-message">
+        <p>Hemos detectado que aún no tienes direcciones guardadas.</p>
+        <p>Por favor, agrega una dirección antes de continuar con tu compra.</p>
+        <button class="btn-primary" (click)="router.navigate(['/mi-perfil'])">
+          Agregar Dirección
+        </button>
+      </div>
+      
+      <div class="direcciones-lista" *ngIf="direcciones.length > 0">
         <div *ngFor="let d of direcciones" 
              class="direccion-option" 
              [class.selected]="selectedDireccionId === d.id"
@@ -151,7 +159,8 @@
         <button
           class="btn-primary"
           (click)="confirmarDireccion()"
-          [disabled]="!selectedDireccionId">
+          [disabled]="!selectedDireccionId"
+          *ngIf="direcciones.length > 0">
           Confirmar Dirección
         </button>
       </div>

@@ -5,6 +5,10 @@ require_once __DIR__ . '/../conexion.php';
 // Asegurarnos de que no haya output antes de las cabeceras
 ob_start();
 
+// Configurar COOP y COEP
+header('Cross-Origin-Opener-Policy: same-origin');
+header('Cross-Origin-Embedder-Policy: require-corp');
+
 // Configurar CORS
 header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Methods: POST, OPTIONS");

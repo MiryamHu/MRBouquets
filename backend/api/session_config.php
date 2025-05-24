@@ -3,6 +3,10 @@
 //  CONFIGURACIÓN GLOBAL DE SESIÓN
 // ======================================================================
 
+// Configurar COOP y COEP
+header('Cross-Origin-Opener-Policy: same-origin');
+header('Cross-Origin-Embedder-Policy: require-corp');
+
 //Cors
 header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Credentials: true");

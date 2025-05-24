@@ -120,10 +120,19 @@ get showMinimalView(): boolean {
     this.direccionesService.getDirecciones().subscribe({
       next: ds => {
         this.direcciones = ds;
-        this.selectedDireccionId = ds.length ? ds[0].id : null;
-        this.showAddressModal = true;
+        if (ds.length === 0) {
+          // Si no hay direcciones, mostrar mensaje y opción para agregar
+          this.showAddressModal = true;
+          this.selectedDireccionId = null;
+        } else {
+          this.selectedDireccionId = ds[0].id;
+          this.showAddressModal = true;
+        }
       },
-      error: () => alert('No se pudieron cargar las direcciones')
+      error: () => {
+        alert('No se pudieron cargar las direcciones');
+        this.showAddressModal = false;
+      }
     });
   }
 

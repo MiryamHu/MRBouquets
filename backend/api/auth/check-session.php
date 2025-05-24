@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../session_config.php';
 
+// Configurar COOP y COEP
+header('Cross-Origin-Opener-Policy: same-origin');
+header('Cross-Origin-Embedder-Policy: require-corp');
+
 // Configurar CORS
 header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Methods: GET, OPTIONS");

@@ -353,3 +353,28 @@
 .direcciones-lista::-webkit-scrollbar-thumb:hover {
   background: #d6336c;
 }
+
+.no-direcciones-message {
+  text-align: center;
+  padding: 2rem;
+  background: #fff5f8;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.no-direcciones-message p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+
+.no-direcciones-message p:first-child {
+  color: #ff4081;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.no-direcciones-message button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+}

@@ -5,6 +5,10 @@ ini_set('display_errors', 1);
 // Asegurarnos de que no haya output antes de las cabeceras
 ob_start();
 
+// Configurar COOP y COEP
+header('Cross-Origin-Opener-Policy: same-origin');
+header('Cross-Origin-Embedder-Policy: require-corp');
+
 // Incluir configuración de sesión
 require_once __DIR__ . '/../session_config.php';
 require_once __DIR__ . '/../conexion.php';

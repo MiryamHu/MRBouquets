@@ -1,0 +1,30 @@
+# Habilitar el módulo de headers
+<IfModule mod_headers.c>
+    # Configurar COOP y COEP
+    Header set Cross-Origin-Opener-Policy "same-origin"
+    Header set Cross-Origin-Embedder-Policy "require-corp"
+    
+    # Configurar CORS
+    Header set Access-Control-Allow-Origin "http://localhost:4200"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+    Header set Access-Control-Allow-Credentials "true"
+</IfModule>
+
+# Habilitar el módulo de rewrite
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /MRBouquets/
+    
+    # Redirigir todas las peticiones a index.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.html [L]
+</IfModule>
+
+# Configurar PHP
+<IfModule mod_php.c>
+    php_value session.cookie_httponly 1
+    php_value session.cookie_secure 0
+    php_value session.cookie_samesite "Lax"
+</IfModule> 
