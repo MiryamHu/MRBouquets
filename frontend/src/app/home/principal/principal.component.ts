@@ -2,7 +2,7 @@ import { Component, Inject, PLATFORM_ID, OnInit, AfterViewInit, ViewChild, Eleme
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { CartService } from '../../services/cart.service';
+import { CarritoService } from '../../services/carrito.service';
 import { RamosService, Ramo } from '../../services/ramos.service';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
@@ -48,7 +48,7 @@ export class PrincipalComponent implements OnInit {
     private ramosService: RamosService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: any,
-    private cartService: CartService
+    private carritoService: CarritoService
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
@@ -196,11 +196,13 @@ export class PrincipalComponent implements OnInit {
       return;
     }
     const cantidad = this.cantidades[producto.id] || 1;
-    for (let i = 0; i < cantidad; i++) {
-      this.cartService.add(producto);
-      this.cartService.open();
-    }
-    // Cerrar el modal de detalles si está abierto
+    this.carritoService.agregarArticulo(producto.id, cantidad).subscribe({
+      next: () => {
+        this.carritoService.open();
+      },
+      error: err => console.error('Error al añadir al carrito', err)
+    });
+    // Cierra el modal de detalles si está abierto
     this.ramoSeleccionado = null;
   }
 

@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { PedidoService } from '../services/pedido.service';
-import { CartService, CartItem } from '../services/cart.service';
+import { CarritoService, ArticuloCarrito } from '../services/carrito.service';
 import { DireccionesService, Direccion } from '../services/direcciones.service';
+import { PedidoService } from '../services/pedido.service';
+import { AuthService } from '../services/auth.service';
 import { Component, Input, OnInit, Optional } from '@angular/core';
-import { MatDialogRef,  MatDialogModule}from '@angular/material/dialog';
-import { Ramo } from '../services/ramos.service';
-import { FormsModule }        from '@angular/forms'; 
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-carrito',
@@ -16,168 +15,186 @@ import { FormsModule }        from '@angular/forms';
     RouterModule,
     MatDialogModule,
   ],
-
   templateUrl: './carrito.component.html',
   styleUrls: ['./carrito.component.css']
 })
 export class CarritoComponent implements OnInit {
-    /** Si viene true desde fuera forzamos la vista minimal */
   @Input() minimal = false;
-
-/** mezcla isDialog (dialogRef presente) o minimal forzado */
-get showMinimalView(): boolean {
-  return this.minimal || this.isDialog;
-}
+  get showMinimalView(): boolean {
+    return this.minimal || this.isDialog;
+  }
 
   isDialog: boolean;
-  items: CartItem[] = [];
+  items: ArticuloCarrito[] = [];
   subtotal = 0;
 
-  /* ---------- Dirección ---------- */
+  // Dirección
   direcciones: Direccion[] = [];
   selectedDireccionId: number | null = null;
   showAddressModal = false;
   showSuccessModal = false;
 
+  
   constructor(
-    private cartService: CartService,
+    private carritoSvc: CarritoService,
     private pedidoService: PedidoService,
-    private direccionesService: DireccionesService,
+    private direccionesSvc: DireccionesService,
+    private auth: AuthService,
     private router: Router,
     @Optional() private dialogRef: MatDialogRef<CarritoComponent>
   ) {
     this.isDialog = !!dialogRef;
   }
 
-  close() {
-    if (this.isDialog) {
-      this.dialogRef!.close();
-    } else {
-      this.router.navigate(['/']);  // o donde quieras volver
-    }
-  }
-
- goToPage(): void {
-    // Si estamos en el panel lateral (minimal), cerramos el sidenav
-    if (this.minimal) {
-      this.cartService.close();
-    }
-    // Si estuviera abierto como diálogo, lo cerramos
-    else if (this.isDialog) {
-      this.dialogRef!.close();
-    }
-    // Y siempre navegamos a /carrito
-    this.router.navigate(['/carrito']);
-  }
-
-
   ngOnInit(): void {
-    this.cartService.items$.subscribe(items => {
-      this.items = items;
-      this.calculateSubtotal();
+    // Si estamos en la vista full (ruta /carrito), CARGAMOS EL BACKEND
+    if (!this.showMinimalView) {
+      // Protegido por AuthGuard, pero doble chequeo
+      if (!this.auth.isLoggedIn()) {
+        this.router.navigate(['/login']);
+      } else {
+        this.loadCart();
+      }
+    }
+    // En vista minimal NO hacemos ninguna llamada al servidor
+  }
+
+  private loadCart(): void {
+    this.carritoSvc.listarArticulos().subscribe({
+      next: items => {
+        this.items = Array.isArray(items) ? items : [];
+        this.calculateSubtotal();
+      },
+      error: err => {
+        console.error('Falló carga de carrito', err);
+        this.items = [];
+        this.subtotal = 0;
+      }
     });
   }
 
-  calculateSubtotal(): void {
+  private calculateSubtotal(): void {
     this.subtotal = this.items.reduce(
-      (sum, item) => sum + item.quantity * item.price,
+      (sum, i) => sum + i.cantidad * (i.precio ?? 0),
       0
     );
   }
 
-  increment(item: CartItem): void {
-    const ramo: Ramo = { ...item, precio: item.price };
-    this.cartService.add(ramo);
+  increment(item: ArticuloCarrito): void {
+    this.carritoSvc
+      .actualizarCantidad(item.id, item.cantidad + 1)
+      .subscribe({
+        next: resp => {
+          if (resp.success) this.loadCart();
+          else alert(resp.error);
+        },
+        error: () => alert('Error de red al actualizar'),
+      });
   }
 
-  decrement(item: CartItem): void {
-    if (item.quantity > 1) {
-      item.quantity--;
-      this.cartService['itemsSubject'].next([...this.items]);
-      this.calculateSubtotal();
+  decrement(item: ArticuloCarrito): void {
+    if (item.cantidad > 1) {
+      this.carritoSvc
+        .actualizarCantidad(item.id, item.cantidad - 1)
+        .subscribe({
+          next: resp => {
+            if (resp.success) this.loadCart();
+            else alert(resp.error);
+          },
+          error: () => alert('Error de red al actualizar'),
+        });
     } else {
       this.removeItem(item.id);
     }
   }
 
   removeItem(id: number): void {
-    this.cartService.remove(id);
-    this.calculateSubtotal();
-  }
-
-  clearCart(): void {
-    this.cartService.clearCart();
-    this.calculateSubtotal();
-  }
-
-  /* ====== Checkout ====== */
-  proceedToCheckout(): void {
-    if (!this.items.length) { return; }
-    this.loadDirecciones();
-  }
-
-  private loadDirecciones(): void {
-    this.direccionesService.getDirecciones().subscribe({
-      next: ds => {
-        this.direcciones = ds;
-        if (ds.length === 0) {
-          // Si no hay direcciones, mostrar mensaje y opción para agregar
-          this.showAddressModal = true;
-          this.selectedDireccionId = null;
+    this.carritoSvc.eliminarArticulo(id).subscribe({
+      next: resp => {
+        if (resp.success) {
+          this.loadCart();       // recarga lista tras borrar
         } else {
-          this.selectedDireccionId = ds[0].id;
-          this.showAddressModal = true;
+          alert(resp.error);
         }
       },
-      error: () => {
-        alert('No se pudieron cargar las direcciones');
-        this.showAddressModal = false;
+      error: err => {
+        console.error('HTTP Error al eliminar:', err);
+        // aunque haya error JSON (parseo, warnings PHP...) recargamos
+        this.loadCart();
       }
     });
   }
 
-  confirmarDireccion(): void {
-  console.log('ID elegido =', this.selectedDireccionId);
-  if (this.selectedDireccionId == null) { return; }
 
-  const idDir = Number(this.selectedDireccionId);
-
-  this.pedidoService.confirmOrder(this.subtotal, this.items, idDir).subscribe({
-    next: () => {
-      console.log('Pedido confirmado ✓'); 
-      this.calculateSubtotal();
-      this.showAddressModal = false;
-      this.showSuccessModal = true;
-    },
-    error: (err) => {
-      console.error('Error HTTP', err);                    // ⬅️ log completo
-      alert('Hubo un error al confirmar tu pedido');
-    }
-  });
-}
-
-
-
-continueShopping(): void {
-    // En minimal cerramos el sidenav
-    if (this.minimal) {
-      this.cartService.close();
-    } 
-    // En vista completa navegamos a home
-    else {
-      this.router.navigate(['/']);
-    }
+  close(): void {
+    if (this.isDialog) this.dialogRef!.close();
+    else this.router.navigate(['/']);
   }
 
+  goToPage(): void {
+    if (this.minimal || this.isDialog) this.close();
+    this.router.navigate(['/carrito']);
+  }
 
-  closeModal(): void {
-    this.showSuccessModal = false;
-    this.router.navigate(['/']);
+  proceedToCheckout(): void {
+    if (!this.items.length) return;
+    this.loadDirecciones();
+  }
+
+  private loadDirecciones(): void {
+    this.direccionesSvc.getDirecciones().subscribe({
+      next: ds => {
+        this.direcciones = ds;
+        this.selectedDireccionId = ds.length ? ds[0].id : null;
+        this.showAddressModal = true;
+      },
+      error: () => alert('No se pudieron cargar las direcciones')
+    });
+  }
+
+  confirmarDireccion(): void {
+    if (this.selectedDireccionId == null) return;
+    this.pedidoService
+      .confirmOrder(this.subtotal, this.items, this.selectedDireccionId)
+      .subscribe({
+        next: () => {
+          this.showAddressModal = false;
+          this.showSuccessModal = true;
+          this.clearCart();
+        },
+        error: () => alert('Error al confirmar tu pedido')
+      });
+  }
+
+  clearCart(): void {
+    this.carritoSvc.vaciarCarrito().subscribe({
+      next: resp => {
+        if (resp.success) {
+          this.loadCart();
+        } else {
+          alert(resp.error);
+        }
+      },
+      error: err => {
+        console.error('HTTP Error al eliminar:', err);
+        this.loadCart();
+      }
+    });
   }
 
   closeSuccessModal(): void {
     this.showSuccessModal = false;
-    this.cartService.clearCart(); // Vaciar el carrito
-    this.router.navigate(['/']); // Redirigir al inicio
+    this.router.navigate(['/']);
+  }
+
+    closeModal(): void {
+    this.showSuccessModal = false;
+    this.router.navigate(['/']);
+  }
+
+
+  continueShopping(): void {
+    if (this.minimal) this.close();
+    else this.router.navigate(['/']);
   }
 }

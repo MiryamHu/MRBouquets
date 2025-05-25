@@ -13,14 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-session_start();
-
-if (!isset($_SESSION['id_usuario'])) {
-    http_response_code(401);
-    echo json_encode(['error' => 'No autenticado']);
-    exit;
-}
-
 $user_id = $_SESSION['id_usuario'];
 $data = json_decode(file_get_contents('php://input'), true);
 

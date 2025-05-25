@@ -93,7 +93,7 @@
 
     <!-- Lista de productos -->
     <div *ngFor="let ramo of ramosFiltrados" class="producto-card">
-      <img [src]="ramo.img" [alt]="ramo.nombre" class="producto-imagen">
+      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' +ramo.img" [alt]="ramo.nombre" class="producto-imagen">
       <div class="producto-info">
         <h3>{{ ramo.nombre }}</h3>
         <p class="producto-descripcion">{{ ramo.descripcion }}</p>
