@@ -15,9 +15,9 @@
 }
 
 /* En modo completo (sin minimal) sí dejamos espacio para el header */
-:host(:not([minimal])) .cart-container {
+/* :host(:not([minimal])) .cart-container {
   margin-top: 130px !important;
-}
+} */
 
 .cart-container {
   width: 100%;
@@ -377,4 +377,16 @@
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
   font-size: 1.1rem;
+}
+
+/* 
+LINEA ENTRE CADA ITEM */
+.cart-items .cart-item {
+  padding: 1rem 0; 
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Opcional: quitar la línea en el último elemento */
+.cart-items .cart-item:last-child {
+  border-bottom: none;
 }

@@ -81,13 +81,13 @@
         <h3>{{ item.nombre }}</h3>
         <p>{{ item.descripcion }}</p>
         <span class="item-price">
-          {{ item.quantity * item.price | currency:'EUR':'symbol':'1.2-2' }}
+          {{ item.cantidad * item.precio | currency:'EUR':'symbol':'1.2-2' }}
         </span>
       </div>
 
       <div class="quantity-controls">
         <button (click)="decrement(item)">–</button>
-        <span>{{ item.quantity }}</span>
+        <span>{{ item.cantidad }}</span>
         <button (click)="increment(item)">+</button>
       </div>
 

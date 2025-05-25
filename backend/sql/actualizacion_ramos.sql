@@ -22,23 +22,23 @@ CREATE INDEX idx_ramos_activo ON ramos(activo);
 
 -- Insertar algunos datos de ejemplo
 INSERT INTO ramos (nombre, descripcion, precio, img, tipo_flor, color, disponible) VALUES
-('Ramo Primaveral', 'Hermoso ramo con flores de temporada', 39.99, '/img/ramo-primaveral.jpg', 'Tulipanes', 'Rosa', true),
-('Ramo Romántico', 'Rosas rojas con acabado elegante', 49.99, '/img/ramo-romantico.jpg', 'Rosas', 'Rojo', true),
-('Ramo Silvestre', 'Flores silvestres variadas', 29.99, '/img/ramo-silvestre.jpg', 'Margaritas', 'Multicolor', true),
-('Ramo Exótico', 'Combinación de flores tropicales', 59.99, '/img/ramo-exotico.jpg', 'Orquídeas', 'Morado', true),
-('Ramo Clásico', 'Rosas blancas con gypsophila', 44.99, '/img/ramo-clasico.jpg', 'Rosas', 'Blanco', true),
-('Ramo Girasoles', 'Girasoles con flores silvestres', 34.99, '/img/ramo-girasoles.jpg', 'Girasoles', 'Amarillo', true),
-('Ramo Delicado', 'Flores en tonos pastel', 39.99, '/img/ramo-delicado.jpg', 'Peonías', 'Rosa Pastel', true),
+('Ramo Primaveral', 'Hermoso ramo con flores de temporada', 39.99, '/img/Ramo_Primaveral.webp', 'Tulipanes', 'Rosa', true),
+('Ramo Romántico', 'Rosas rojas con acabado elegante', 49.99, '/img/Bouquet_Romantico.webp', 'Rosas', 'Rojo', true),
+('Ramo Silvestre', 'Flores silvestres variadas', 29.99, '/img/bouquet-silvestre.jpg', 'Margaritas', 'Multicolor', true),
+('Ramo Exótico', 'Combinación de flores tropicales', 59.99, '/img/bouquet-exotico.jpg', 'Orquídeas', 'Morado', true),
+('Ramo Clásico', 'Rosas blancas con gypsophila', 44.99, '/img/bouquet-clasico.jpg', 'Rosas', 'Blanco', true),
+('Ramo Girasoles', 'Girasoles con flores silvestres', 34.99, '/img/bouquet-girasoles.jpg', 'Girasoles', 'Amarillo', true),
+('Ramo Delicado', 'Flores en tonos pastel', 39.99, '/img/bouquet-delicado.jpg', 'Peonías', 'Rosa Pastel', true),
 ('Ramo Campestre', 'Flores de campo variadas', 32.99, '/img/ramo-campestre.jpg', 'Margaritas', 'Multicolor', true),
-('Ramo Elegante', 'Rosas y liliums', 54.99, '/img/ramo-elegante.jpg', 'Lilium', 'Blanco y Rosa', true),
-('Ramo Tropical', 'Flores exóticas coloridas', 64.99, '/img/ramo-tropical.jpg', 'Ave del Paraíso', 'Naranja', true);
+('Ramo Elegante', 'Rosas y liliums', 54.99, '/img/Bouquet_Elegante.webp', 'Lilium', 'Blanco y Rosa', true),
+('Ramo Tropical', 'Flores exóticas coloridas', 64.99, '/img/bouquet-tropical.jpg', 'Ave del Paraíso', 'Naranja', true);
 
 -- Insertar ramos para ocasiones especiales
 INSERT INTO ramos (nombre, descripcion, precio, img, tipo_flor, color, disponible) VALUES
-('Celebración de Cumpleaños', 'Espectacular ramo festivo con flores vibrantes y globos', 55.00, '/img/ramo-cumpleanos.jpg', 'Mixto', 'Multicolor', true),
-('Romance de Aniversario', 'Elegante arreglo de rosas rojas y flores blancas', 38.00, '/img/ramo-aniversario.jpg', 'Rosas', 'Rojo y Blanco', true),
-('Éxito en Graduación', 'Sofisticado ramo en tonos del éxito académico', 45.00, '/img/ramo-graduacion.jpg', 'Mixto', 'Blanco y Dorado', true),
-('Sentido Pésame', 'Delicado arreglo floral para expresar condolencias', 60.00, '/img/ramo-condolencias.jpg', 'Lilium', 'Blanco', true);
+('Celebración de Cumpleaños', 'Espectacular ramo festivo con flores vibrantes y globos', 55.00, '/img/bouquet-cumpleanos.jpg', 'Mixto', 'Multicolor', true),
+('Romance de Aniversario', 'Elegante arreglo de rosas rojas y flores blancas', 38.00, '/img/bouquet-aniversario.jpg.jpg', 'Rosas', 'Rojo y Blanco', true),
+('Éxito en Graduación', 'Sofisticado ramo en tonos del éxito académico', 45.00, '/img/bouquet-graduacion.jpg', 'Mixto', 'Blanco y Dorado', true),
+('Sentido Pésame', 'Delicado arreglo floral para expresar condolencias', 60.00, '/img/bouquet-condolencias.jpg', 'Lilium', 'Blanco', true);
 
 -- Actualizar los ramos existentes para marcar los que son de ocasiones especiales
 UPDATE ramos 

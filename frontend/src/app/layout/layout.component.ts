@@ -38,9 +38,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Verificar si hay una sesión activa
-    if (!this.auth.isLoggedIn()) {
-      this.router.navigate(['/login']);
-    }
+    // if (!this.auth.isLoggedIn()) {
+    //   this.router.navigate(['/login']);
+    // }
   }
 
   ngOnDestroy() {
