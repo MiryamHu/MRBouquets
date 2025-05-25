@@ -1,0 +1,17 @@
+<div class="perfil container">
+  <div class="menu">
+    <h2>MI PERFIL</h2>
+     <nav class="navegacion">
+      <ul class="lista-navegacion">
+        <li><a routerLink="datos">MIS DATOS</a></li>
+        <li><a routerLink="direcciones">MIS DIRECCIONES</a></li>
+        <li><a routerLink="pedidos">MIS PEDIDOS</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="content">
+    <!-- aquí se renderiza el componente hijo según la ruta actual -->
+    <router-outlet></router-outlet>
+  </div>
+</div>

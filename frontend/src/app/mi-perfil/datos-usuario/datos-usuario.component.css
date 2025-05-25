@@ -1,0 +1,54 @@
+h2 {
+    color: #e91e63;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+h3 {
+    color: #333;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+  
+.datos-usuario {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+  
+.datos-usuario p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.botones{
+    display: flex;
+    gap: 3rem;
+    margin-top: 20px;
+}
+
+.botones .btn-modifcar {
+    text-decoration: none;
+    padding: 0.45rem 1.1rem;
+    border: 1.5px solid #ff4081;
+    border-radius: 50px;
+    color: #ff4081;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.botones .btn-modifcar:hover {
+    background: #ff4081;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(255, 64, 129, 0.15);
+}

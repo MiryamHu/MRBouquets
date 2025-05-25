@@ -1,0 +1,19 @@
+
+
+<div class="datos-usuario" *ngIf="userData; else noUser">
+      <h3>Mis Datos</h3>
+      <p><strong>Nombre de usuario:</strong> {{ userData.nombre_usuario ?? userData.nombre }}</p>
+      <p><strong>Nombre:</strong> {{ userData.nombre }}</p>
+      <p><strong>Apellido:</strong> {{ userData.apellido }}</p>
+      <p><strong>Correo:</strong> {{ userData.correo }}</p>
+      <p *ngIf="userData.telefono"><strong>Teléfono:</strong> {{ userData.telefono }}</p>
+
+      <div class="botones">
+            <button class="btn-modifcar" (click)="modificarDatos()">Modificar Datos</button>
+            <button class="btn-modifcar" (click)="cambiarContrasena()">Cambiar Contraseña</button>
+      </div>
+</div>
+
+<ng-template #noUser>
+      <p>No se han encontrado datos de usuario.</p>
+</ng-template>

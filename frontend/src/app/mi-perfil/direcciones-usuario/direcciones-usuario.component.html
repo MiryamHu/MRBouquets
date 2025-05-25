@@ -1,0 +1,51 @@
+    <!-- ========= DIRECCIONES ========= -->
+<section class="direcciones" *ngIf="isBrowser">
+  <div class="direcciones-header">
+    <h3>Mis Direcciones</h3>
+    <button class="btn-add" (click)="mostrarFormDireccion = !mostrarFormDireccion">
+      {{ mostrarFormDireccion ? 'Cancelar' : '+ Añadir' }}
+    </button>
+  </div>
+
+  <!-- Loader / error -->
+  <div *ngIf="loadingDirecciones" class="loading-direcciones">
+    <div class="spinner"></div><p>Cargando direcciones…</p>
+  </div>
+  <p class="error-direcciones" *ngIf="errorDirecciones">{{ errorDirecciones }}</p>
+
+  <!-- Lista -->
+  <ul class="lista-direcciones" *ngIf="!loadingDirecciones && direcciones.length">
+    <li class="direccion-card" *ngFor="let dir of direcciones">
+      <div class="dir-info">
+        <p class="dir-nombre"><strong>{{ dir.nombre }}</strong></p>
+        <p class="dir-linea1">
+          {{ dir.calle }} {{ dir.numero }}
+          <span *ngIf="dir.piso">, piso {{ dir.piso }}</span>
+          <span *ngIf="dir.puerta">, puerta {{ dir.puerta }}</span>
+        </p>
+        <p class="dir-linea2">
+          {{ dir.codigo_postal }} {{ dir.localidad }}, {{ dir.provincia }}, {{ dir.pais }}
+        </p>
+      </div>
+      <button class="btn-remove" (click)="eliminarDireccion(dir.id)">Eliminar</button>
+    </li>
+  </ul>
+
+  <p class="no-direcciones" *ngIf="!loadingDirecciones && !direcciones.length">
+    Todavía no tienes direcciones guardadas.
+  </p>
+
+  <!-- Formulario nuevo -->
+  <form class="form-direccion" *ngIf="mostrarFormDireccion" #fDir="ngForm" (ngSubmit)="guardarDireccion()">
+    <input ngModel name="nombre"          placeholder="Nombre (ej: Mi casa, Mi oficina)" required [(ngModel)]="nuevaDireccion.nombre">
+    <input ngModel name="calle"          placeholder="Calle"          required [(ngModel)]="nuevaDireccion.calle">
+    <input ngModel name="numero"         placeholder="Número"        required [(ngModel)]="nuevaDireccion.numero">
+    <input ngModel name="piso"           placeholder="Piso"                       [(ngModel)]="nuevaDireccion.piso">
+    <input ngModel name="puerta"         placeholder="Puerta"                     [(ngModel)]="nuevaDireccion.puerta">
+    <input ngModel name="codigo_postal"  placeholder="CP"             required maxlength="5" [(ngModel)]="nuevaDireccion.codigo_postal">
+    <input ngModel name="localidad"      placeholder="Localidad"      required [(ngModel)]="nuevaDireccion.localidad">
+    <input ngModel name="provincia"      placeholder="Provincia"      required [(ngModel)]="nuevaDireccion.provincia">
+    <input ngModel name="pais"           placeholder="País"                       [(ngModel)]="nuevaDireccion.pais">
+    <button type="submit" [disabled]="fDir.invalid">Guardar</button>
+  </form>
+</section>

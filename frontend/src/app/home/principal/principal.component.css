@@ -24,12 +24,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   display: flex;
   align-items: center;
   min-height: 70vh;
-  background-color: #f9f7eb;
+  background-color: #fffef6;
 }
 
 .banner-text {
   flex: 1;
-  padding: 4rem;
+  padding: 4rem;  
   color: #74565d;
   font-size: 2rem;
 }

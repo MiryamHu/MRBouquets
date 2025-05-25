@@ -3,12 +3,17 @@ import { LoginComponent } from './seguridad/login/login.component';
 import { RegistroComponent } from './seguridad/registro/registro.component';
 import { PrincipalComponent } from './home/principal/principal.component';
 import { CarritoComponent } from './carrito/carrito.component';
-import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
+import { PrincipalPerfilComponent } from './mi-perfil/principal-perfil/principal-perfil.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { LayoutComponent } from './layout/layout.component';
 
+import { DatosUsuarioComponent } from './mi-perfil/datos-usuario/datos-usuario.component';
+import { DireccionesUsuarioComponent } from './mi-perfil/direcciones-usuario/direcciones-usuario.component';
+import { PedidosUsuarioComponent } from './mi-perfil/pedidos-usuario/pedidos-usuario.component';
+
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { ActualizarDatosPerfilComponent } from './formularios/actualizar-datos-perfil/actualizar-datos-perfil.component';
 
 export const routes: Routes = [
   {
@@ -26,8 +31,14 @@ export const routes: Routes = [
       },
       {
         path: 'perfil',
-        component: MiPerfilComponent,
-        canActivate: [AuthGuard]
+        component: PrincipalPerfilComponent,
+        children: [
+          { path: '', redirectTo: 'datos', pathMatch: 'full' },
+          { path: 'datos', component: DatosUsuarioComponent },
+          { path: 'direcciones', component: DireccionesUsuarioComponent },
+          { path: 'pedidos', component: PedidosUsuarioComponent },
+          { path: 'actualizarDatos', component: ActualizarDatosPerfilComponent},
+        ]
       },
     ]
   },

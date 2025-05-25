@@ -1,0 +1,60 @@
+.perfil {
+    display: flex;
+    gap: rem;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+}
+h2 {
+    color: #e91e63;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.menu {
+    width: 200px;
+    }
+.content {
+    flex: 1;
+}
+
+.navegacion .lista-navegacion {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navegacion .lista-navegacion a {
+  text-decoration: none;
+  color: #666;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.35rem 0;
+  position: relative;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.navegacion .lista-navegacion a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #ff4081;
+  transition: width 0.3s ease;
+}
+
+.navegacion .lista-navegacion a:hover {
+  color: #ff4081;
+}
+
+.navegacion .lista-navegacion a:hover::after {
+  width: 100%;
+}
+

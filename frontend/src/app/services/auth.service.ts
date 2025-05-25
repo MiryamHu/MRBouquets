@@ -10,6 +10,7 @@ export interface User {
   nombre: string;
   apellido: string;
   correo: string;
+  telefono?: string;
   rol: 'cliente' | 'admin';
 }
 
@@ -201,5 +202,14 @@ export class AuthService {
         }
       })
     );
+  }
+
+  /** Exponemos un método para sobrescribir el usuario actual en memoria + localStorage */
+  public updateLocalUserData(partial: Partial<User>) {
+    const current = this.getUser();
+    if (!current) return;
+    const updated: User = { ...current, ...partial };
+    // re-aplica al BehaviorSubject y localStorage
+    this.setStoredUser(updated);
   }
 }
