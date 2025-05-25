@@ -656,53 +656,94 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1100;
-  padding: 2rem;
-  backdrop-filter: blur(5px);
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal-contenido-detalles {
   background: white;
-  border-radius: 20px;
-  max-width: 1200px;
-  width: 95%;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 900px;
+  width: 90%;
   max-height: 90vh;
-  display: flex;
+  overflow-y: auto;
   position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  animation: modalEntrada 0.3s ease-out;
-}
-
-@keyframes modalEntrada {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
 }
 
 .modal-imagen {
-  flex: 1;
-  max-width: 50%;
   position: relative;
-  overflow: hidden;
+  width: 100%;
+  height: 400px;
+  overflow: visible;
+  border-radius: 8px;
+  background: #f8f8f8;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f8f8;
 }
 
-.modal-imagen img {
+.main-canvas {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+  object-fit: contain;
+  display: block;
+}
+
+.copy-canvas{
+  position: absolute;            /* lo sacamos del flujo normal     */
+  top: 100%;                     /* justo debajo de la imagen       */
+  left: 50%;
+  transform: translateX(-50%);   /* centrado                        */
+  width: 200px;                  /* igual que el atributo width     */
+  height: 200px;                 /* igual que el atributo height    */
+  border: 2px solid #ccc;
+  background: #fff;
+  display: none;                 /* el TS lo cambia a block         */
+  z-index: 10;
+}
+
+.selector{
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #fff;
+  background: rgba(255,255,255,.25);
+  pointer-events: none;
+  display:none;
+}
+
+.lupa-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.lupa-icon:hover {
+  background: #ff4081;
+  color: white;
+  transform: scale(1.1);
+}
+
+.lupa-icon.active {
+  background: #ff4081;
+  color: white;
 }
 
 .modal-info {
@@ -914,9 +955,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     width: 100%;
   }
 
-  .modal-imagen {
-    height: 250px;
-  }
+
 
   .modal-info {
     padding: 1rem;

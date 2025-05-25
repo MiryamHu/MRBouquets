@@ -15,12 +15,25 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./principal.component.css']
 })
 
-export class PrincipalComponent implements OnInit {
+export class PrincipalComponent implements OnInit, AfterViewInit {
   productosRegulares: Ramo[] = [];
   productosOcasiones: Ramo[] = [];
 
   @ViewChild('videoPlayer', { static: false })
   videoPlayer!: ElementRef<HTMLVideoElement>;
+
+  @ViewChild('mainCanvas', { static: false }) mainCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('copyCanvas', { static: false }) copyCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('square', { static: false }) square!: ElementRef<HTMLDivElement>;
+
+  private mainCtx: CanvasRenderingContext2D | null = null;
+  private copyCtx: CanvasRenderingContext2D | null = null;
+  private isZoomActive = false;
+  private currentImage: HTMLImageElement | null = null;
+  
+  private scale   = 1;
+  private offsetX = 0;
+  private offsetY = 0;
 
 
   showLoginModal = false;
@@ -35,13 +48,6 @@ export class PrincipalComponent implements OnInit {
   currentIndexOcasiones = 0;
   itemsPerPage = 4;
 
-  isZoomActive = false;
-
-  private zoomLevel = 2.5; // Nivel de zoom
-  private isZooming = false;
-  private zoomContainer: HTMLElement | null = null;
-  private zoomImage: HTMLElement | null = null;
-  private zoomLens: HTMLElement | null = null;
 
   constructor(
     public auth: AuthService,
@@ -139,6 +145,34 @@ export class PrincipalComponent implements OnInit {
     this.loadRamos();
   }
 
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit ejecutado');
+    // No inicializamos los canvas aquí ya que el modal no está visible
+  }
+
+  private initializeCanvas() {
+    console.log('Inicializando canvas...');
+    
+    // Solo intentar inicializar si el modal está visible
+    if (this.ramoSeleccionado) {
+      if (this.mainCanvas?.nativeElement) {
+        this.mainCtx = this.mainCanvas.nativeElement.getContext('2d');
+        console.log('Canvas principal inicializado:', {
+          canvas: this.mainCanvas.nativeElement,
+          context: this.mainCtx
+        });
+      }
+
+      if (this.copyCanvas?.nativeElement) {
+        this.copyCtx = this.copyCanvas.nativeElement.getContext('2d');
+        this.copyCanvas.nativeElement.width  = 200;
+        this.copyCanvas.nativeElement.height = 200;
+      }
+    } else {
+      console.log('Modal no visible, omitiendo inicialización de canvas');
+    }
+  }
+
   private loadRamos(): void {
     this.loading = true;
     // Cargar ramos regulares
@@ -226,133 +260,130 @@ export class PrincipalComponent implements OnInit {
   }
 
   verDetalles(ramo: Ramo): void {
-    this.ramoSeleccionado = ramo;
+    this.abrirDetalles(ramo);
   }
 
-  cerrarDetalles(): void {
+  abrirDetalles(ramo: Ramo): void {
+    console.log('Iniciando abrirDetalles con ramo:', ramo);
+    this.ramoSeleccionado = ramo;
+    this.cantidades[ramo.id] = 1;
+  
+    // Esperar a que el modal esté en el DOM
+    setTimeout(() => {
+  
+      /* 1.- Reinicializar canvas */
+      this.initializeCanvas();
+      if (!this.mainCanvas?.nativeElement || !this.mainCtx) {
+        console.error('Canvas principal no disponible');
+        return;
+      }
+      // Dimensionar también el canvas de copia
+      if (this.copyCanvas?.nativeElement) {
+        this.copyCanvas.nativeElement.width  = 200;
+        this.copyCanvas.nativeElement.height = 200;
+      }
+  
+      /* 2.- Cargar la imagen */
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      const imageUrl = `http://localhost/MRBouquets/frontend/public/img/${ramo.img}`;
+      console.log('Intentando cargar imagen desde:', imageUrl);
+      img.src = imageUrl;
+  
+      img.onload = () => {
+        console.log('Imagen cargada', { w: img.naturalWidth, h: img.naturalHeight });
+        this.currentImage = img;
+  
+        /* 3.- Redimensionar mainCanvas al contenedor */
+        const container = this.mainCanvas.nativeElement.parentElement;
+        if (container) {
+          this.mainCanvas.nativeElement.width  = container.clientWidth;
+          this.mainCanvas.nativeElement.height = container.clientHeight;
+        }
+  
+        /* 4.- Calcular escala y offsets */
+        this.scale   = Math.min(
+          this.mainCanvas.nativeElement.width  / img.width,
+          this.mainCanvas.nativeElement.height / img.height
+        );
+        this.offsetX = (this.mainCanvas.nativeElement.width  - img.width  * this.scale) / 2;
+        this.offsetY = (this.mainCanvas.nativeElement.height - img.height * this.scale) / 2;
+  
+        /* 5.- Dibujar la imagen */
+        this.mainCtx.clearRect(
+          0, 0,
+          this.mainCanvas.nativeElement.width,
+          this.mainCanvas.nativeElement.height
+        );
+        this.mainCtx.drawImage(
+          img,
+          this.offsetX, this.offsetY,
+          img.width  * this.scale,
+          img.height * this.scale
+        );
+      };
+  
+      img.onerror = err =>
+        console.error('Error al cargar la imagen', { err, url: imageUrl });
+    }, 100);          // pequeño delay para esperar al modal
+  }
+  
+
+  cerrarDetalles() {
     this.ramoSeleccionado = null;
+    this.isZoomActive = false;
+    this.square.nativeElement.style.display = 'none';
+    this.copyCanvas.nativeElement.style.display = 'none';
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (
+      !this.isZoomActive ||
+      !this.currentImage ||
+      !this.mainCanvas?.nativeElement ||
+      !this.copyCtx ||
+      !this.square?.nativeElement
+    ) { return; }
+  
+    /* 1.- Posición del puntero dentro del canvas principal */
+    const rect = this.mainCanvas.nativeElement.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+  
+    /* 2.- Mostrar y posicionar selector */
+    this.square.nativeElement.style.display = 'block';
+    this.square.nativeElement.style.left   = `${x - 50}px`;
+    this.square.nativeElement.style.top    = `${y - 50}px`;
+  
+    /* 3.- Preparar canvas de copia */
+    this.copyCanvas.nativeElement.style.display = 'block';
+    this.copyCtx.clearRect(0, 0, 200, 200);
+  
+    /* 4.- Calcular el área que se va a ampliar */
+    const sourceX = ((x - this.offsetX) / this.scale) - 50;
+    const sourceY = ((y - this.offsetY) / this.scale) - 50;
+  
+    /* 5.- Dibujar la ampliación (factor ×2) */
+    this.copyCtx.drawImage(
+      this.currentImage,
+      sourceX, sourceY, 100, 100,   // recorte original
+      0, 0, 200, 200                // dibujado ampliado
+    );
+  }
+  
+
+  onMouseLeave() {
+    if (this.square?.nativeElement && this.copyCanvas?.nativeElement) {
+      this.square.nativeElement.style.display = 'none';
+      this.copyCanvas.nativeElement.style.display = 'none';
+    }
   }
 
   toggleZoom() {
     this.isZoomActive = !this.isZoomActive;
-    const modalImagen = document.querySelector('.modal-imagen') as HTMLElement;
-    
-    if (modalImagen) {
-      if (this.isZoomActive) {
-        // Asegurarnos de que la imagen esté cargada antes de inicializar el zoom
-        const img = modalImagen.querySelector('img');
-        if (img) {
-          if (img.complete) {
-            this.initializeZoom(modalImagen);
-          } else {
-            img.onload = () => {
-              this.initializeZoom(modalImagen);
-            };
-          }
-        }
-      } else {
-        this.cleanupZoom();
-      }
+    if (!this.isZoomActive && this.square?.nativeElement && this.copyCanvas?.nativeElement) {
+      this.square.nativeElement.style.display = 'none';
+      this.copyCanvas.nativeElement.style.display = 'none';
     }
-  }
-
-  private handleMouseMove(e: MouseEvent) {
-    if (!this.isZooming || !this.zoomLens || !this.zoomContainer || !this.zoomImage) return;
-
-    const container = e.currentTarget as HTMLElement;
-    const rect = container.getBoundingClientRect();
-    const img = container.querySelector('img');
-    
-    if (!img) return;
-
-    // Calcular posición del lente
-    const lensSize = 150; // Tamaño del lente de zoom
-    let x = e.clientX - rect.left - lensSize / 2;
-    let y = e.clientY - rect.top - lensSize / 2;
-    
-    // Mantener el lente dentro de los límites
-    x = Math.max(0, Math.min(x, rect.width - lensSize));
-    y = Math.max(0, Math.min(y, rect.height - lensSize));
-    
-    // Calcular el factor de zoom basado en el tamaño de la imagen original
-    const zoomFactor = img.naturalWidth / rect.width;
-    
-    // Actualizar posición del lente
-    this.zoomLens.style.display = 'block';
-    this.zoomLens.style.left = `${x}px`;
-    this.zoomLens.style.top = `${y}px`;
-    
-    // Actualizar vista ampliada
-    this.zoomContainer.style.display = 'block';
-    this.zoomImage.style.backgroundImage = `url(${img.src})`;
-    this.zoomImage.style.backgroundSize = `${img.naturalWidth}px ${img.naturalHeight}px`;
-    this.zoomImage.style.backgroundPosition = `-${x * zoomFactor}px -${y * zoomFactor}px`;
-  }
-
-  private initializeZoom(container: HTMLElement) {
-    // Limpiar cualquier zoom existente
-    this.cleanupZoom();
-
-    // Crear elementos para el zoom
-    this.zoomContainer = document.createElement('div');
-    this.zoomContainer.className = 'zoom-container';
-    this.zoomContainer.style.display = 'none';
-    
-    this.zoomLens = document.createElement('div');
-    this.zoomLens.className = 'zoom-lens';
-    this.zoomLens.style.display = 'none';
-    
-    this.zoomImage = document.createElement('div');
-    this.zoomImage.className = 'zoom-image';
-    
-    // Configurar el contenedor
-    container.style.position = 'relative';
-    container.appendChild(this.zoomLens);
-    container.appendChild(this.zoomContainer);
-    this.zoomContainer.appendChild(this.zoomImage);
-    
-    // Configurar eventos
-    const boundHandleMouseMove = this.handleMouseMove.bind(this);
-    container.addEventListener('mousemove', boundHandleMouseMove);
-    
-    container.addEventListener('mouseenter', () => {
-      if (this.isZoomActive) {
-        this.isZooming = true;
-        const img = container.querySelector('img');
-        if (img) {
-          img.style.cursor = 'none';
-        }
-      }
-    });
-    
-    container.addEventListener('mouseleave', () => {
-      this.isZooming = false;
-      if (this.zoomLens) {
-        this.zoomLens.style.display = 'none';
-      }
-      if (this.zoomContainer) {
-        this.zoomContainer.style.display = 'none';
-      }
-      const img = container.querySelector('img');
-      if (img) {
-        img.style.cursor = 'zoom-in';
-      }
-    });
-  }
-
-  private cleanupZoom() {
-    if (this.zoomLens) {
-      this.zoomLens.remove();
-      this.zoomLens = null;
-    }
-    if (this.zoomContainer) {
-      this.zoomContainer.remove();
-      this.zoomContainer = null;
-    }
-    this.zoomImage = null;
-  }
-
-  ngOnDestroy() {
-    this.cleanupZoom();
   }
 }

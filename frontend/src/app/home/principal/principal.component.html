@@ -225,9 +225,12 @@
   <div class="modal-contenido-detalles">
     <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
     
-    <div class="modal-imagen">
-      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramoSeleccionado.img" 
-           [alt]="ramoSeleccionado.nombre">
+    <div class="modal-imagen" 
+         (mousemove)="onMouseMove($event)"
+         (mouseleave)="onMouseLeave()">
+      <canvas #mainCanvas class="main-canvas"></canvas>
+      <div #square class="selector"></div>
+      <canvas #copyCanvas class="copy-canvas" width="200" height="200"></canvas>
       <button class="lupa-icon" [class.active]="isZoomActive" (click)="toggleZoom()">
         <i class="bi" [class.bi-zoom-in]="!isZoomActive" [class.bi-zoom-out]="isZoomActive"></i>
       </button>
