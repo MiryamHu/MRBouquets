@@ -6,6 +6,7 @@ import { CarritoComponent } from './carrito/carrito.component';
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { LayoutComponent } from './layout/layout.component';
+import { ContactoComponent } from './contacto/contacto.component';
 
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
@@ -18,7 +19,8 @@ export const routes: Routes = [
       { path: '', component: PrincipalComponent },
       { path: 'registro', component: RegistroComponent },
       { path: 'login', component: LoginComponent },
-      {path: 'catalogo', component: CatalogoComponent},
+      { path: 'catalogo', component: CatalogoComponent },
+      { path: 'contacto', component: ContactoComponent },
       {
         path: 'carrito',
         component: CarritoComponent,
@@ -35,8 +37,7 @@ export const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
     canActivate: [AuthGuard, AdminGuard]
-},
-
+  },
   { path: '**', redirectTo: '' }
 ];
 
