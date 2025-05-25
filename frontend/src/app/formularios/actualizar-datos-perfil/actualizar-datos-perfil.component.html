@@ -1,0 +1,49 @@
+
+    <form
+            [formGroup]="actualizarDatosForm"
+            (ngSubmit)="onActualizarDatosSubmit()"
+            style="max-width: 400px; margin: auto; display: flex; flex-direction: column; gap: 16px;"
+        >
+        <h3 style="text-align: center;">Actualizar Datos</h3>
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre de usuario</mat-label>
+            <input matInput formControlName="nombre_usuario" />
+            <mat-error *ngIf="actualizarDatosForm.get('nombre_usuario')?.invalid && actualizarDatosForm.get('nombre_usuario')?.touched">
+            Campo requerido
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" />
+            <mat-error *ngIf="actualizarDatosForm.get('nombre')?.invalid && actualizarDatosForm.get('nombre')?.touched">
+            Campo requerido
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="apellido" />
+            <mat-error *ngIf="actualizarDatosForm.get('apellido')?.invalid && actualizarDatosForm.get('apellido')?.touched">
+            Campo requerido
+            </mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="telefono" />
+        </mat-form-field>
+
+        <div *ngIf="mensaje" style="color: green; text-align: center;">
+            {{ mensaje }}
+        </div>
+        <div *ngIf="error" style="color: red; text-align: center;">
+            {{ error }}
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="actualizarDatosForm.invalid">
+            Guardar
+        </button>
+
+    </form>
