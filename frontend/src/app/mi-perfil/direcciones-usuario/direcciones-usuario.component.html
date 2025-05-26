@@ -1,51 +1,104 @@
     <!-- ========= DIRECCIONES ========= -->
 <section class="direcciones" *ngIf="isBrowser">
   <div class="direcciones-header">
-    <h3>Mis Direcciones</h3>
+    <h3><i class="fas fa-map-marker-alt"></i> Mis Direcciones</h3>
     <button class="btn-add" (click)="mostrarFormDireccion = !mostrarFormDireccion">
-      {{ mostrarFormDireccion ? 'Cancelar' : '+ Añadir' }}
+      <i class="fas" [class.fa-plus]="!mostrarFormDireccion" [class.fa-times]="mostrarFormDireccion"></i>
+      {{ mostrarFormDireccion ? 'Cancelar' : 'Añadir Dirección' }}
     </button>
   </div>
 
   <!-- Loader / error -->
   <div *ngIf="loadingDirecciones" class="loading-direcciones">
-    <div class="spinner"></div><p>Cargando direcciones…</p>
+    <div class="spinner"></div>
+    <p>Cargando direcciones…</p>
   </div>
-  <p class="error-direcciones" *ngIf="errorDirecciones">{{ errorDirecciones }}</p>
+  <div class="error-direcciones" *ngIf="errorDirecciones">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ errorDirecciones }}
+  </div>
 
   <!-- Lista -->
   <ul class="lista-direcciones" *ngIf="!loadingDirecciones && direcciones.length">
     <li class="direccion-card" *ngFor="let dir of direcciones">
       <div class="dir-info">
-        <p class="dir-nombre"><strong>{{ dir.nombre }}</strong></p>
+        <p class="dir-nombre">
+          <i class="fas fa-home"></i>
+          <strong>{{ dir.nombre }}</strong>
+        </p>
         <p class="dir-linea1">
+          <i class="fas fa-road"></i>
           {{ dir.calle }} {{ dir.numero }}
           <span *ngIf="dir.piso">, piso {{ dir.piso }}</span>
           <span *ngIf="dir.puerta">, puerta {{ dir.puerta }}</span>
         </p>
         <p class="dir-linea2">
+          <i class="fas fa-map"></i>
           {{ dir.codigo_postal }} {{ dir.localidad }}, {{ dir.provincia }}, {{ dir.pais }}
         </p>
       </div>
-      <button class="btn-remove" (click)="eliminarDireccion(dir.id)">Eliminar</button>
+      <button class="btn-remove" (click)="eliminarDireccion(dir.id)">
+        <i class="fas fa-trash-alt"></i>
+        Eliminar
+      </button>
     </li>
   </ul>
 
-  <p class="no-direcciones" *ngIf="!loadingDirecciones && !direcciones.length">
-    Todavía no tienes direcciones guardadas.
-  </p>
+  <div class="no-direcciones" *ngIf="!loadingDirecciones && !direcciones.length">
+    <i class="fas fa-map-marked-alt"></i>
+    <p>Todavía no tienes direcciones guardadas.</p>
+  </div>
 
   <!-- Formulario nuevo -->
   <form class="form-direccion" *ngIf="mostrarFormDireccion" #fDir="ngForm" (ngSubmit)="guardarDireccion()">
-    <input ngModel name="nombre"          placeholder="Nombre (ej: Mi casa, Mi oficina)" required [(ngModel)]="nuevaDireccion.nombre">
-    <input ngModel name="calle"          placeholder="Calle"          required [(ngModel)]="nuevaDireccion.calle">
-    <input ngModel name="numero"         placeholder="Número"        required [(ngModel)]="nuevaDireccion.numero">
-    <input ngModel name="piso"           placeholder="Piso"                       [(ngModel)]="nuevaDireccion.piso">
-    <input ngModel name="puerta"         placeholder="Puerta"                     [(ngModel)]="nuevaDireccion.puerta">
-    <input ngModel name="codigo_postal"  placeholder="CP"             required maxlength="5" [(ngModel)]="nuevaDireccion.codigo_postal">
-    <input ngModel name="localidad"      placeholder="Localidad"      required [(ngModel)]="nuevaDireccion.localidad">
-    <input ngModel name="provincia"      placeholder="Provincia"      required [(ngModel)]="nuevaDireccion.provincia">
-    <input ngModel name="pais"           placeholder="País"                       [(ngModel)]="nuevaDireccion.pais">
-    <button type="submit" [disabled]="fDir.invalid">Guardar</button>
+    <div class="input-group">
+      <i class="fas fa-home"></i>
+      <input ngModel name="nombre" placeholder="Nombre (ej: Mi casa, Mi oficina)" required [(ngModel)]="nuevaDireccion.nombre">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-road"></i>
+      <input ngModel name="calle" placeholder="Calle" required [(ngModel)]="nuevaDireccion.calle">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-hashtag"></i>
+      <input ngModel name="numero" placeholder="Número" required [(ngModel)]="nuevaDireccion.numero">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-building"></i>
+      <input ngModel name="piso" placeholder="Piso" [(ngModel)]="nuevaDireccion.piso">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-door-open"></i>
+      <input ngModel name="puerta" placeholder="Puerta" [(ngModel)]="nuevaDireccion.puerta">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-mail-bulk"></i>
+      <input ngModel name="codigo_postal" placeholder="CP" required maxlength="5" [(ngModel)]="nuevaDireccion.codigo_postal">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-city"></i>
+      <input ngModel name="localidad" placeholder="Localidad" required [(ngModel)]="nuevaDireccion.localidad">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-map"></i>
+      <input ngModel name="provincia" placeholder="Provincia" required [(ngModel)]="nuevaDireccion.provincia">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-globe-americas"></i>
+      <input ngModel name="pais" placeholder="País" [(ngModel)]="nuevaDireccion.pais">
+    </div>
+
+    <button type="submit" [disabled]="fDir.invalid" class="btn-save">
+      <i class="fas fa-save"></i>
+      Guardar Dirección
+    </button>
   </form>
 </section>
