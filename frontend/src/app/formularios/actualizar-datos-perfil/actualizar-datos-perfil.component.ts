@@ -5,12 +5,12 @@ import { FormsModule }              from '@angular/forms';
 import { MatFormFieldModule }       from '@angular/material/form-field';
 import { MatInputModule }           from '@angular/material/input';
 import { MatButtonModule }          from '@angular/material/button';
-import { Router }     from '@angular/router';
+import { Router }                   from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PerfilUsuarioService, UpdateUserData } from '../../services/perfil.usuario.service';
-import { AuthService, User }       from '../../services/auth.service';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import { DialogoConfirmacionComponent } from '../../utilidades/dialogo-confirmacion/dialogo-confirmacion.component'; 
+import { AuthService, User }        from '../../services/auth.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogoConfirmacionComponent } from '../../utilidades/dialogo-confirmacion/dialogo-confirmacion.component';
 
 @Component({
   selector: 'app-actualizar-datos-perfil',
@@ -22,8 +22,7 @@ import { DialogoConfirmacionComponent } from '../../utilidades/dialogo-confirmac
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatDialogModule,
-    DialogoConfirmacionComponent
+    MatDialogModule
   ],
   templateUrl: './actualizar-datos-perfil.component.html',
   styleUrl: './actualizar-datos-perfil.component.css'
@@ -51,7 +50,7 @@ export class ActualizarDatosPerfilComponent implements OnInit {
   }
 
   ngOnInit() {
-     this.userData = this.auth.getUser();
+    this.userData = this.auth.getUser();
     if (this.userData) {
       this.actualizarDatosForm.patchValue(this.userData);
     }
@@ -72,7 +71,7 @@ export class ActualizarDatosPerfilComponent implements OnInit {
           disableClose: true
         });
 
-        // 3) Al cerrar el modal, navegamos de vuelta a “Mis Datos”
+        // 3) Al cerrar el modal, navegamos de vuelta a "Mis Datos"
         ref.afterClosed().subscribe(() => {
           this.router.navigate(['/perfil','datos']);
         });

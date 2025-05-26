@@ -5,6 +5,7 @@ import { RamosService } from '../services/ramos.service';
 import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
 import { RouterModule,Router } from '@angular/router';
+import { FooterComponent } from '../shared/footer/footer.component';
 
 interface Ramo {
   id: number;
@@ -20,7 +21,7 @@ interface Ramo {
 @Component({
   selector: 'app-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, FooterComponent],
   templateUrl: './catalogo.component.html',
   styleUrls: ['./catalogo.component.css']
 })

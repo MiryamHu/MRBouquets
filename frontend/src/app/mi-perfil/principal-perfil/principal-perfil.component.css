@@ -75,7 +75,6 @@ h2 i {
 .navegacion .lista-navegacion a:hover {
   color: #ff4081;
   background: #fff5f8;
-  transform: translateX(5px);
 }
 
 .navegacion .lista-navegacion a.active {
