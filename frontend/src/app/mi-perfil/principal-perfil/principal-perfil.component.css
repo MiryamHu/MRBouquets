@@ -1,60 +1,123 @@
 .perfil {
     display: flex;
-    gap: rem;
+    gap: 2rem;
     max-width: 1500px;
     margin: 0 auto;
     padding: 3rem 1rem;
+    min-height: calc(100vh - 200px);
 }
 h2 {
     color: #e91e63;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+h2 i {
     font-size: 2rem;
+    color: #ff4081;
 }
 
 .menu {
-    width: 200px;
-    }
+    width: 280px;
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+}
 .content {
     flex: 1;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .navegacion .lista-navegacion {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1rem;
   margin: 0;
   padding: 0;
+}
+
+.navegacion .lista-navegacion li {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .navegacion .lista-navegacion a {
   text-decoration: none;
   color: #666;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
-  padding: 0.35rem 0;
-  position: relative;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.navegacion .lista-navegacion a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: #ff4081;
-  transition: width 0.3s ease;
+.navegacion .lista-navegacion a i {
+  font-size: 1.2rem;
+  color: #ff4081;
+  transition: all 0.3s ease;
 }
 
 .navegacion .lista-navegacion a:hover {
   color: #ff4081;
+  background: #fff5f8;
+  transform: translateX(5px);
 }
 
-.navegacion .lista-navegacion a:hover::after {
-  width: 100%;
+.navegacion .lista-navegacion a.active {
+  background: #ff4081;
+  color: white;
 }
 
+.navegacion .lista-navegacion a.active i {
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .perfil {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .menu {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .navegacion .lista-navegacion {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .navegacion .lista-navegacion li {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .navegacion .lista-navegacion a {
+    padding: 0.8rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .navegacion .lista-navegacion a:hover {

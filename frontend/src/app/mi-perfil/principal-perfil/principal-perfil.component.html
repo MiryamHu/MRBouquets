@@ -1,11 +1,26 @@
 <div class="perfil container">
   <div class="menu">
-    <h2>MI PERFIL</h2>
-     <nav class="navegacion">
+    <h2><i class="fas fa-user-circle"></i> MI PERFIL</h2>
+    <nav class="navegacion">
       <ul class="lista-navegacion">
-        <li><a routerLink="datos">MIS DATOS</a></li>
-        <li><a routerLink="direcciones">MIS DIRECCIONES</a></li>
-        <li><a routerLink="pedidos">MIS PEDIDOS</a></li>
+        <li>
+          <a routerLink="datos" routerLinkActive="active">
+            <i class="fas fa-id-card"></i>
+            <span>MIS DATOS</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="direcciones" routerLinkActive="active">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>MIS DIRECCIONES</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="pedidos" routerLinkActive="active">
+            <i class="fas fa-shopping-bag"></i>
+            <span>MIS PEDIDOS</span>
+          </a>
+        </li>
       </ul>
     </nav>
   </div>
