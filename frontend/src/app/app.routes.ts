@@ -7,6 +7,7 @@ import { PrincipalPerfilComponent } from './mi-perfil/principal-perfil/principal
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ContactoComponent } from './contacto/contacto.component';
+import { GarantiaComponent } from './garantia/garantia.component';
 
 import { DatosUsuarioComponent } from './mi-perfil/datos-usuario/datos-usuario.component';
 import { DireccionesUsuarioComponent } from './mi-perfil/direcciones-usuario/direcciones-usuario.component';
@@ -15,6 +16,7 @@ import { PedidosUsuarioComponent } from './mi-perfil/pedidos-usuario/pedidos-usu
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { ActualizarDatosPerfilComponent } from './formularios/actualizar-datos-perfil/actualizar-datos-perfil.component';
+import { FaqComponent } from './faq/faq.component';
 
 export const routes: Routes = [
   {
@@ -26,6 +28,7 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'catalogo', component: CatalogoComponent },
       { path: 'contacto', component: ContactoComponent },
+      { path: 'garantia', component: GarantiaComponent },
       {
         path: 'carrito',
         component: CarritoComponent,
@@ -48,6 +51,10 @@ export const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
     canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'faq',
+    component: FaqComponent
   },
   { path: '**', redirectTo: '' }
 ];
