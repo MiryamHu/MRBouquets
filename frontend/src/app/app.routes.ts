@@ -8,6 +8,7 @@ import { CatalogoComponent } from './catalogo/catalogo.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ContactoComponent } from './contacto/contacto.component';
 import { GarantiaComponent } from './garantia/garantia.component';
+import { EnviosComponent } from './envios/envios.component';
 
 import { DatosUsuarioComponent } from './mi-perfil/datos-usuario/datos-usuario.component';
 import { DireccionesUsuarioComponent } from './mi-perfil/direcciones-usuario/direcciones-usuario.component';
@@ -29,6 +30,7 @@ export const routes: Routes = [
       { path: 'catalogo', component: CatalogoComponent },
       { path: 'contacto', component: ContactoComponent },
       { path: 'garantia', component: GarantiaComponent },
+      { path: 'envios', component: EnviosComponent },
       {
         path: 'carrito',
         component: CarritoComponent,

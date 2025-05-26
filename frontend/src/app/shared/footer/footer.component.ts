@@ -45,8 +45,6 @@ import { CommonModule } from '@angular/common';
           <h4>Enlaces Útiles</h4>
           <div class="grid-enlaces">
             <a href="/catalogo"><i class="bi bi-flower3"></i> Catálogo</a>
-            <a href="/ocasiones"><i class="bi bi-gift"></i> Ocasiones</a>
-            <a href="/cuidados"><i class="bi bi-droplet"></i> Cuidado Floral</a>
             <a href="/envios"><i class="bi bi-box-seam"></i> Envíos</a>
             <a href="/garantia"><i class="bi bi-shield-check"></i> Garantía</a>
             <a href="/faq"><i class="bi bi-question-circle"></i> FAQ</a>
