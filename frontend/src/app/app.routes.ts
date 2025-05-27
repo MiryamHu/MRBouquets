@@ -17,6 +17,7 @@ import { PedidosUsuarioComponent } from './mi-perfil/pedidos-usuario/pedidos-usu
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { ActualizarDatosPerfilComponent } from './formularios/actualizar-datos-perfil/actualizar-datos-perfil.component';
+import {CambiarPasswordComponent} from './formularios/cambiar-password/cambiar-password.component';
 import { FaqComponent } from './faq/faq.component';
 
 export const routes: Routes = [
@@ -45,6 +46,7 @@ export const routes: Routes = [
           { path: 'direcciones', component: DireccionesUsuarioComponent },
           { path: 'pedidos', component: PedidosUsuarioComponent },
           { path: 'actualizarDatos', component: ActualizarDatosPerfilComponent},
+          { path: 'cambiarPassword', component: CambiarPasswordComponent},
         ]
       },
     ]

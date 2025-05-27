@@ -81,4 +81,8 @@ export class ActualizarDatosPerfilComponent implements OnInit {
       }
     });
   }
+
+  volver(){
+    this.router.navigate(['/perfil','datos']);
+  }
 }

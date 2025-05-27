@@ -29,6 +29,6 @@ export class DatosUsuarioComponent implements OnInit{
   }
 
   cambiarContrasena(){
-
+    this.router.navigate(['/perfil', 'cambiarPassword']);
   }
 }

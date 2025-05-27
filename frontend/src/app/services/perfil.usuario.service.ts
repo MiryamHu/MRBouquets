@@ -10,6 +10,17 @@ export interface UpdateUserData {
   telefono: string;
 }
 
+export interface ChangePasswordData {
+  password_actual: string;
+  password_nueva: string;
+}
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +41,25 @@ export class PerfilUsuarioService {
           'Content-Type': 'application/json'
         }),
         withCredentials: true      // ← aquí le dices que envíe la cookie de sesión
+      }
+    );
+  }
+
+  verificarPasswordActual(password_actual: string): Observable<{ valido: boolean }> {
+  return this.http.post<{ valido: boolean }>(
+    `${this.base}/verificar-password-actual.php`,
+    { password_actual },
+    { withCredentials: true }
+  );
+}
+
+  cambiarContrasena(data: ChangePasswordData): Observable<ChangePasswordResponse> {
+    return this.http.put<ChangePasswordResponse>(
+      `${this.base}/actualizar-password.php`,
+      data,
+      {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        withCredentials: true // importante para enviar cookies de sesión
       }
     );
   }

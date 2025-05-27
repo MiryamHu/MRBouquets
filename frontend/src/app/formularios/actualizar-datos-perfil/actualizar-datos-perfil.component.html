@@ -42,8 +42,15 @@
             {{ error }}
         </div>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="actualizarDatosForm.invalid">
-            Guardar
-        </button>
+        <div class="botones">
+              <button class="btn-volver" (click)="volver()">
+                Volver
+            </button>
+
+            <button class="btn-actualizar" type="submit" [disabled]="actualizarDatosForm.invalid">
+                Guardar
+            </button>
+        </div>
+      
 
     </form>
