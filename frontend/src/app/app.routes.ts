@@ -19,6 +19,7 @@ import { AdminGuard } from './guards/admin.guard';
 import { ActualizarDatosPerfilComponent } from './formularios/actualizar-datos-perfil/actualizar-datos-perfil.component';
 import {CambiarPasswordComponent} from './formularios/cambiar-password/cambiar-password.component';
 import { FaqComponent } from './faq/faq.component';
+import { ADMIN_ROUTES } from './admin/admin.routes';
 
 export const routes: Routes = [
   {
@@ -53,7 +54,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
+    children: ADMIN_ROUTES,
     canActivate: [AuthGuard, AdminGuard]
   },
   {

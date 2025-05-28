@@ -1,0 +1,31 @@
+<!-- pedidos.component.html -->
+<h2>Pedidos</h2>
+
+<table>
+    <thead>
+        <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Total (€)</th>
+        <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let pedido of pedidos">
+        <td>{{ pedido.id }}</td>
+        <td>{{ pedido.cliente }}</td>
+        <td>{{ pedido.fecha_pedido}}</td>
+        <td>{{ pedido.estado }}</td>
+        <td>{{ pedido.precio_total}}</td>
+        <td>
+            <button mat-icon-button 
+                    (click)="verDetalle(pedido)" 
+                    matTooltip="Ver detalle">
+            <mat-icon>visibility</mat-icon>
+            </button>
+        </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,21 @@
+.detalle-card {
+    margin: 16px;
+}
+
+.detalle-card mat-card-header {
+    align-items: center;
+}
+
+.detalle-card mat-card-title {
+    margin-left: 8px;
+}
+
+.detalle-table {
+    width: 100%;
+    margin-top: 16px;
+}
+
+.detalle-table th,
+.detalle-table td {
+    padding: 8px;
+}

@@ -12,6 +12,7 @@ export interface User {
   correo: string;
   telefono?: string;
   rol: 'cliente' | 'admin';
+  loginProvider?: 'google' | 'local'; 
 }
 
 export interface LoginData {
@@ -69,15 +70,15 @@ export class AuthService {
   }
 
   private setStoredUser(user: User | null): void {
-    if (this.isBrowser()) {
-      if (user) {
-        localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
-      } else {
-        localStorage.removeItem(this.USER_STORAGE_KEY);
-      }
-      this.userSubject.next(user);
-    }
+  if (user) {
+    // si viene sin loginProvider asumimos 'local'
+    if (!user.loginProvider) user.loginProvider = 'local';
+    localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
+  } else {
+    localStorage.removeItem(this.USER_STORAGE_KEY);
   }
+  this.userSubject.next(user);
+}
 
   private getHttpOptions() {
   return {
@@ -124,29 +125,35 @@ export class AuthService {
     window.dispatchEvent(new CustomEvent('session-expired'));
   }
 
-  login(data: LoginData): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/auth/login.php`,
-      data,
-      this.getHttpOptions()
-    ).pipe(
-      tap((response: any) => {
-        if (response.usuario) {
-          this.setStoredUser(response.usuario);
-          this.checkSession().subscribe({
-            next: () => {
-              console.log('Sesión verificada después del login');
-              this.startSessionCheck();
-            },
-            error: (err) => {
-              console.error('Error al verificar sesión después del login:', err);
-              this.handleSessionExpired();
-            }
-          });
-        }
-      })
-    );
-  }
+login(data: LoginData): Observable<any> {
+  return this.http.post(
+    `${this.apiUrl}/auth/login.php`,
+    data,
+    this.getHttpOptions()
+  ).pipe(
+    tap((response: any) => {
+      if (response.usuario) {
+        // Marca que este usuario vino por login “local”
+        response.usuario.loginProvider = 'local';
+
+        // Ahora guarda el usuario ya con ese campo
+        this.setStoredUser(response.usuario);
+
+        this.checkSession().subscribe({
+          next: () => {
+            console.log('Sesión verificada después del login');
+            this.startSessionCheck();
+          },
+          error: (err) => {
+            console.error('Error al verificar sesión después del login:', err);
+            this.handleSessionExpired();
+          }
+        });
+      }
+    })
+  );
+}
+
 
   logout(): void {
     if (this.sessionCheckTimer) {
@@ -184,7 +191,10 @@ export class AuthService {
     ).pipe(
       tap(res => {
         if (res.usuario) {
+          // Marca que éste vino por Google
+          res.usuario.loginProvider = 'google';
           this.setStoredUser(res.usuario);
+          // …resto de tu lógica…
         }
       })
     );

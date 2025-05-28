@@ -10,7 +10,6 @@ h3 {
     font-size: 1.5rem;
 }
 
-  
 .datos-usuario {
     background: white;
     padding: 1.5rem;
@@ -18,7 +17,7 @@ h3 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
 }
-  
+
 .datos-usuario p {
     margin: 0.5rem 0;
     font-size: 1.1rem;
@@ -30,7 +29,7 @@ h3 {
     margin-top: 20px;
 }
 
-.botones .btn-modifcar {
+.btn-modificar {
     text-decoration: none;
     padding: 0.45rem 1.1rem;
     border: 1.5px solid #ff4081;
@@ -46,7 +45,7 @@ h3 {
     white-space: nowrap;
 }
 
-.botones .btn-modifcar:hover {
+.btn-modificar:hover {
     background: #ff4081;
     color: #fff;
     transform: translateY(-1px);

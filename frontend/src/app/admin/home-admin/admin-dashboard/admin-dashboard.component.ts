@@ -3,7 +3,7 @@ import { CommonModule }   from '@angular/common';
 import { RouterModule, Router }   from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
-import { SidebarComponent } from '../../home-admin/sidebar/sidebar.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-admin-dashboard',

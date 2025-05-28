@@ -9,9 +9,14 @@
       <p *ngIf="userData.telefono"><strong>Teléfono:</strong> {{ userData.telefono }}</p>
 
       <div class="botones">
-            <button class="btn-modifcar" (click)="modificarDatos()">Modificar Datos</button>
-            <button class="btn-modifcar" (click)="cambiarContrasena()">Cambiar Contraseña</button>
-      </div>
+            <button class="btn-modificar" (click)="modificarDatos()">Modificar Datos</button>
+              <button
+            *ngIf="puedeCambiarContrasena"
+            class="btn-modificar"
+            (click)="cambiarContrasena()">
+            Cambiar Contraseña
+            </button>
+            </div>
 </div>
 
 <ng-template #noUser>

@@ -1,19 +1,22 @@
 // src/app/admin/admin.routes.ts
 import { Routes } from '@angular/router';
-import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
+import { AdminDashboardComponent } from './home-admin/admin-dashboard/admin-dashboard.component';
+import { SidebarComponent } from './home-admin/sidebar/sidebar.component';
 import { AdminGuard } from '../guards/admin.guard';
 import { AuthGuard }  from '../guards/auth.guard';
+import { PedidosComponent } from './pages/pedidos/pedidos.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DetallePedidoComponent } from './pages/detalle-pedido/detalle-pedido.component';
 
 export const ADMIN_ROUTES: Routes = [
     {
         path: '',
-        component: AdminDashboardComponent,
-        canActivate: [AuthGuard, AdminGuard],
+        component: SidebarComponent,
         children: [
-        // aquí más sub-rutas de admin
-        // { path: 'usuarios', component: UsuariosComponent },
-        // { path: 'pedidos',  component: PedidosComponent   },
-        { path: '', redirectTo: 'usuarios', pathMatch: 'full' }
+        { path: 'dashboard', component: DashboardComponent },
+        { path: 'pedidos', component: PedidosComponent },
+        { path: 'pedidos/:id', component: DetallePedidoComponent },
+        { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
     }
 ];

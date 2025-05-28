@@ -23,6 +23,10 @@ export class DatosUsuarioComponent implements OnInit{
     this.userData = this.auth.getUser();
   }
 
+  get puedeCambiarContrasena(): boolean {
+  return this.userData?.loginProvider !== 'google';
+}
+
   modificarDatos(){
     this.router.navigate(['/perfil', 'actualizarDatos']);
 

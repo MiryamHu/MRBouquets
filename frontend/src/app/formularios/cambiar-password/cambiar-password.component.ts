@@ -41,12 +41,12 @@ export class CambiarPasswordComponent {
   ) {
     this.actualizarPasswordForm = this.fb.group({
     passwordActual: ['', {
-      validators: [Validators.required],
-      asyncValidators: [validarPasswordActual(this.service)],
-      updateOn: 'blur' 
-    }],
-    passwordNueva: ['', [Validators.required, Validators.minLength(6)]]
-  });
+        validators: [Validators.required],
+        asyncValidators: [validarPasswordActual(this.service)],
+        updateOn: 'blur'  // valida cuando el usuario sale del input
+      }],
+      passwordNueva: ['', [Validators.required, Validators.minLength(6)]]
+      });
   }
 
   volver(){
@@ -68,8 +68,12 @@ export class CambiarPasswordComponent {
     this.service.cambiarContrasena(data).subscribe({
       next: res => {
         if (res.success) {
-          this.mensaje = res.message || 'Contraseña actualizada correctamente.';
-          this.actualizarPasswordForm.reset();
+          this.dialog.open(DialogoConfirmacionComponent, {
+          data: 'La contraseña ha sido cambiada con éxito.',
+          disableClose: true
+          }).afterClosed().subscribe(() => {
+            this.router.navigate(['/perfil','datos']);
+          });
         } else {
           this.error = res.error || 'Error al cambiar la contraseña.';
         }

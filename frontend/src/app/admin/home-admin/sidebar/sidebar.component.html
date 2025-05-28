@@ -7,36 +7,40 @@
   </div>
   <ul class="nav-links">
     <li *ngFor="let item of menu; let i = index" [class.showMenu]="item.open">
+      
       <!-- Item sin submenú -->
       <ng-container *ngIf="!item.submenu">
-        <a [routerLink]="item.link">
+        <a [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
           <i [class]="item.icon"></i>
           <span class="link_name">{{ item.name }}</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">{{ item.name }}</a></li>
+          <li><a class="link_name">{{ item.name }}</a></li>
         </ul>
       </ng-container>
 
       <!-- Item con submenú -->
       <ng-container *ngIf="item.submenu">
         <div class="iocn-link">
-          <a href="#">
+          <!-- No debe navegar al hacer clic en el nombre principal, solo en submenu -->
+          <a href="javascript:void(0)">
             <i [class]="item.icon"></i>
             <span class="link_name">{{ item.name }}</span>
           </a>
-          <i class="bx bxs-chevron-down arrow"
-             (click)="toggleSubmenu(i)"></i>
+          <i class="bx bxs-chevron-down arrow" (click)="toggleSubmenu(i)"></i>
         </div>
         <ul class="sub-menu">
           <li>
-            <a class="link_name" href="#">{{ item.name }}</a>
+            <a class="link_name">{{ item.name }}</a>
           </li>
           <li *ngFor="let sub of item.submenu">
-            <a href="#">{{ sub }}</a>
+            <a [routerLink]="sub.link" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+              {{ sub.name }}
+            </a>
           </li>
         </ul>
       </ng-container>
+      
     </li>
 
     <!-- Perfil al final -->
@@ -48,7 +52,7 @@
         <div class="profile_name">Prem Shahi</div>
         <div class="job">Web Designer</div>
       </div>
-      <i class="bx bx-log-out"></i>
+      <i class="bx bx-log-out" (click)="logoutAdmin()"></i>
     </li>
   </ul>
 </div>
@@ -58,4 +62,5 @@
     <i class="bx bx-menu" (click)="toggleSidebar()"></i>
     <span class="text">Drop Down Sidebar</span>
   </div>
+    <router-outlet></router-outlet>
 </section>

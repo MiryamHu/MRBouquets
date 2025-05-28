@@ -6,10 +6,10 @@ import { PerfilUsuarioService } from '../services/perfil.usuario.service';
 export function validarPasswordActual(perfilService: PerfilUsuarioService): AsyncValidatorFn {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
         if (!control.value) {
-            return of(null); 
+        return of(null); // No error si está vacío (ajusta si quieres)
         }
         return of(control.value).pipe(
-        debounceTime(500), 
+        debounceTime(500),
         distinctUntilChanged(),
         switchMap(value =>
             perfilService.verificarPasswordActual(value).pipe(
@@ -20,3 +20,4 @@ export function validarPasswordActual(perfilService: PerfilUsuarioService): Asyn
         );
     };
 }
+

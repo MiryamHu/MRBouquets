@@ -46,12 +46,12 @@ export class PerfilUsuarioService {
   }
 
   verificarPasswordActual(password_actual: string): Observable<{ valido: boolean }> {
-  return this.http.post<{ valido: boolean }>(
-    `${this.base}/verificar-password-actual.php`,
-    { password_actual },
-    { withCredentials: true }
-  );
-}
+    return this.http.post<{ valido: boolean }>(
+      `${this.base}/verificar-password-actual.php`,
+      { password_actual },
+      { withCredentials: true }
+    );
+  }
 
   cambiarContrasena(data: ChangePasswordData): Observable<ChangePasswordResponse> {
     return this.http.put<ChangePasswordResponse>(

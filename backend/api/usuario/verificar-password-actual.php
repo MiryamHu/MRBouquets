@@ -29,8 +29,7 @@ $user_id = (int) $_SESSION['id_usuario'];
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (empty($data['password_actual'])) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Falta la contraseña actual']);
+    echo json_encode(['valido' => false]);
     exit;
 }
 
