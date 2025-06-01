@@ -119,4 +119,5 @@ h2 i {
     text-align: center;
   }
 
-  .navegacion .lista-navegacion a:hover {
+  .navegacion .lista-navegacion a:hover {}
+}

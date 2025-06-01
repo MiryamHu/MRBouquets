@@ -1,27 +1,31 @@
 <?php
+
 require_once __DIR__ . '/../conexion.php';
 require_once __DIR__ . '/../session_config.php';
 
 header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: http://localhost:4200');
+header('Access-Control-Allow-Credentials: true');
 
 start_clean_session();
 
+// Verificar sesión
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     http_response_code(401);
-    echo json_encode(['error' => 'Usuario no autenticado']);
+    echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
     exit;
 }
-
 if (isset($_SESSION['last_activity'])) {
-    $inactivo = 3600; // 1 hora
+    $inactivo = 3600;
     if (time() - $_SESSION['last_activity'] > $inactivo) {
+        session_unset();
         session_destroy();
         http_response_code(401);
-        echo json_encode(['error' => 'Sesión expirada']);
+        echo json_encode(['success' => false, 'error' => 'Sesión expirada']);
         exit;
     }
-    $_SESSION['last_activity'] = time();
 }
+$_SESSION['last_activity'] = time();
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -33,21 +37,11 @@ try {
             CONCAT(u.nombre, ' ', u.apellido) AS cliente,
             p.fecha_pedido,
             p.precio_total,
-            p.estado,
-            GROUP_CONCAT(
-                CONCAT(
-                    dp.cantidad,
-                    'x ',
-                    ' (',
-                    dp.precio_unitario,
-                    '€)'
-                )
-            ) as detalles
+            p.id_estado,
+            e.nombre AS estado_nombre
         FROM pedidos p
-        JOIN detalle_pedidos dp ON p.id = dp.id_pedido
-        JOIN ramos r ON dp.id_ramo = r.id
-        JOIN usuarios u ON p.id_usuario = u.id
-        GROUP BY p.id
+        JOIN usuarios u       ON p.id_usuario = u.id
+        JOIN estados_pedidos e ON p.id_estado = e.id
         ORDER BY p.fecha_pedido DESC
     ";
 
@@ -57,21 +51,31 @@ try {
 
     $pedidos = [];
     while ($row = $result->fetch_assoc()) {
+        // Formatear fecha y precio_total
         $fecha = new DateTime($row['fecha_pedido']);
         $row['fecha_pedido'] = $fecha->format('d/m/Y H:i');
         $row['precio_total'] = number_format($row['precio_total'], 2, ',', '.');
-        $pedidos[] = $row;
+
+        $pedidos[] = [
+            'id'            => intval($row['id']),
+            'id_usuario'    => intval($row['id_usuario']),
+            'cliente'       => $row['cliente'],
+            'fecha_pedido'  => $row['fecha_pedido'],
+            'precio_total'  => $row['precio_total'],
+            'id_estado'     => intval($row['id_estado']),
+            'estado_nombre' => $row['estado_nombre']
+        ];
     }
 
     echo json_encode([
         'success' => true,
-        'data' => $pedidos
+        'data'    => $pedidos
     ]);
 } catch (Exception $e) {
-    error_log("Error en get-pedidos-usuario.php: " . $e->getMessage());
+    error_log("Error en obtener-pedidos-admin.php: " . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'Error al obtener los pedidos'
+        'error'   => 'Error al obtener los pedidos'
     ]);
 }

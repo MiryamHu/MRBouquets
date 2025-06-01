@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../conexion.php';
 require_once __DIR__ . '/../session_config.php';
 
@@ -8,7 +9,7 @@ start_clean_session();
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     http_response_code(401);
-    echo json_encode(['error' => 'Usuario no autenticado']);
+    echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
     exit;
 }
 
@@ -18,20 +19,23 @@ if (isset($_SESSION['last_activity'])) {
     if (time() - $_SESSION['last_activity'] > $inactivo) {
         session_destroy();
         http_response_code(401);
-        echo json_encode(['error' => 'Sesión expirada']);
+        echo json_encode(['success' => false, 'error' => 'Sesión expirada']);
         exit;
     }
     $_SESSION['last_activity'] = time();
 }
 
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 try {
-    // Consulta para obtener los pedidos con sus detalles
+    // 1) Consulta: ahora incluir id_estado y estado_nombre (JOIN a estados_pedidos)
     $query = "
         SELECT 
             p.id,
             p.fecha_pedido,
             p.precio_total,
-            p.estado,
+            p.id_estado,
+            e.nombre AS estado_nombre,
             GROUP_CONCAT(
                 CONCAT(
                     dp.cantidad,
@@ -42,10 +46,11 @@ try {
                     '€)'
                 )
                 SEPARATOR '; '
-            ) as detalles
+            ) AS detalles
         FROM pedidos p
         JOIN detalle_pedidos dp ON p.id = dp.id_pedido
         JOIN ramos r ON dp.id_ramo = r.id
+        JOIN estados_pedidos e ON p.id_estado = e.id
         WHERE p.id_usuario = ?
         GROUP BY p.id
         ORDER BY p.fecha_pedido DESC
@@ -61,16 +66,23 @@ try {
         // Formatear la fecha
         $fecha = new DateTime($row['fecha_pedido']);
         $row['fecha_pedido'] = $fecha->format('d/m/Y H:i');
-        
-        // Formatear el precio
+
+        // Formatear el precio_total
         $row['precio_total'] = number_format($row['precio_total'], 2, ',', '.');
-        
-        $pedidos[] = $row;
+
+        $pedidos[] = [
+            'id'            => intval($row['id']),
+            'fecha_pedido'  => $row['fecha_pedido'],
+            'precio_total'  => $row['precio_total'],
+            'id_estado'     => intval($row['id_estado']),
+            'estado_nombre' => $row['estado_nombre'],
+            'detalles'      => $row['detalles']
+        ];
     }
 
     echo json_encode([
         'success' => true,
-        'data' => $pedidos
+        'data'    => $pedidos
     ]);
 
 } catch (Exception $e) {
@@ -78,6 +90,6 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'Error al obtener los pedidos'
+        'error'   => 'Error al obtener los pedidos'
     ]);
-} 
+}
