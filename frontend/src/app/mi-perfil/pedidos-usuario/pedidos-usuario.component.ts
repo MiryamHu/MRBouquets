@@ -1,3 +1,5 @@
+// src/app/components/pedidos-usuario/pedidos-usuario.component.ts
+
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,10 +17,10 @@ interface PedidoItem {
   templateUrl: './pedidos-usuario.component.html',
   styleUrl: './pedidos-usuario.component.css'
 })
-export class PedidosUsuarioComponent implements OnInit{
+export class PedidosUsuarioComponent implements OnInit {
   pedidos: Pedido[] = [];
   pedidosFiltrados: Pedido[] = [];
-  filtroEstado = '';
+  filtroEstado = '';              // Ahora será un string que representa el nombre del estado
   ordenFecha: 'asc' | 'desc' = 'desc';
   itemsPorPagina = 5;
   paginaActual = 1;
@@ -57,23 +59,29 @@ export class PedidosUsuarioComponent implements OnInit{
 
   aplicarFiltros(): void {
     let temp = [...this.pedidos];
+
+    // 1) Filtrar por id_estado (usamos filtroEstado como el nombre del estado, y comparamos con estado_nombre)
     if (this.filtroEstado) {
-      temp = temp.filter(p => p.estado === this.filtroEstado);
+      temp = temp.filter(p => p.estado_nombre === this.filtroEstado);
     }
+
+    // 2) Ordenar por fecha
     temp.sort((a, b) => {
       const tA = new Date(this.parseFecha(a.fecha_pedido)).getTime();
       const tB = new Date(this.parseFecha(b.fecha_pedido)).getTime();
       return this.ordenFecha === 'desc' ? tB - tA : tA - tB;
     });
+
     this.pedidosFiltrados = temp;
     this.totalPaginas = Math.ceil(temp.length / this.itemsPorPagina);
     this.paginaActual = 1;
   }
 
   parseFecha(fecha: string): string {
+    // Convierte "DD/MM/YYYY HH:mm" a "YYYY-MM-DD HH:mm" para JS
     const [dia, mes, resto] = fecha.split('/');
-    const [anio, hora] = resto.split(' ');
-    return `${anio}-${mes}-${dia} ${hora}`;
+    const [año, hora] = resto.split(' ');
+    return `${año}-${mes}-${dia} ${hora}`;
   }
 
   cambiarPagina(pag: number): void {
@@ -84,23 +92,35 @@ export class PedidosUsuarioComponent implements OnInit{
 
   getPedidoItems(detalles: string): PedidoItem[] {
     return detalles.split('; ').map(item => {
-      const m = item.match(/(\d+)x (.+) \((.+)€\)/)!;
-      return { cantidad: +m[1], nombre: m[2], precio: m[3] };
+      const match = item.match(/(\d+)x (.+) \((.+)€\)/);
+      return match
+        ? { cantidad: +match[1], nombre: match[2], precio: match[3] }
+        : { cantidad: 0, nombre: item, precio: '0' };
     });
   }
 
-  getEstadoTexto(estado: string): string {
-    switch (estado) {
+  // getEstadoClase y getEstadoTexto usan 'estado_nombre' (texto legible) para asignar clases o mostrar texto
+  getEstadoClase(estadoNombre: string): string {
+    switch (estadoNombre) {
+      case 'pendiente':   return 'estado-pendiente';
+      case 'confirmado':  return 'estado-confirmado';
+      case 'en_proceso':  return 'estado-proceso';
+      case 'entregado':   return 'estado-entregado';
+      case 'cancelado':   return 'estado-cancelado';
+      case 'completado':  return 'estado-completado';
+      default:            return '';
+    }
+  }
+
+  getEstadoTexto(estadoNombre: string): string {
+    switch (estadoNombre) {
       case 'pendiente':   return 'Pendiente';
       case 'confirmado':  return 'Confirmado';
       case 'en_proceso':  return 'En Proceso';
       case 'entregado':   return 'Entregado';
       case 'cancelado':   return 'Cancelado';
-      default:            return estado;
+      case 'completado':  return 'Completado';
+      default:            return estadoNombre;
     }
-  }
-
-  getEstadoClase(estado: string): string {
-    return `estado-${estado}`;
   }
 }

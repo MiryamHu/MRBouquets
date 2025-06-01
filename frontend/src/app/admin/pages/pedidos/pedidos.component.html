@@ -1,31 +1,88 @@
-<!-- pedidos.component.html -->
-<h2>Pedidos</h2>
+<div class="pedidos-container">
+    <h2>Panel de Pedidos</h2>
 
-<table>
-    <thead>
-        <tr>
-        <th>ID</th>
-        <th>Cliente</th>
-        <th>Fecha</th>
-        <th>Estado</th>
-        <th>Total (€)</th>
-        <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let pedido of pedidos">
-        <td>{{ pedido.id }}</td>
-        <td>{{ pedido.cliente }}</td>
-        <td>{{ pedido.fecha_pedido}}</td>
-        <td>{{ pedido.estado }}</td>
-        <td>{{ pedido.precio_total}}</td>
-        <td>
-            <button mat-icon-button 
-                    (click)="verDetalle(pedido)" 
-                    matTooltip="Ver detalle">
-            <mat-icon>visibility</mat-icon>
-            </button>
-        </td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Spinner de carga -->
+    <div *ngIf="loading" class="loading-spinner">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Cargando pedidos...</p>
+    </div>
+
+    <!-- Mensaje de error si hubo fallo -->
+    <div *ngIf="!loading && errorMsg" class="error-message">
+        <p>{{ errorMsg }}</p>
+    </div>
+
+    <!-- Cuando ya haya datos, mostrar la MatTable -->
+    <div *ngIf="!loading && !errorMsg">
+        <!--  Campo de filtro global -->
+        <mat-form-field appearance="outline" class="filtro-field">
+        <mat-label>Buscar (ID o Cliente)</mat-label>
+        <input matInput
+                (keyup)="applyFilter($any($event.target).value)"
+                placeholder="Escribe ID o nombre del cliente" />
+        <button mat-button *ngIf="dataSource.filter" matSuffix mat-icon-button aria-label="Limpiar"
+                (click)="applyFilter('')">
+            <mat-icon>close</mat-icon>
+        </button>
+        </mat-form-field>
+
+        <!--  Tabla de pedidos -->
+        <div class="table-container">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!-- Columna ID -->
+            <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let pedido"> {{ pedido.id }} </td>
+            </ng-container>
+
+            <!-- Columna Cliente -->
+            <ng-container matColumnDef="cliente">
+            <th mat-header-cell *matHeaderCellDef> Cliente </th>
+            <td mat-cell *matCellDef="let pedido"> {{ pedido.cliente }} </td>
+            </ng-container>
+
+            <!-- Columna Fecha Pedido -->
+            <ng-container matColumnDef="fecha_pedido">
+            <th mat-header-cell *matHeaderCellDef> Fecha </th>
+            <td mat-cell *matCellDef="let pedido"> {{ pedido.fecha_pedido }} </td>
+            </ng-container>
+
+            <!-- Columna Precio Total -->
+            <ng-container matColumnDef="precio_total">
+            <th mat-header-cell *matHeaderCellDef> Total (€) </th>
+            <td mat-cell *matCellDef="let pedido"> {{ pedido.precio_total }} </td>
+            </ng-container>
+
+            <!-- Columna Estado -->
+            <ng-container matColumnDef="estado_nombre">
+            <th mat-header-cell *matHeaderCellDef> Estado </th>
+            <td mat-cell *matCellDef="let pedido"> {{ pedido.estado_nombre | titlecase }} </td>
+            </ng-container>
+
+            <!-- Columna Acciones -->
+            <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let pedido">
+                <button mat-icon-button
+                        color="primary"
+                        (click)="verDetalle(pedido)"
+                        matTooltip="Ver detalle">
+                <mat-icon>visibility</mat-icon>
+                </button>
+            </td>
+            </ng-container>
+
+            <!-- Definición de filas -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row        *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        </div>
+
+        <!--  Paginador -->
+        <mat-paginator [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 50]"
+                    showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>

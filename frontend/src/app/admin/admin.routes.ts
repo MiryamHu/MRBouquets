@@ -1,4 +1,3 @@
-// src/app/admin/admin.routes.ts
 import { Routes } from '@angular/router';
 import { AdminDashboardComponent } from './home-admin/admin-dashboard/admin-dashboard.component';
 import { SidebarComponent } from './home-admin/sidebar/sidebar.component';
@@ -14,7 +13,7 @@ export const ADMIN_ROUTES: Routes = [
         component: SidebarComponent,
         children: [
         { path: 'dashboard', component: DashboardComponent },
-        { path: 'pedidos', component: PedidosComponent },
+        { path: 'pedidos', component: PedidosComponent },       
         { path: 'pedidos/:id', component: DetallePedidoComponent },
         { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]

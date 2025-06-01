@@ -1,5 +1,5 @@
 <?php
-// C:\xampp\htdocs\MRBouquets\backend\api\pedido.php
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -19,11 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
     exit;
 }
-
-// session_name('MRBSESSID');
-// if (session_status() === PHP_SESSION_NONE) {
-//     session_start();
-// }
 
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     http_response_code(401);
@@ -56,6 +51,7 @@ $precio_total = floatval($data['total']);
 $items        = $data['items'];
 $id_direccion = (int) $data['id_direccion'];
 
+// Verificar que la dirección pertenezca al usuario
 $stmt = $conn->prepare("SELECT id FROM direcciones WHERE id = ? AND usuario_id = ?");
 $stmt->bind_param("ii", $id_direccion, $id_usuario);
 $stmt->execute();
@@ -69,19 +65,22 @@ $stmt->close();
 try {
     $conn->begin_transaction();
 
+    // 1) Insertar en 'pedidos' con id_estado = 1 (pendiente)
+    $estadoPendiente = 1; // Asegúrate que en tu tabla estados_pedidos el ID=1 corresponde a "pendiente"
+
     $stmt = $conn->prepare("
-        INSERT INTO pedidos (id_usuario, id_direccion, precio_total, estado)
-        VALUES (?, ?, ?, 'confirmado')
+        INSERT INTO pedidos (id_usuario, id_direccion, precio_total, id_estado)
+        VALUES (?, ?, ?, ?)
     ");
 
     if ($stmt === false) {
-    error_log("Error en prepare(): " . $conn->error);
-    http_response_code(500);
-    echo json_encode(['error' => 'Error interno del servidor']);
-    exit;
-}
+        error_log("Error en prepare(): " . $conn->error);
+        http_response_code(500);
+        echo json_encode(['error' => 'Error interno del servidor']);
+        exit;
+    }
 
-    $stmt->bind_param("iid", $id_usuario, $id_direccion, $precio_total);
+    $stmt->bind_param("iidi", $id_usuario, $id_direccion, $precio_total, $estadoPendiente);
     $stmt->execute();
 
     if ($stmt->affected_rows !== 1) {
@@ -91,10 +90,15 @@ try {
     $id_pedido = $stmt->insert_id;
     $stmt->close();
 
+    // 2) Insertar cada ítem en detalle_pedidos
     $stmt = $conn->prepare("
         INSERT INTO detalle_pedidos (id_pedido, id_ramo, cantidad, precio_unitario)
         VALUES (?, ?, ?, ?)
     ");
+
+    if ($stmt === false) {
+        throw new Exception("Error en prepare detalle_pedidos: " . $conn->error);
+    }
 
     foreach ($items as $item) {
         $stmt->bind_param("iiid",
@@ -114,7 +118,7 @@ try {
     $conn->commit();
 
     echo json_encode([
-        'mensaje'   => 'Pedido confirmado',
+        'mensaje'   => 'Pedido registrado como pendiente',
         'id_pedido' => $id_pedido
     ]);
 

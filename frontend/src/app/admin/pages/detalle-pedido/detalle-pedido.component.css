@@ -19,3 +19,201 @@
 .detalle-table td {
     padding: 8px;
 }
+
+
+/* ===== Contenedor general ===== */
+:host {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: #F0F4FF;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* ===== MatCard ===== */
+mat-card {
+    width: 100%;
+    max-width: 800px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    margin-top: 1rem;
+    overflow: hidden;
+}
+
+/* MatCard Header */
+mat-card-header {
+    background-color: #E3E8F3;
+    padding: 1rem 1.5rem;
+}
+
+mat-card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2E3A59;
+}
+
+mat-card-subtitle {
+    font-size: 1rem;
+    color: #556080;
+}
+
+/* MatCard Content */
+mat-card-content {
+    padding: 1rem 1.5rem;
+    color: #2E3A59;
+    font-size: 0.95rem;
+}
+
+/* Etiquetas dentro del contenido */
+mat-card-content p {
+    margin: 0 0 1rem 0;
+}
+
+mat-card-content strong {
+    color: #2E3A59;
+}
+
+/* ===== Selección de estado (mat-form-field) ===== */
+mat-form-field {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 1rem;
+}
+
+mat-form-field .mat-form-field-flex {
+    background-color: #FFFFFF;
+    border-radius: 4px;
+}
+
+mat-form-field .mat-form-field-label {
+    font-size: 0.9rem;
+    color: #556080;
+}
+
+mat-select {
+    font-size: 0.95rem;
+    color: #2E3A59;
+}
+
+mat-option {
+    font-size: 0.95rem;
+}
+
+/* ===== Tabla de ítems ===== */
+table.mat-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.mat-header-row {
+    background-color: #E3E8F3;
+}
+
+.mat-header-cell {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #2E3A59;
+    border-bottom: 1px solid #D0D4DB;
+    text-transform: uppercase;
+}
+
+.mat-row:nth-child(odd) {
+    background-color: #FCFCFE;
+}
+
+.mat-row:nth-child(even) {
+    background-color: #FFFFFF;
+}
+
+.mat-cell {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #2E3A59;
+    border-bottom: 1px solid #F0F2F5;
+}
+
+/* Hover en fila */
+.mat-row:hover {
+    background-color: #F0F4FF;
+}
+
+/* ===== Botón Volver ===== */
+mat-card-actions {
+    background-color: #F7F9FC;
+    padding: 0.75rem 1.5rem;
+    text-align: right;
+}
+
+mat-card-actions button {
+    font-size: 0.95rem;
+    color: #2E3A59;
+    transition: background-color 0.2s ease-in-out;
+}
+
+mat-card-actions button:hover {
+    background-color: rgba(30, 136, 229, 0.1); 
+}
+
+mat-card-actions mat-icon {
+    margin-right: 0.25rem;
+    vertical-align: middle;
+}
+
+/* ===== Mensaje de carga / error (si aplica) ===== */
+.loading-content,
+.error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.loading-content mat-spinner {
+    margin-bottom: 1rem;
+}
+
+.error-content p {
+    background-color: #fdecea;
+    color: #a71d2a;
+    padding: 1rem;
+    border: 1px solid #f5c2c7;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* ===== Ajustes responsivos ===== */
+@media (max-width: 768px) {
+    mat-card {
+        margin: 1rem;
+    }
+
+    .mat-header-cell,
+    .mat-cell {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    mat-card-title {
+        font-size: 1.25rem;
+    }
+
+    mat-card-subtitle {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    mat-form-field {
+        max-width: 100%;
+    }
+
+    mat-card-content p {
+        font-size: 0.85rem;
+    }
+}
+
