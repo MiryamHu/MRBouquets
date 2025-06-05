@@ -5,13 +5,12 @@ CREATE TABLE IF NOT EXISTS estados_pedidos (
 );
 
 -- 1.2) Insertamos algunos estados iniciales.
---     Aquí puedes ajustar la lista según tus necesidades.
 INSERT INTO estados_pedidos (nombre) VALUES
     ('confirmado'),
     ('en preparación'),
     ('enviado'),
-    ('cancelado'),
-    ('recibido')
+    ('recibido'),
+    ('cancelado')
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 
 
@@ -32,9 +31,31 @@ ALTER TABLE pedidos
 -- 3.1) Actualizar cada pedido para que id_estado apunte al id correcto
 UPDATE pedidos AS p
 JOIN estados_pedidos AS e
-  ON e.nombre = p.estado_textual
+    ON e.nombre = p.estado_textual
 SET p.id_estado = e.id;
 
 
 -- 4.1) (Opcional) Borrar la columna textual antigua
 ALTER TABLE pedidos DROP COLUMN estado_textual;
+
+
+
+
+-- 5.1) Eliminar la tabla temporal para modificar los estados
+-- 1) Asegurar que 'nombre' sea único
+-- 1) Asegurar que 'nombre' sea único
+ALTER TABLE estados_pedidos
+ADD UNIQUE INDEX uq_estados_nombre (nombre);
+
+-- 2) Eliminar cualquier estado distinto a esos cinco
+DELETE FROM estados_pedidos
+WHERE nombre NOT IN ('confirmado','en preparación','enviado','recibido','cancelado');
+
+-- 3) Insertar/actualizar los cinco estados
+INSERT INTO estados_pedidos (nombre) VALUES
+  ('confirmado'),
+  ('en preparación'),
+  ('enviado'),
+  ('recibido'),
+  ('cancelado')
+ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
