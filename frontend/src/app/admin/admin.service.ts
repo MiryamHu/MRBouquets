@@ -52,7 +52,7 @@ export class AdminService {
   /** Obtener la lista de pedidos **/
   getPedidos(): Observable<{ success: boolean; data: PedidoResumen[] }> {
     return this.http.get<{ success: boolean; data: PedidoResumen[] }>(
-      `${this.baseUrl}/obtener-pedidos-admin.php`,
+      `${this.baseUrl}/pedido/obtener-pedidos-admin.php`,
       { withCredentials: true }
     );
   }
@@ -60,7 +60,7 @@ export class AdminService {
   /** Obtener detalle de un pedido **/
   obtenerPedidoPorId(id: number): Observable<{ success: boolean; data: PedidoDetalle }> {
     return this.http.get<{ success: boolean; data: PedidoDetalle }>(
-      `${this.baseUrl}/obtener-pedido-por-id.php?id=${id}`,
+      `${this.baseUrl}/pedido/obtener-pedido-por-id.php?id=${id}`,
       { withCredentials: true }
     );
   }
@@ -68,7 +68,7 @@ export class AdminService {
   /** Obtener todos los estados (id + nombre) **/
   getEstadosPedidos(): Observable<{ success: boolean; data: EstadoPedido[] }> {
     return this.http.get<{ success: boolean; data: EstadoPedido[] }>(
-      `${this.baseUrl}/obtener-estados-pedidos.php`,
+      `${this.baseUrl}/pedido/obtener-estados-pedidos.php`,
       { withCredentials: true }
     );
   }
@@ -76,8 +76,8 @@ export class AdminService {
   /** Actualizar el estado de un pedido **/
   updateEstadoPedido(id: number, idEstado: number): Observable<{ success: boolean; message: string }> {
     const payload = { id: id, id_estado: idEstado };
-    return this.http.post<{ success: boolean; message: string }>(
-      `${this.baseUrl}/update-estado-pedido.php`,
+    return this.http.put<{ success: boolean; message: string }>(
+      `${this.baseUrl}/pedido/actualizar-estado-pedido.php`,
       payload,
       { withCredentials: true }
     );

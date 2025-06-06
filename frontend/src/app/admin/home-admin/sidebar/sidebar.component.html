@@ -22,7 +22,6 @@
       <!-- Item con submenú -->
       <ng-container *ngIf="item.submenu">
         <div class="iocn-link">
-          <!-- No debe navegar al hacer clic en el nombre principal, solo en submenu -->
           <a href="javascript:void(0)">
             <i [class]="item.icon"></i>
             <span class="link_name">{{ item.name }}</span>
@@ -30,11 +29,11 @@
           <i class="bx bxs-chevron-down arrow" (click)="toggleSubmenu(i)"></i>
         </div>
         <ul class="sub-menu">
-          <li>
-            <a class="link_name">{{ item.name }}</a>
-          </li>
+          <li><a class="link_name">{{ item.name }}</a></li>
           <li *ngFor="let sub of item.submenu">
-            <a [routerLink]="sub.link" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+            <a [routerLink]="sub.link"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }">
               {{ sub.name }}
             </a>
           </li>

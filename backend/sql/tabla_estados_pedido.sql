@@ -7,11 +7,11 @@ CREATE TABLE IF NOT EXISTS estados_pedidos (
 -- 1.2) Insertamos algunos estados iniciales.
 --     Aquí puedes ajustar la lista según tus necesidades.
 INSERT INTO estados_pedidos (nombre) VALUES
-    ('pendiente'),
     ('confirmado'),
+    ('en preparación'),
     ('enviado'),
     ('cancelado'),
-    ('completado')
+    ('recibido')
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 
 

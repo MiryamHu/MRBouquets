@@ -7,10 +7,14 @@ interface MenuItem {
   name: string;
   icon: string;
   link?: string;
-  submenu?: string[];
+  submenu?: SubmenuItem[];
   open?: boolean;
 }
 
+interface SubmenuItem {
+  name: string;
+  link: string;
+}
 @Component({
   selector: 'app-sidebar',
   imports: [CommonModule, RouterModule],
@@ -32,9 +36,13 @@ export class SidebarComponent {
     { name: 'Pedidos', icon: 'bx bx-grid-alt', link: '/admin/pedidos' },
 
     {
-      name: 'Inventario',
+      name: 'Catálogo',
       icon: 'bx bx-book-alt',
-      submenu: ['Web Design', 'Login Form', 'Card Design'],
+      submenu: [
+      { name: 'Añadir producto', link: '/admin/catalogo/añadir' },
+      { name: 'Editar producto', link: '/admin/catalogo/editar' },
+      { name: 'Eliminar producto', link: '/admin/catalogo/eliminar' }
+    ],
       open: false
     },
     { name: 'Clientes', icon: 'bx bx-pie-chart-alt-2', link: '/analytics' },
@@ -42,7 +50,11 @@ export class SidebarComponent {
     {
       name: 'Reportes',
       icon: 'bx bx-plug',
-      submenu: ['UI Face', 'Pigments', 'Box Icons'],
+      submenu: [
+      { name: 'Añadir producto', link: '/admin/catalogo/añadir' },
+      { name: 'Editar producto', link: '/admin/catalogo/editar' },
+      { name: 'Eliminar producto', link: '/admin/catalogo/eliminar' }
+    ],
       open: false
     },
     // { name: 'Explore', icon: 'bx bx-compass', link: '/explore' },

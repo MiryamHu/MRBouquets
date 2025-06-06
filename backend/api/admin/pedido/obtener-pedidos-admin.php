@@ -1,11 +1,27 @@
 <?php
 
-require_once __DIR__ . '/../conexion.php';
-require_once __DIR__ . '/../session_config.php';
+require_once __DIR__ . '/../../conexion.php';
+require_once __DIR__ . '/../../session_config.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: http://localhost:4200');
 header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    // Responder al preflight de CORS
+    http_response_code(204);
+    exit;
+}
+
+// A partir de aquí, SOLO aceptamos PUT
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'Método no permitido. Use GET.']);
+    exit;
+}
+
 
 start_clean_session();
 
