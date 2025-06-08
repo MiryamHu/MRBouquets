@@ -40,25 +40,11 @@ export class SidebarComponent {
       icon: 'bx bx-book-alt',
       submenu: [
       { name: 'Productos', link: '/admin/catalogo/productos' },
-      { name: 'Secciones', link: '/admin/catalogo/secciones' },
+      { name: 'Ocasiones', link: '/admin/catalogo/ocasiones' },
     ],
       open: false
     },
     { name: 'Clientes', icon: 'bx bx-pie-chart-alt-2', link: '/analytics' },
-    // { name: 'Chart',     icon: 'bx bx-line-chart',         link: '/chart' },
-    {
-      name: 'Reportes',
-      icon: 'bx bx-plug',
-      submenu: [
-      { name: 'Añadir producto', link: '/admin/catalogo/añadir' },
-      { name: 'Editar producto', link: '/admin/catalogo/editar' },
-      { name: 'Eliminar producto', link: '/admin/catalogo/eliminar' }
-    ],
-      open: false
-    },
-    // { name: 'Explore', icon: 'bx bx-compass', link: '/explore' },
-    // { name: 'History', icon: 'bx bx-history', link: '/history' },
-    // { name: 'Setting', icon: 'bx bx-cog',     link: '/setting' }
   ];
 
   toggleSidebar() {

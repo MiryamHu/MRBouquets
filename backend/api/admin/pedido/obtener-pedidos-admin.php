@@ -30,7 +30,15 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
     exit;
+    
 }
+
+if ( ($_SESSION['rol'] ?? '') !== 'admin' ) {
+    http_response_code(403);
+    echo json_encode(['success'=>false,'error'=>'Acceso denegado']);
+    exit;
+}
+
 if (isset($_SESSION['last_activity'])) {
     $inactivo = 3600;
     if (time() - $_SESSION['last_activity'] > $inactivo) {

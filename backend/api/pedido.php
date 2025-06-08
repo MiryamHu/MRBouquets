@@ -65,8 +65,8 @@ $stmt->close();
 try {
     $conn->begin_transaction();
 
-    // 1) Insertar en 'pedidos' con id_estado = 1 (pendiente)
-    $estadoPendiente = 1; // Asegúrate que en tu tabla estados_pedidos el ID=1 corresponde a "pendiente"
+    // 1) Insertar en 'pedidos' con id_estado = 1 (confirmado)
+    $estadoPendiente = 1; // Asegúrate que en tu tabla estados_pedidos el ID=1 corresponde a "confirmado"
 
     $stmt = $conn->prepare("
         INSERT INTO pedidos (id_usuario, id_direccion, precio_total, id_estado)

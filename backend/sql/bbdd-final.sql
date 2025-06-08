@@ -167,7 +167,7 @@ CREATE TABLE soporte_cliente (
 INSERT INTO tipos_ocasion (nombre) VALUES
     ('Cumpleaños'),
     ('Condolencias'),
-    ('Aniversario'),
+    ('Romance'),
     ('Graduación');
 
 -- Insert ramos

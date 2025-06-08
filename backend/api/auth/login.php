@@ -62,11 +62,12 @@ if ($usuario = $result->fetch_assoc()) {
         }
         
         // Guardar datos en la sesión
-        $_SESSION['id_usuario'] = $usuario['id'];
-        $_SESSION['usuario'] = $usuario['nombre'];
-        $_SESSION['initialized'] = true;
-        $_SESSION['created'] = time();
-        $_SESSION['last_activity'] = time();
+        $_SESSION['id_usuario']   = $usuario['id'];
+        $_SESSION['usuario']      = $usuario['nombre'];
+        $_SESSION['rol']          = $usuario['rol'];     // ← esto faltaba
+        $_SESSION['initialized']  = true;
+        $_SESSION['created']      = time();
+        $_SESSION['last_activity']= time();
         
         error_log("=== Login exitoso ===");
         error_log("Usuario ID: " . $usuario['id']);

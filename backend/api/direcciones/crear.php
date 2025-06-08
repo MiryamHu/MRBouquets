@@ -59,7 +59,7 @@ try {
     $stmt = $conn->prepare("
         INSERT INTO direcciones
         (usuario_id, nombre, calle, numero, piso, puerta, codigo_postal,
-         localidad, provincia, pais)
+        localidad, provincia, pais)
         VALUES (?,?,?,?,?,?,?,?,?,?)
     ");
     $stmt->bind_param(

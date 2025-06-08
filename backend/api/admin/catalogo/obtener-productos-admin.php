@@ -1,5 +1,3 @@
-
-
 <?php
 
 require_once __DIR__ . '/../../conexion.php';
@@ -33,6 +31,13 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
     exit;
 }
+
+if ( ($_SESSION['rol'] ?? '') !== 'admin' ) {
+    http_response_code(403);
+    echo json_encode(['success'=>false,'error'=>'Acceso denegado']);
+    exit;
+}
+
 if (isset($_SESSION['last_activity'])) {
     $inactivo = 3600;
     if (time() - $_SESSION['last_activity'] > $inactivo) {
@@ -59,8 +64,10 @@ try {
         r.color,
         r.disponible,
         r.activo,
+        r.img,
         r.es_ocasion_especial,
         
+
         t.nombre AS nombre_ocasion
         FROM ramos r
         LEFT JOIN tipos_ocasion t
@@ -86,6 +93,7 @@ try {
                 'color'                => $row['color'],
                 'disponible'           => (bool)$row['disponible'],
                 'activo'               => (bool)$row['activo'],
+                'img'                  => $row['img'],
                 'es_ocasion_especial'  => (bool)$row['es_ocasion_especial'],
                 'nombre_ocasion'       => $row['nombre_ocasion']
         ];

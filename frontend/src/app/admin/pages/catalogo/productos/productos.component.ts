@@ -13,6 +13,9 @@ import { MatTableDataSource }     from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule }      from '@angular/material/checkbox';
 import { MatSelectModule }        from '@angular/material/select';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
+import { DialogoEliminarProductoComponent } from '../dialogo-eliminar-producto/dialogo-eliminar-producto.component';
 
 import { ProductosService, Producto } from '../../../services-admin/productos.service';
 import { RamosService, Ocasion }      from '../../../../services/ramos.service';
@@ -31,7 +34,8 @@ import { RamosService, Ocasion }      from '../../../../services/ramos.service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogModule,
   ],
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.css']
@@ -47,39 +51,40 @@ export class ProductosComponent implements OnInit {
   errorMsg: string | null = null;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  // ✨ Array local para los filtros
   productosTodos: Producto[] = [];
-
-  // ✨ Opciones de ocasión
   ocasiones: Ocasion[] = [];
-
-  // ✨ Modelo de filtros
   filtros = {
     busqueda: '',
     esEspecial: false,
-    nombreOcasion: null as string|null   // ← cambia aquí
+    nombreOcasion: null as string|null
   };
 
   constructor(
     private productosSvc: ProductosService,
     private ramosSvc: RamosService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
-    // Cargar ocasiones
+    // cargar ocasiones
     this.ramosSvc.getOcasiones().subscribe({
       next: oc => this.ocasiones = oc,
       error: () => this.ocasiones = []
     });
+    // cargar productos
+    this.loadProductos();
+  }
 
-    // Cargar productos
+  private loadProductos() {
+    this.loading = true;
     this.productosSvc.getProductos().subscribe({
       next: resp => {
         if (resp.success) {
           this.productosTodos = resp.data;
           this.dataSource.data = this.productosTodos;
-          this.dataSource.paginator = this.paginator;
+
+          setTimeout(() => this.dataSource.paginator = this.paginator);
         } else {
           this.errorMsg = 'No se pudieron cargar los productos.';
         }
@@ -93,49 +98,42 @@ export class ProductosComponent implements OnInit {
     });
   }
 
-  /** Filtro global de texto */
   applyFilter(value: string) {
     this.filtros.busqueda = value.trim().toLowerCase();
     this.aplicarFiltros();
   }
 
-  /** Aquí se combinan todos los filtros */
-  aplicarFiltros() {
+  private aplicarFiltros() {
     this.dataSource.data = this.productosTodos.filter(prod => {
-      // Búsqueda de texto
       const b = !this.filtros.busqueda
         || prod.id.toString().includes(this.filtros.busqueda)
         || prod.nombre.toLowerCase().includes(this.filtros.busqueda);
-
-      // Si no está activado “solo especiales”, pasamos
-      if (!this.filtros.esEspecial) {
-        return b;
-      }
-
-      // Aquí ya sabemos que esEspecial === true, así que filtro por flag
-      const esp = prod.es_ocasion_especial;
-
-      if (!esp) {
-        // Si no es una ocasión especial, lo descartamos
-        return false;
-      }
-
-      // Si aún no se ha elegido ninguna ocasión concreta, lo dejamos pasar
-      if (!this.filtros.nombreOcasion) {
-        return true;
-      }
-
-      // Si eligió una ocasión, filtramos por nombre
+      if (!this.filtros.esEspecial) return b;
+      if (!prod.es_ocasion_especial) return false;
+      if (!this.filtros.nombreOcasion) return true;
       return prod.nombre_ocasion === this.filtros.nombreOcasion;
     });
   }
 
-
   editarProducto(p: Producto) {
-    // this.router.navigate(['/admin/productos/editar', p.id]);
+    this.router.navigate(['/admin/catalogo/productos/editar', p.id]);
   }
 
-  eliminarProducto(p: Producto) {
-    // tu lógica de eliminación…
+  eliminarProducto(producto: Producto) {
+    const dialogRef = this.dialog.open(DialogoEliminarProductoComponent, {
+      data: {
+        title: 'Confirmar eliminación',
+        message: `¿Seguro que quieres eliminar "${producto.nombre}"?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.productosSvc.deleteProducto(producto.id).subscribe({
+          next: () => this.loadProductos(),
+          error: () => alert('Error al eliminar el producto')
+        });
+      }
+    });
   }
 }
