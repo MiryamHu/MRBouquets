@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdminService, PedidoDetalle, ItemDetalle, EstadoPedido } from '../../admin.service';
+import { AdminService, PedidoDetalle, ItemDetalle, EstadoPedido } from '../../services-admin/pedido.service';
 
 import { MatCardModule }    from '@angular/material/card';
 import { MatTableModule }   from '@angular/material/table';
@@ -27,6 +27,7 @@ import { MatOptionModule } from '@angular/material/core';
   templateUrl: './detalle-pedido.component.html',
   styleUrl: './detalle-pedido.component.css'
 })
+
 export class DetallePedidoComponent implements OnInit {
   pedido!: PedidoDetalle;
   displayedColumns = ['id_producto', 'producto', 'cantidad', 'precio_unitario', 'subtotal'];

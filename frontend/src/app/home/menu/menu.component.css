@@ -105,6 +105,8 @@ body {
   letter-spacing: 0.5px;
 }
 
+
+
 .navegacion .lista-navegacion a::after {
   content: '';
   position: absolute;
@@ -189,6 +191,204 @@ body {
 .acciones-usuario .cerrar-sesion:hover {
   opacity: 1;
 }
+
+
+/*SUBMENU*/
+/* ========================
+   Estilos del menú principal
+   ======================== */
+.has-submenu > a::after {
+  content: none !important;
+}
+.navegacion .lista-navegacion > li > a,
+.has-submenu > a {
+  display: flex;               /* igual para todos */
+  align-items: center;         /* calibre vertical idéntico */
+  padding: 0.35rem 0;          /* usa el mismo padding que los demás */
+  line-height: normal;         /* quita cualquier line-height que los desajuste */
+}
+
+/* 2) Ajusta el font-size de tu icono para hacerlo más grande */
+.has-submenu > a .submenu-icon {
+  font-size: 1.4rem !important;   /* ajústalo a tu gusto */
+  line-height: 1;                 /* que ocupe solo su alto */
+  vertical-align: middle;         /* forzar alineación central */
+  margin-left: 0.3em;             /* un poco de separación */
+}
+
+/* 3) Posiciona el submenú justo bajo el enlace padre */
+.has-submenu .submenu {
+  top: 100%;                /* ancla justo al fondo del enlace */
+  left: 0;
+  margin-top: 4px;          /* gap pequeño si lo quieres */
+}
+
+.lista-navegacion {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.lista-navegacion li {
+  position: relative;
+}
+
+/* ========================
+   Enlace con icono ▼
+   ======================== */
+
+
+.has-submenu .submenu {
+  position: absolute;
+  top: 100%;               /* justo en la base del enlace padre */
+  left: 0;
+  margin-top: 4px;         /* un pequeño gap si quieres */
+  /* elimina cualquier cálculo con calc(100% + ...) que lo baje demasiado */
+}
+
+
+.has-submenu > a {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 0.5rem;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+
+/* Pseudo-elemento para la flecha */
+.has-submenu > a::after {
+  content: '▼';
+  font-size: 0.6em;
+  margin-left: 0.3em;
+  transition: transform 0.2s;
+}
+
+/* Hover del enlace padre */
+.has-submenu:hover > a {
+  color: #0a7;              /* cambia al color que quieras */
+}
+
+.has-submenu:hover > a::after {
+  transform: rotate(180deg); /* gira la flecha si te gusta */
+}
+
+/* ========================
+   Sub-menú oculto por defecto
+   ======================== */
+.submenu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);     /* un poco más abajo */
+  left: 0;
+  background: #fff;
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 180px;           /* ancho mínimo */
+  z-index: 10;
+}
+
+
+/* ========================
+   Estilos de los ítems del sub-menú
+   ======================== */
+.submenu li {
+  overflow: hidden;     /* mantiene todo dentro */
+}
+
+.submenu-link {
+  display: block;
+  text-decoration: none;
+  color: #333;
+}
+
+.submenu li a.submenu-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  overflow: hidden;             /* opcional, para recortar desbordes */
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+
+.link-text {
+  display: inline-block;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.submenu li a.submenu-link:hover {
+  background: #ff4081;          /* fondo completo */
+}
+
+.submenu li a.submenu-link:hover .link-text {
+  transform: translateX(6px);   /* o el valor que prefieras */
+  color: #fff;                  /* texto en blanco */
+}
+
+
+
+.submenu li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+
+/*ICON SUBMENU*/
+.has-submenu > a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.1rem 0 !important;   /* mismo padding vertical que los demás */
+}
+
+/* 2) Neutraliza cualquier line-height del mat-icon */
+.has-submenu > a .submenu-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.4rem !important;     /* tu tamaño deseado */
+  line-height: 1 !important;        /* evita empujar la línea */
+  margin: 0 0 0 0.3em !important;   /* sólo margen a la izquierda */
+  vertical-align: middle !important;
+}
+
+.has-submenu .submenu {
+  top: 100% !important;             /* base exacta del enlace */
+  margin-top: 4px !important;       /* gap pequeño */
+}
+.submenu-icon {
+  margin-left: 0.4em;
+  font-size: 0.8em;
+  transition: transform 0.2s;
+}
+
+
+
+/* Hover: girar icono y cambiar color del enlace */
+.has-submenu.open > a {
+  color: #0a7;              /* mismo color que antes en hover */
+}
+.has-submenu.open .submenu-icon {
+  transform: rotate(180deg); /* gira la flecha solo al abrir */
+}
+.has-submenu.open .submenu {
+  display: block;            /* muestra solo al abrir */
+}
+
+
+/* 1) Ocultar la línea de subrayado rosa en los enlaces del submenú */
+.submenu li a::after {
+  content: none !important;
+}
+
+
 
 /* ============================= */
 /* Responsive                    */

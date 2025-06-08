@@ -102,7 +102,7 @@
       <div class="grid-ocasiones">
         <article class="tarjeta-ocasion" *ngFor="let ocasion of productosOcasionesVisibles">
           <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ocasion.img" 
-               [alt]="ocasion.nombre">
+              [alt]="ocasion.nombre">
           <h3>{{ ocasion.nombre }}</h3>
           <p class="descripcion">{{ ocasion.descripcion }}</p>
           <span class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</span>

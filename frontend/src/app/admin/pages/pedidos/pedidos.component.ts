@@ -2,7 +2,7 @@
 
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminService, PedidoResumen } from '../../admin.service';
+import { AdminService, PedidoResumen } from '../../services-admin/pedido.service';
 import { Router } from '@angular/router';
 
 import { MatTableModule }       from '@angular/material/table';
@@ -59,13 +59,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
           this.dataSource.data = resp.data;
           this.loading = false;
         } else {
-          this.errorMsg = 'No se pudieron cargar los pedidos.';
+          this.errorMsg = 'No se pudieron cargar los productos.';
           this.loading = false;
         }
       },
       error: err => {
         console.error('Error al obtener pedidos:', err);
-        this.errorMsg = 'Error de red al cargar los pedidos.';
+        this.errorMsg = 'Error de red al cargar los productos.';
         this.loading = false;
       }
     });

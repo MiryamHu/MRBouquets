@@ -30,7 +30,6 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
     exit;
-    
 }
 
 if ( ($_SESSION['rol'] ?? '') !== 'admin' ) {
@@ -56,44 +55,53 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 try {
     $query = "
         SELECT 
-            p.id,
-            p.id_usuario,
-            CONCAT(u.nombre, ' ', u.apellido) AS cliente,
-            p.fecha_pedido,
-            p.precio_total,
-            p.id_estado,
-            e.nombre AS estado_nombre
-        FROM pedidos p
-        JOIN usuarios u       ON p.id_usuario = u.id
-        JOIN estados_pedidos e ON p.id_estado = e.id
-        ORDER BY p.fecha_pedido DESC
+        r.id,
+        r.nombre,
+        r.descripcion,
+        r.precio,
+        r.stock,
+        r.tipo_flor,
+        r.color,
+        r.disponible,
+        r.activo,
+        r.img,
+        r.es_ocasion_especial,
+        
+
+        t.nombre AS nombre_ocasion
+        FROM ramos r
+        LEFT JOIN tipos_ocasion t
+        ON r.id_ocasion = t.id
+        ORDER BY r.id ASC
     ";
 
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    $pedidos = [];
+    $productos = [];
     while ($row = $result->fetch_assoc()) {
-        // Formatear fecha y precio_total
-        $fecha = new DateTime($row['fecha_pedido']);
-        $row['fecha_pedido'] = $fecha->format('d/m/Y H:i');
-        $row['precio_total'] = number_format($row['precio_total'], 2, ',', '.');
+        // Formatear fecha y precio_tota
 
-        $pedidos[] = [
-            'id'            => intval($row['id']),
-            'id_usuario'    => intval($row['id_usuario']),
-            'cliente'       => $row['cliente'],
-            'fecha_pedido'  => $row['fecha_pedido'],
-            'precio_total'  => $row['precio_total'],
-            'id_estado'     => intval($row['id_estado']),
-            'estado_nombre' => $row['estado_nombre']
+        $productos[] = [
+                'id'                   => intval($row['id']),
+                'nombre'               => $row['nombre'],
+                'descripcion'          => $row['descripcion'],
+                'precio'               => number_format($row['precio'], 2, ',', '.'),
+                'stock'                => intval($row['stock']),
+                'tipo_flor'            => $row['tipo_flor'],
+                'color'                => $row['color'],
+                'disponible'           => (bool)$row['disponible'],
+                'activo'               => (bool)$row['activo'],
+                'img'                  => $row['img'],
+                'es_ocasion_especial'  => (bool)$row['es_ocasion_especial'],
+                'nombre_ocasion'       => $row['nombre_ocasion']
         ];
     }
 
     echo json_encode([
         'success' => true,
-        'data'    => $pedidos
+        'data'    => $productos
     ]);
 } catch (Exception $e) {
     error_log("Error en obtener-pedidos-admin.php: " . $e->getMessage());

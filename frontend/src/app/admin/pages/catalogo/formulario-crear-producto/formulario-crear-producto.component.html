@@ -1,0 +1,120 @@
+<div class="formulario-anadir-producto">
+    <h2>Añadir un producto</h2>
+
+    <form [formGroup]="crearProductoForm" (ngSubmit)="onCrearProductoSubmit()">
+        <!-- Nombre -->
+        <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nombre de producto</mat-label>
+        <input matInput formControlName="nombre" />
+        <mat-error *ngIf="crearProductoForm.get('nombre')?.invalid && crearProductoForm.get('nombre')?.touched">
+            Campo requerido
+        </mat-error>
+        </mat-form-field>
+
+        <div class="doble-input">
+            <!-- Precio -->
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Precio (€)</mat-label>
+                <input matInput type="number" formControlName="precio" />
+                <mat-error *ngIf="crearProductoForm.get('precio')?.invalid && crearProductoForm.get('precio')?.touched">
+                    Campo requerido
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Stock -->
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Stock</mat-label>
+                <input matInput type="number" formControlName="stock" />
+                <mat-error *ngIf="crearProductoForm.get('stock')?.invalid && crearProductoForm.get('stock')?.touched">
+                    Campo requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="doble-input">
+            <!-- Tipo de flor -->
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Tipo de flor</mat-label>
+                <input matInput formControlName="tipo_flor" />
+                <mat-error *ngIf="crearProductoForm.get('tipo_flor')?.invalid && crearProductoForm.get('tipo_flor')?.touched">
+                    Campo requerido
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Color -->
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Color</mat-label>
+                <input matInput formControlName="color" />
+                <mat-error *ngIf="crearProductoForm.get('color')?.invalid && crearProductoForm.get('color')?.touched">
+                    Campo requerido
+                </mat-error>
+        </mat-form-field>
+        </div>
+        
+
+        <!-- Descripción -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput rows="3" formControlName="descripcion"></textarea>
+            <mat-error *ngIf="crearProductoForm.get('descripcion')?.invalid && crearProductoForm.get('descripcion')?.touched">
+                Campo requerido 
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Imagen -->
+        <div class="file-input-container full-width">
+        <label for="imagen">Imagen del producto</label>
+        <input
+            id="imagen"
+            type="file" 
+            accept="image/*"
+            (change)="onFileSelected($event)"
+        />
+        <div *ngIf="imagenError" class="mat-error">
+            Debes seleccionar una imagen válida
+        </div>
+        </div>
+
+
+        <!-- Ocasión especial -->
+        <mat-checkbox formControlName="es_ocasion_especial">
+        Ocasión Especial
+        </mat-checkbox>
+
+        <!-- Select Nombre ocasión -->
+        <mat-form-field
+        appearance="fill"
+        class="full-width"
+        *ngIf="crearProductoForm.get('es_ocasion_especial')?.value"
+        >
+        <mat-label>Nombre ocasión</mat-label>
+        <mat-select formControlName="nombre_ocasion">
+            <mat-option [value]="null">Seleccione...</mat-option>
+            <mat-option *ngFor="let oc of ocasiones" [value]="oc.nombre">
+            {{ oc.nombre }}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="crearProductoForm.get('nombre_ocasion')?.invalid && crearProductoForm.get('nombre_ocasion')?.touched">
+            Debes elegir una ocasión
+        </mat-error>
+        </mat-form-field>
+
+        <!-- Activo -->
+        <mat-checkbox formControlName="activo">
+        Activo (visible en la página)
+        </mat-checkbox>
+
+        <!-- Mensajes -->
+        <div *ngIf="mensaje" class="mensaje-ok">{{ mensaje }}</div>
+        <div *ngIf="error" class="mensaje-error">{{ error }}</div>
+
+        <!-- Botones -->
+        <div class="botones-form">
+        <button mat-button type="button" (click)="volver()">Volver</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="crearProductoForm.invalid">
+            Guardar
+        </button>
+    </div>
+  </form>
+</div>
+
