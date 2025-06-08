@@ -6,6 +6,8 @@ import { AuthGuard }  from '../guards/auth.guard';
 import { PedidosComponent } from './pages/pedidos/pedidos.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DetallePedidoComponent } from './pages/detalle-pedido/detalle-pedido.component';
+import { ProductosComponent } from './pages/catalogo/productos/productos.component';
+import { FormularioCrearProductoComponent } from './pages/catalogo/formulario-crear-producto/formulario-crear-producto.component';
 
 export const ADMIN_ROUTES: Routes = [
     {
@@ -15,6 +17,8 @@ export const ADMIN_ROUTES: Routes = [
         { path: 'dashboard', component: DashboardComponent },
         { path: 'pedidos', component: PedidosComponent },       
         { path: 'pedidos/:id', component: DetallePedidoComponent },
+        { path: 'catalogo/productos', component: ProductosComponent },
+        { path: 'catalogo/productos/nuevo', component: FormularioCrearProductoComponent },
         { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
     }

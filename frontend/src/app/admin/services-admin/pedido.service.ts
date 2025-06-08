@@ -1,22 +1,17 @@
-// admin.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
-//
-// Interfaces actualizadas / nuevas
-//
 
 export interface PedidoResumen {
   id: number;
   id_usuario: number;
-  cliente: string;        // Ej: "María Gómez"
-  fecha_pedido: string;   // Ej: "30/05/2025 14:23"
-  precio_total: string;   // Ej: "45,50"
-  id_estado: number;      // Ej: 1, 2, 3...
-  estado_nombre: string;  // Ej: "pendiente", "confirmado"
+  cliente: string;
+  fecha_pedido: string;
+  precio_total: string;
+  id_estado: number;
+  estado_nombre: string;
 }
 
 export interface ItemDetalle {
@@ -82,4 +77,6 @@ export class AdminService {
       { withCredentials: true }
     );
   }
+
+  
 }

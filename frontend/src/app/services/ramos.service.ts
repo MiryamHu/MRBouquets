@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Ramo {
@@ -15,6 +15,11 @@ export interface Ramo {
   disponible: boolean;
   activo?: boolean;
   es_ocasion_especial?: boolean;
+}
+
+export interface Ocasion {
+  id: number;
+  nombre: string;
 }
 
 @Injectable({
@@ -45,6 +50,22 @@ export class RamosService {
   getRamosOcasiones(): Observable<Ramo[]> {
     return this.getRamos().pipe(
       map(ramos => ramos.filter(ramo => ramo.es_ocasion_especial))
+    );
+  }
+
+  getOcasiones(): Observable<Ocasion[]> {
+    return this.http.get<{success: boolean, data: Ocasion[]}>(
+      `${this.apiUrl}/ramos/get-ocasion.php`,
+      { responseType: 'json' }
+    ).pipe(
+      map(resp => {
+        if (!resp.success) throw new Error('Error API');
+        return resp.data;
+      }),
+      catchError(err => {
+        console.error('getOcasiones error', err);
+        return of([] as Ocasion[]);
+      })
     );
   }
 } 

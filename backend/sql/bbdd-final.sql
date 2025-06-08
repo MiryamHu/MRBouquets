@@ -55,7 +55,7 @@ CREATE TABLE ramos (
     color VARCHAR(50) NOT NULL DEFAULT 'Multicolor',
     disponible BOOLEAN NOT NULL DEFAULT TRUE,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
-    en_ocasion_especial BOOLEAN NOT NULL DEFAULT FALSE,
+    es_ocasion_especial BOOLEAN NOT NULL DEFAULT FALSE,
     id_ocasion INT NULL,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -171,7 +171,7 @@ INSERT INTO tipos_ocasion (nombre) VALUES
     ('Graduación');
 
 -- Insert ramos
-INSERT INTO ramos (nombre, descripcion, precio, img, tipo_flor, color, disponible, activo, en_ocasion_especial, id_ocasion) VALUES
+INSERT INTO ramos (nombre, descripcion, precio, img, tipo_flor, color, disponible, activo, es_ocasion_especial, id_ocasion) VALUES
 ('Ramo Primaveral', 'Hermoso ramo con flores de temporada', 39.99, '/Ramo_Primaveral.webp', 'Tulipanes', 'Rosa', true, true, false, NULL),
 ('Ramo Romántico', 'Rosas rojas con acabado elegante', 49.99, '/Bouquet_Romantico.webp', 'Rosas', 'Rojo', true, true, false, NULL),
 ('Ramo Silvestre', 'Flores silvestres variadas', 29.99, '/bouquet-silvestre.jpg', 'Margaritas', 'Multicolor', true, true, false, NULL),
@@ -182,10 +182,10 @@ INSERT INTO ramos (nombre, descripcion, precio, img, tipo_flor, color, disponibl
 ('Ramo Campestre', 'Flores de campo variadas', 32.99, '/ramo-campestre.jpg', 'Margaritas', 'Multicolor', true, true, false, NULL),
 ('Ramo Elegante', 'Rosas y liliums', 54.99, '/Bouquet_Elegante.webp', 'Lilium', 'Blanco y Rosa', true, true, false, NULL),
 ('Ramo Tropical', 'Flores exóticas coloridas', 64.99, '/bouquet-tropical.jpg', 'Ave del Paraíso', 'Naranja', true, true, false, NULL),
-('Celebración de Cumpleaños', 'Espectacular ramo festivo con flores vibrantes y globos', 55.00, '/ramo-cumpleanos.jpg', 'Mixto', 'Multicolor', true, true, true, 1),
-('Romance de Aniversario', 'Elegante arreglo de rosas rojas y flores blancas', 38.00, '/ramo-aniversario.jpg', 'Rosas', 'Rojo y Blanco', true, true, true, 3),
-('Éxito en Graduación', 'Sofisticado ramo en tonos del éxito académico', 45.00, '/ramo-graduacion.jpg', 'Mixto', 'Blanco y Dorado', true, true, true, 4),
-('Sentido Pésame', 'Delicado arreglo floral para expresar condolencias', 60.00, '/ramo-condolencias.jpg', 'Lilium', 'Blanco', true, true, true, 2);
+('Celebración de Cumpleaños', 'Espectacular ramo festivo con flores vibrantes y globos', 55.00, '/bouquet-cumpleanos.jpg', 'Mixto', 'Multicolor', true, true, true, 1),
+('Romance de Aniversario', 'Elegante arreglo de rosas rojas y flores blancas', 38.00, '/bouquet-aniversario.jpg', 'Rosas', 'Rojo y Blanco', true, true, true, 3),
+('Éxito en Graduación', 'Sofisticado ramo en tonos del éxito académico', 45.00, '/bouquet-graduacion.jpg', 'Mixto', 'Blanco y Dorado', true, true, true, 4),
+('Sentido Pésame', 'Delicado arreglo floral para expresar condolencias', 60.00, '/bouquet-condolencias.jpg', 'Lilium', 'Blanco', true, true, true, 2);
 
 -- Insert estados_pedidos
 INSERT INTO estados_pedidos (nombre) VALUES
@@ -203,3 +203,12 @@ INSERT INTO usuarios (nombre_usuario, nombre, apellido, correo, contrasena, tele
 -- Aquí irían más INSERTs si tienes datos existentes (pedidos, detalle_pedidos, articulos_carrito, entregas, soporte_cliente).
 
 -- FIN del script combinado
+
+
+ALTER TABLE ramos
+  DROP COLUMN disponible,
+  ADD COLUMN disponible BOOLEAN GENERATED ALWAYS AS (stock > 0) STORED AFTER color;
+
+  -- Establecer stock inicial de 100 unidades en todos los ramos
+UPDATE ramos
+  SET stock = 100;

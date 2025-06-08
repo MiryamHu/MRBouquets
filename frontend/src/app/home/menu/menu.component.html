@@ -1,14 +1,41 @@
 <header class="encabezado">
-  <!-- FILA SUPERIOR: logo + navegación + acciones de usuario -->
   <div #headerTop class="encabezado-top header--pinned">
     <div class="logo">
       <a routerLink="/"><img src="img/logo_menu_4.png" alt="logo"></a>
     </div>
-    
+
     <nav class="navegacion">
       <ul class="lista-navegacion">
         <li><a routerLink="/">INICIO</a></li>
         <li><a routerLink="/catalogo">CATÁLOGO</a></li>
+
+        <!-- OCASIONES con submenú -->
+        <li class="has-submenu ocasiones" [class.open]="submenuAbierto">
+          <!-- Este es el padre: abre/cierra el submenu -->
+          <a
+            href="#"
+            (click)="toggleSubmenu(); $event.preventDefault()"
+          >
+            OCASIONES
+            <mat-icon class="submenu-icon">expand_more</mat-icon>
+          </a>
+
+          <!-- Aquí ya el desplegable, solo si submenuAbierto -->
+          <ul class="submenu" *ngIf="submenuAbierto">
+            <li *ngFor="let oc of ocasiones">
+              <a
+                [routerLink]="['/catalogo']"
+                [queryParams]="{ oc: oc.id }"
+                class="submenu-link"
+              >
+                <span class="link-text">{{ oc.nombre }}</span>
+              </a>
+            </li>
+          </ul>
+
+        </li>
+
+
         <li><a routerLink="/contacto">CONTACTO</a></li>
       </ul>
     </nav>
@@ -26,4 +53,3 @@
     </div>
   </div>
 </header>
-

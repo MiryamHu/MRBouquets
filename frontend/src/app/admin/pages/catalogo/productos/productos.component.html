@@ -1,0 +1,158 @@
+
+<div class="productos-container">
+    <h2>Panel de Productos</h2>
+
+    <!-- Spinner de carga -->
+    <div *ngIf="loading" class="loading-spinner">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Cargando pedidos...</p>
+    </div>
+
+    <!-- Mensaje de error si hubo fallo -->
+    <div *ngIf="!loading && errorMsg" class="error-message">
+        <p>{{ errorMsg }}</p>
+    </div>
+
+    <!-- Cuando ya haya datos, mostrar la MatTable -->
+    <div *ngIf="!loading && !errorMsg">
+
+        <!-- ===== Zona de Filtros ===== -->
+        <div class="filtros-row">
+        <!-- Búsqueda global -->
+        <mat-form-field appearance="outline" class="filtro-field">
+            <mat-label>Buscar (ID o Nombre)</mat-label>
+            <input matInput (keyup)="applyFilter($any($event.target).value)" placeholder="Escribe ID o nombre">
+            <button mat-button *ngIf="dataSource.filter" matSuffix mat-icon-button aria-label="Limpiar"
+                    (click)="applyFilter('')">
+            <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <!-- Checkbox Ocasión Especial -->
+        <mat-checkbox [(ngModel)]="filtros.esEspecial" (change)="aplicarFiltros()">
+        Solo Ocasiones Especiales
+        </mat-checkbox>
+
+        <!-- Select de ocasiones: solo si esEspecial=true -->
+        <mat-form-field appearance="outline" *ngIf="filtros.esEspecial" class="filtro-ocasion">
+        <mat-label>Elige Ocasión</mat-label>
+        <mat-select [(value)]="filtros.nombreOcasion" (selectionChange)="aplicarFiltros()">
+            <mat-option [value]="null">Todas</mat-option>
+            <mat-option *ngFor="let oc of ocasiones" [value]="oc.nombre">
+            {{ oc.nombre }}
+            </mat-option>
+        </mat-select>
+        </mat-form-field>
+
+         <button mat-flat-button color="primary" class="btn-anadir"
+                (click)="router.navigate(['/admin/catalogo/productos/nuevo'])">
+            <mat-icon>add</mat-icon>
+            Añadir Producto
+        </button>
+
+        <!--  Tabla de pedidos -->
+        <div class="table-container">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!-- Columna ID -->
+            <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.id }} </td>
+            </ng-container>
+
+            <!-- Columna Nombre -->
+            <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.nombre }} </td>
+            </ng-container>
+
+            <!-- Columna Descripción -->
+            <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef> Descripción </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.descripcion }} </td>
+            </ng-container>
+
+            <!-- Columna Precio -->
+            <ng-container matColumnDef="precio">
+            <th mat-header-cell *matHeaderCellDef> Precio (€) </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.precio }} </td>
+            </ng-container>
+
+            <!-- Columna Stock -->
+            <ng-container matColumnDef="stock">
+            <th mat-header-cell *matHeaderCellDef> Stock </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.stock }} </td>
+            </ng-container>
+
+            <!-- Columna Tipo de Flor  -->
+            <ng-container matColumnDef="tipo_flor">
+            <th mat-header-cell *matHeaderCellDef> Tipo de Flor </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.tipo_flor }} </td>
+            </ng-container>
+
+            <!-- Columna Color -->
+            <ng-container matColumnDef="color">
+            <th mat-header-cell *matHeaderCellDef> Color </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.color }} </td>
+            </ng-container>
+
+            <!-- Columna Disponible -->
+            <ng-container matColumnDef="disponible">
+            <th mat-header-cell *matHeaderCellDef> Disponible </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.disponible }} </td>
+            </ng-container>
+
+            <!-- Columna Activo -->
+            <ng-container matColumnDef="activo">
+            <th mat-header-cell *matHeaderCellDef> Activo </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.activo }} </td>
+            </ng-container>
+
+            <!-- Columna Es ocasión especial -->
+            <ng-container matColumnDef="es_ocasion_especial">
+            <th mat-header-cell *matHeaderCellDef> Ocasión Especial </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.es_ocasion_especial }} </td>
+            </ng-container>
+
+            <!-- Columna Nombre ocasión -->	
+            <ng-container matColumnDef="nombre_ocasion">
+            <th mat-header-cell *matHeaderCellDef> Nombre ocasión </th>
+            <td mat-cell *matCellDef="let producto"> {{ producto.nombre_ocasion }} </td>
+            </ng-container>
+
+            <!-- Columna Acciones -->
+            <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let pedido" >
+                <div class="botones">
+                    <button mat-icon-button
+                        color="primary"
+                        (click)="editarProducto(producto)"
+                        matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+                <!-- <span class="ocasiones">Editar</span> -->
+                </button> 
+                <button mat-icon-button
+                        color="primary"
+                        (click)="eliminarProducto(producto)"
+                        matTooltip="Eliminar">
+                <mat-icon>delete_forever</mat-icon>
+                <!-- <span class="ocasiones">Eliminar</span> -->
+                </button>
+                </div>
+            </td>
+            </ng-container>
+
+            <!-- Definición de filas -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row        *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        </div>
+
+        <!--  Paginador -->
+        <mat-paginator [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 50]"
+                    showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>

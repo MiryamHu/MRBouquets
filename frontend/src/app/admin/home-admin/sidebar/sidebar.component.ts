@@ -39,9 +39,8 @@ export class SidebarComponent {
       name: 'Catálogo',
       icon: 'bx bx-book-alt',
       submenu: [
-      { name: 'Añadir producto', link: '/admin/catalogo/añadir' },
-      { name: 'Editar producto', link: '/admin/catalogo/editar' },
-      { name: 'Eliminar producto', link: '/admin/catalogo/eliminar' }
+      { name: 'Productos', link: '/admin/catalogo/productos' },
+      { name: 'Secciones', link: '/admin/catalogo/secciones' },
     ],
       open: false
     },
