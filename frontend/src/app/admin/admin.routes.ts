@@ -10,6 +10,7 @@ import { ProductosComponent } from './pages/catalogo/productos/productos.compone
 import { FormularioCrearProductoComponent } from './pages/catalogo/formulario-crear-producto/formulario-crear-producto.component';
 import { FormularioEditarProductoComponent } from './pages/catalogo/formulario-editar-producto/formulario-editar-producto.component';
 import { OcasionesComponent } from './pages/catalogo/ocasiones/ocasiones.component';
+import { ClienteComponent } from './pages/cliente/cliente.component';
 
 export const ADMIN_ROUTES: Routes = [
     {
@@ -23,6 +24,7 @@ export const ADMIN_ROUTES: Routes = [
         { path: 'catalogo/productos/nuevo', component: FormularioCrearProductoComponent },
         { path: 'catalogo/productos/editar/:id', component: FormularioEditarProductoComponent },
         { path: 'catalogo/ocasiones', component: OcasionesComponent },
+        { path: 'clientes', component: ClienteComponent},
         { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
     }

@@ -16,6 +16,10 @@
 }
 
 /* ===== Zona de filtro ===== */
+.filtros-row{
+    display: flex;
+    gap: 2rem;
+}
 .filtro-field {
     width: 100%;
     max-width: 320px;

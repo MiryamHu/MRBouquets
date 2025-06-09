@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdminService, PedidoDetalle, ItemDetalle, EstadoPedido } from '../../services-admin/pedido.service';
+import { PedidoService, PedidoDetalle, ItemDetalle, EstadoPedido } from '../../services-admin/pedido.service';
 
 import { MatCardModule }    from '@angular/material/card';
 import { MatTableModule }   from '@angular/material/table';
@@ -40,7 +40,7 @@ export class DetallePedidoComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private adminService: AdminService
+    private pedidoSvc: PedidoService
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class DetallePedidoComponent implements OnInit {
     const idPedido = Number(idParam);
 
     // 1) Cargar detalle de pedido
-    this.adminService.obtenerPedidoPorId(idPedido).subscribe({
+    this.pedidoSvc.obtenerPedidoPorId(idPedido).subscribe({
       next: (resp) => {
         if (resp.success) {
           this.pedido = resp.data;
@@ -78,7 +78,7 @@ private cargarEstados(): void {
   this.errorEstados = '';
   console.log('Comenzando cargarEstados(): cargandoEstados =', this.cargandoEstados);
 
-  this.adminService.getEstadosPedidos().subscribe({
+  this.pedidoSvc.getEstadosPedidos().subscribe({
     next: resp => {
       console.log('getEstadosPedidos.next', resp);
       if (resp.success) {
@@ -104,7 +104,7 @@ private cargarEstados(): void {
   /** 3) Manejar cambio de estado desde el <select> **/
   onCambioEstado(nuevoIdEstado: number): void {
     const idPedido = this.pedido.id;
-    this.adminService.updateEstadoPedido(idPedido, nuevoIdEstado).subscribe({
+    this.pedidoSvc.updateEstadoPedido(idPedido, nuevoIdEstado).subscribe({
       next: resp => {
         if (resp.success) {
           // Actualizar localmente para reflejar el cambio

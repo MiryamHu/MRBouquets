@@ -44,7 +44,7 @@ export class SidebarComponent {
     ],
       open: false
     },
-    { name: 'Clientes', icon: 'bx bx-pie-chart-alt-2', link: '/analytics' },
+    { name: 'Clientes', icon: 'bx bx-pie-chart-alt-2', link: '/admin/clientes' },
   ];
 
   toggleSidebar() {

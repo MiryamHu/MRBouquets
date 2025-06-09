@@ -90,7 +90,7 @@ export class OcasionesComponent implements OnInit {
 
   deleteOcasion(o: Ocasion) {
     if (!confirm(`¿Eliminar "${o.nombre}"?`)) return;
-    this.ocasionSvc.deleteOcasion(o.id).subscribe({
+    this.ocasionSvc.eliminarOcasion(o.id).subscribe({
       next: () => this.loadOcasiones(),
       error: () => alert('Error al eliminar ocasión')
     });

@@ -6,13 +6,21 @@
     
 
         <mat-form-field appearance="outline" class="filtro-field">
-            <mat-label>Buscar ocasión</mat-label>
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="ID o nombre">
-            <button mat-button *ngIf="dataSource.filter" matSuffix mat-icon-button aria-label="Limpiar"
-                    (click)="applyFilter('')">
+        <mat-label>Buscar ocasión</mat-label>
+        <input
+            matInput
+            (keyup)="applyFilter($event.target.value)"
+            placeholder="ID o nombre">
+        <button
+            *ngIf="dataSource.filter"
+            matSuffix
+            mat-icon-button
+            aria-label="Limpiar"
+            (click)="applyFilter('')">
             <mat-icon>close</mat-icon>
-            </button>
+        </button>
         </mat-form-field>
+
 
         <button mat-flat-button color="primary" (click)="addOcasion()">
             <mat-icon>add</mat-icon> Añadir ocasión
@@ -44,7 +52,7 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="['id','nombre','acciones']"></tr>
-        <tr mat-row        *matRowDef="let row; columns: ['id','nombre','acciones'];"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['id','nombre','acciones'];"></tr>
         </table>
     </div>
 </div>

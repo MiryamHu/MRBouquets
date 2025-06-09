@@ -2,7 +2,7 @@
 
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminService, PedidoResumen } from '../../services-admin/pedido.service';
+import { PedidoService, PedidoResumen } from '../../services-admin/pedido.service';
 import { Router } from '@angular/router';
 
 import { MatTableModule }       from '@angular/material/table';
@@ -48,12 +48,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
-    private adminService: AdminService,
+    private pedidoSvc: PedidoService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.adminService.getPedidos().subscribe({
+    this.pedidoSvc.getPedidos().subscribe({
       next: resp => {
         if (resp.success) {
           this.dataSource.data = resp.data;

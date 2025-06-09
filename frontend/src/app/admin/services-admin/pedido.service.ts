@@ -39,7 +39,7 @@ export interface EstadoPedido {
 }
 
 @Injectable({ providedIn: 'root' })
-export class AdminService {
+export class PedidoService {
   private baseUrl = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient) { }
