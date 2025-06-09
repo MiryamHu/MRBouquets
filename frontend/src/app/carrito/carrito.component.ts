@@ -209,4 +209,8 @@ export class CarritoComponent implements OnInit {
     this.showConfirmClearCart = false;
     this.clearCart();
   }
+
+  goToCatalogo() {
+    this.router.navigate(['/catalogo']);
+  }
 }

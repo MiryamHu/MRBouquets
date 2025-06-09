@@ -1,4 +1,3 @@
-
 <ng-container *ngIf="showMinimalView; else fullPage">
 
   <div class="cart-container">
@@ -9,62 +8,70 @@
       <button class="btn-close" (click)="continueShopping()">×</button>
     </div>
 
-    <!-- Items -->
-    <div class="cart-items">
-      <div class="cart-item" *ngFor="let item of items">
-        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img" [alt]="item.nombre" class="item-img">
-        <div class="item-details">
-          <h3>{{ item.nombre }}</h3>
-          <p>{{ item.descripcion }}</p>
-          <span class="item-price">
-            {{ (item.quantity * item.price) | currency:'EUR':'symbol':'1.2-2' }}
-          </span>
+    <ng-container *ngIf="items.length > 0; else emptyCart">
+      <div class="cart-items">
+        <div class="cart-item" *ngFor="let item of items">
+          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img" [alt]="item.nombre" class="item-img">
+          <div class="item-details">
+            <h3>{{ item.nombre }}</h3>
+            <p>{{ item.descripcion }}</p>
+            <span class="item-price">
+              {{ (item.quantity * item.price) | currency:'EUR':'symbol':'1.2-2' }}
+            </span>
+          </div>
+          <div class="quantity-controls">
+            <button (click)="decrement(item)">–</button>
+            <span>{{ item.quantity }}</span>
+            <button (click)="increment(item)">+</button>
+          </div>
+          <button class="btn-remove" (click)="removeItem(item.id)">🗑️</button>
         </div>
-        <div class="quantity-controls">
-          <button (click)="decrement(item)">–</button>
-          <span>{{ item.quantity }}</span>
-          <button (click)="increment(item)">+</button>
+      </div>
+
+      <div class="summary">
+        <div class="line">
+          <span>Subtotal</span>
+          <span>{{ subtotal | currency:'EUR':'symbol':'1.2-2' }}</span>
         </div>
-        <button class="btn-remove" (click)="removeItem(item.id)">🗑️</button>
+        <div class="line">
+          <span>Envío</span>
+          <span>Calculado al pagar</span>
+        </div>
+        <div class="line total">
+          <span>Total</span>
+          <span>{{ subtotal | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="cart-actions">
+        <button class="btn-secondary" (click)="continueShopping()">
+          Seguir comprando
+        </button>
+        <button class="btn-primary" (click)="goToPage()">
+          Ver cesta
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #emptyCart>
+      <div class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <h3>Tu carrito está vacío</h3>
+        <p>Agrega productos para verlos aquí.</p>
+        <button class="btn-primary" (click)="goToCatalogo()">Ir al catálogo</button>
+      </div>
+    </ng-template>
+
+    <!-- Modal de confirmación para vaciar carrito -->
+    <div class="confirm-modal-backdrop" *ngIf="showConfirmClearCart">
+      <div class="confirm-modal">
+        <h3>¿Estás seguro de que deseas vaciar el carrito?</h3>
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeConfirmClearCart()">Cancelar</button>
+          <button class="btn-primary" (click)="confirmClearCart()">Vaciar</button>
+        </div>
       </div>
     </div>
 
-    <!-- Resumen -->
-    <div class="summary">
-      <div class="line">
-        <span>Subtotal</span>
-        <span>{{ subtotal | currency:'EUR':'symbol':'1.2-2' }}</span>
-      </div>
-      <div class="line">
-        <span>Envío</span>
-        <span>Calculado al pagar</span>
-      </div>
-      <div class="line total">
-        <span>Total</span>
-        <span>{{ subtotal | currency:'EUR':'symbol':'1.2-2' }}</span>
-      </div>
-    </div>
-
-    <!-- Acciones finales: continuar comprando o ver cesta completa -->
-    <div class="cart-actions">
-      <button class="btn-secondary" (click)="continueShopping()">
-        Seguir comprando
-      </button>
-      <button class="btn-primary" (click)="goToPage()">
-        Ver cesta
-      </button>
-    </div>
-  </div>
-
-  <!-- Modal de confirmación para vaciar carrito -->
-  <div class="confirm-modal-backdrop" *ngIf="showConfirmClearCart">
-    <div class="confirm-modal">
-      <h3>¿Estás seguro de que deseas vaciar el carrito?</h3>
-      <div class="modal-actions">
-        <button class="btn-secondary" (click)="closeConfirmClearCart()">Cancelar</button>
-        <button class="btn-primary" (click)="confirmClearCart()">Vaciar</button>
-      </div>
-    </div>
   </div>
 
 </ng-container>
@@ -80,55 +87,65 @@
   </div>
 
   <!-- ───── Lista de productos ───── -->
-  <div class="cart-items">
-    <div class="cart-item" *ngFor="let item of items">
-      <img
-        class="item-img"
-        [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img"
-        [alt]="item.nombre"
-      />
+  <ng-container *ngIf="items.length > 0; else emptyCartFull">
+    <div class="cart-items">
+      <div class="cart-item" *ngFor="let item of items">
+        <img
+          class="item-img"
+          [src]="'http://localhost/MRBouquets/frontend/public/img/' + item.img"
+          [alt]="item.nombre"
+        />
 
-      <div class="item-details">
-        <h3>{{ item.nombre }}</h3>
-        <p>{{ item.descripcion }}</p>
-        <span class="item-price">
-          {{ item.cantidad * item.precio | currency:'EUR':'symbol':'1.2-2' }}
-        </span>
+        <div class="item-details">
+          <h3>{{ item.nombre }}</h3>
+          <p>{{ item.descripcion }}</p>
+          <span class="item-price">
+            {{ item.cantidad * item.precio | currency:'EUR':'symbol':'1.2-2' }}
+          </span>
+        </div>
+
+        <div class="quantity-controls">
+          <button (click)="decrement(item)">–</button>
+          <span>{{ item.cantidad }}</span>
+          <button (click)="increment(item)">+</button>
+        </div>
+
+        <button class="btn-remove" (click)="removeItem(item.id)">🗑️</button>
       </div>
+    </div>
 
-      <div class="quantity-controls">
-        <button (click)="decrement(item)">–</button>
-        <span>{{ item.cantidad }}</span>
-        <button (click)="increment(item)">+</button>
+    <!-- ───── Resumen ───── -->
+    <div class="summary">
+      <div class="line">
+        <span>Subtotal</span>
+        <span>{{ subtotal | currency:'EUR':'symbol':'1.2-2' }}</span>
       </div>
+      <div class="line">
+        <span>Envío</span>
+        <span>Calculado al pagar</span>
+      </div>
+      <div class="line total">
+        <span>Total</span>
+        <span>{{ subtotal | currency:'EUR':'symbol':'1.2-2' }}</span>
+      </div>
+    </div>
 
-      <button class="btn-remove" (click)="removeItem(item.id)">🗑️</button>
+    <!-- ───── Acciones ───── -->
+    <button class="btn-primary full-width" (click)="proceedToCheckout()">
+      Proceder al Pago
+    </button>
+    <button class="btn-secondary full-width" (click)="continueShopping()">
+      Seguir Comprando
+    </button>
+  </ng-container>
+  <ng-template #emptyCartFull>
+    <div class="empty-cart">
+      <div class="empty-icon">🛒</div>
+      <h3>Tu carrito está vacío</h3>
+      <p>Agrega productos para verlos aquí.</p>
+      <button class="btn-primary" (click)="goToCatalogo()">Ir al catálogo</button>
     </div>
-  </div>
-
-  <!-- ───── Resumen ───── -->
-  <div class="summary">
-    <div class="line">
-      <span>Subtotal</span>
-      <span>{{ subtotal | currency:'EUR':'symbol':'1.2-2' }}</span>
-    </div>
-    <div class="line">
-      <span>Envío</span>
-      <span>Calculado al pagar</span>
-    </div>
-    <div class="line total">
-      <span>Total</span>
-      <span>{{ subtotal | currency:'EUR':'symbol':'1.2-2' }}</span>
-    </div>
-  </div>
-
-  <!-- ───── Acciones ───── -->
-  <button class="btn-primary full-width" (click)="proceedToCheckout()">
-    Proceder al Pago
-  </button>
-  <button class="btn-secondary full-width" (click)="continueShopping()">
-    Seguir Comprando
-  </button>
+  </ng-template>
 
   <!-- ───── Modal: Selección de dirección ───── -->
   <div class="modal-backdrop" *ngIf="showAddressModal">
