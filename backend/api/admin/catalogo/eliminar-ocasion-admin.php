@@ -43,7 +43,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // Leer parámetro id
 parse_str(file_get_contents('php://input'), $params);
-$id = isset($params['id']) ? intval($params['id']) : 0;
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id<=0) {
     http_response_code(400);
     echo json_encode(['success'=>false,'error'=>'ID inválido']);

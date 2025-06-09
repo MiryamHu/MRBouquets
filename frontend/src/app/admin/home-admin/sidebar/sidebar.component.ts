@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { MatIconModule } from '@angular/material/icon';
 
 interface MenuItem {
   name: string;
@@ -17,7 +18,7 @@ interface SubmenuItem {
 }
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
@@ -33,18 +34,18 @@ export class SidebarComponent {
   // definición de todo el menú
   menu: MenuItem[] = [
     { name: 'Dashboard', icon: 'bx bx-grid-alt', link: '/admin/dashboard' },
-    { name: 'Pedidos', icon: 'bx bx-grid-alt', link: '/admin/pedidos' },
+    { name: 'Pedidos', icon: 'bx bx-shopping-bag', link: '/admin/pedidos' },
 
     {
       name: 'Catálogo',
-      icon: 'bx bx-book-alt',
+      icon: 'bx bx-package',
       submenu: [
       { name: 'Productos', link: '/admin/catalogo/productos' },
       { name: 'Ocasiones', link: '/admin/catalogo/ocasiones' },
     ],
       open: false
     },
-    { name: 'Clientes', icon: 'bx bx-pie-chart-alt-2', link: '/analytics' },
+    { name: 'Clientes', icon: 'bx bx-user', link: '/admin/clientes' },
   ];
 
   toggleSidebar() {

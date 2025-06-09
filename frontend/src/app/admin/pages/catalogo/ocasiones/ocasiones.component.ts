@@ -52,7 +52,9 @@ export class OcasionesComponent implements OnInit {
     };
 
     this.loadOcasiones();
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
+
 
   private loadOcasiones() {
     this.loading = true;
@@ -90,7 +92,7 @@ export class OcasionesComponent implements OnInit {
 
   deleteOcasion(o: Ocasion) {
     if (!confirm(`¿Eliminar "${o.nombre}"?`)) return;
-    this.ocasionSvc.deleteOcasion(o.id).subscribe({
+    this.ocasionSvc.eliminarOcasion(o.id).subscribe({
       next: () => this.loadOcasiones(),
       error: () => alert('Error al eliminar ocasión')
     });

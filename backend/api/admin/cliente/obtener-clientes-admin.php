@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// A partir de aquí, SOLO aceptamos GET
+// A partir de aquí, SOLO aceptamos PUT
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
     echo json_encode(['success' => false, 'error' => 'Método no permitido. Use GET.']);
@@ -30,49 +30,44 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
     exit;
 }
-// 1) Verificar que el usuario está autenticado
-if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
+
+if (($_SESSION['rol'] ?? '') !== 'admin') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Acceso denegado']);
     exit;
 }
 
-// 2) Control de timeout de sesión (1 hora)
-if (isset($_SESSION['last_activity'])) {
-    $inactivo = 3600; // 1 hora en segundos
-    if (time() - $_SESSION['last_activity'] > $inactivo) {
-        session_unset();
-        session_destroy();
-        http_response_code(401);
-        echo json_encode(['success' => false, 'error' => 'Sesión expirada']);
-        exit;
-    }
-}
-$_SESSION['last_activity'] = time();
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 try {
-    $sql = "SELECT id, nombre FROM estados_pedidos ORDER BY id ASC";
+    $sql = "SELECT id, nombre, apellido, correo, telefono  FROM usuarios 
+            WHERE rol='cliente'
+            ORDER BY id ASC";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $res = $stmt->get_result();
 
-    $estados = [];
+    $clientes = [];
     while ($row = $res->fetch_assoc()) {
-        $estados[] = [
+        $clientes[] = [
             'id'     => intval($row['id']),
-            'nombre' => $row['nombre']
+            'nombre' => $row['nombre'],
+            'apellido' => $row['apellido'],
+            'correo' => $row['correo'],
+            'telefono' => $row['telefono'],
+
         ];
     }
 
     echo json_encode([
         'success' => true,
-        'data'    => $estados
+        'data'    => $clientes
     ]);
 } catch (Exception $e) {
-    error_log("Error en get-estados-pedidos.php: " . $e->getMessage());
+    error_log("Error en obtener-clientes-admin.php: " . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error'   => 'Error al obtener estados'
+        'error'   => 'Error al obtener clientes'
     ]);
 }

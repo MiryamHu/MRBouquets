@@ -16,6 +16,10 @@
 }
 
 /* ===== Zona de filtro ===== */
+.filtros-row{
+    display: flex;
+    gap: 2rem;
+}
 .filtro-field {
     width: 100%;
     max-width: 320px;
@@ -159,6 +163,13 @@
     font-weight: 500;
     font-size: 0.95rem;
 }
+
+
+/* filas */
+.row-confirmado    { background-color: #ffcccc; } /* rojo claro */
+.row-enviado       { background-color: #fff2cc; } /* amarillo claro */
+.row-entregado     { background-color: #ccffcc; } /* verde claro */
+.row-cancelado     { background-color: #f2f2f2; } /* gris claro */
 
 /* ===== Ajustes responsivos ===== */
 

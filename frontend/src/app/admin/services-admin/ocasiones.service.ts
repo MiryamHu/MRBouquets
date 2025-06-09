@@ -42,9 +42,9 @@ export class OcasionesService {
     ); 
   }
 
-    deleteOcasion(id: number): Observable<{ success: boolean }> {
+    eliminarOcasion(id: number): Observable<{ success: boolean }> {
     return this.http.delete<{ success: boolean }>(
-      `${this.baseUrl}/admin/ocasion/eliminar-ocasion.php?id=${id}`,
+      `${this.baseUrl}/admin/catalogo/eliminar-ocasion-admin.php?id=${id}`,
       { withCredentials: true }
     );
   }

@@ -1,12 +1,10 @@
 <div class="ocasiones-container">
-    <h2>Gestión de Ocasiones</h2>
+    <h2>Clientes</h2>
 
-   <!-- botón y filtro en la cabecera -->
+    <!-- botón y filtro en la cabecera -->
     <div class="filtros-row">
-    
-
         <mat-form-field appearance="outline" class="filtro-field">
-        <mat-label>Buscar ocasión</mat-label>
+        <mat-label>Buscar cliente</mat-label>
         <input
             matInput
             (keyup)="applyFilter($event.target.value)"
@@ -20,11 +18,6 @@
             <mat-icon>close</mat-icon>
         </button>
         </mat-form-field>
-
-
-        <button mat-flat-button color="primary" (click)="addOcasion()">
-            <mat-icon>add</mat-icon> Añadir ocasión
-        </button>
     </div>
 
     <div *ngIf="!loading && !errorMsg" class="table-container">
@@ -32,33 +25,52 @@
         <!-- ID -->
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> ID </th>
-            <td mat-cell *matCellDef="let o"> {{ o.id }} </td>
+            <td mat-cell *matCellDef="let cliente"> {{ cliente.id }} </td>
         </ng-container>
 
         <!-- Nombre -->
         <ng-container matColumnDef="nombre">
             <th mat-header-cell *matHeaderCellDef> Nombre </th>
-            <td mat-cell *matCellDef="let o"> {{ o.nombre }} </td>
+            <td mat-cell *matCellDef="let cliente"> {{ cliente.nombre }} </td>
+        </ng-container>
+
+        <!-- Apellido -->
+        <ng-container matColumnDef="apellido">
+            <th mat-header-cell *matHeaderCellDef> Apellido </th>
+            <td mat-cell *matCellDef="let cliente"> {{ cliente.apellido }} </td>
+        </ng-container>
+
+        <!-- correo -->
+        <ng-container matColumnDef="correo">
+            <th mat-header-cell *matHeaderCellDef> Correo </th>
+            <td mat-cell *matCellDef="let cliente"> {{ cliente.correo }} </td>
+        </ng-container>
+
+        <!-- telefono -->
+        <ng-container matColumnDef="telefono">
+            <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+            <td mat-cell *matCellDef="let cliente"> {{ cliente.telefono }} </td>
         </ng-container>
 
         <!-- Acciones -->
-        <ng-container matColumnDef="acciones">
+        <!-- <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef> Acciones </th>
-            <td mat-cell *matCellDef="let o">
+            <td mat-cell *matCellDef="let cliente">
             <button mat-icon-button color="warn" (click)="deleteOcasion(o)">
                 <mat-icon>delete_forever</mat-icon>
             </button>
             </td>
-        </ng-container>
+        </ng-container> -->
 
-        <tr mat-header-row *matHeaderRowDef="['id','nombre','acciones']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['id','nombre','acciones'];"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
-          <mat-paginator
+        <mat-paginator
             [pageSize]="10"
             [pageSizeOptions]="[5, 10, 25, 50]"
             showFirstLastButtons>
-            </mat-paginator>
+        </mat-paginator>
     </div>
 </div>
+

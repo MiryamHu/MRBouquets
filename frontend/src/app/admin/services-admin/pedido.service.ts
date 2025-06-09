@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 
@@ -39,7 +39,7 @@ export interface EstadoPedido {
 }
 
 @Injectable({ providedIn: 'root' })
-export class AdminService {
+export class PedidoService {
   private baseUrl = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient) { }
@@ -78,5 +78,11 @@ export class AdminService {
     );
   }
 
+  getAllPedidos(): Observable<PedidoResumen[]> {
+  // te regresa sólo el array, sin envolver en {success,data}
+  return this.getPedidos().pipe(
+    map(r => r.success ? r.data : []),
+  );
+}
   
 }

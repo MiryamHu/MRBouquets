@@ -43,7 +43,7 @@
     </li>
 
     <!-- Perfil al final -->
-    <li class="profile-details">
+    <!-- <li class="profile-details">
       <div class="profile-content">
         <img src="assets/image/profile.jpg" alt="profileImg" />
       </div>
@@ -52,14 +52,21 @@
         <div class="job">Web Designer</div>
       </div>
       <i class="bx bx-log-out" (click)="logoutAdmin()"></i>
-    </li>
+    </li> -->
   </ul>
 </div>
 
 <section class="home-section">
   <div class="home-content">
-    <i class="bx bx-menu" (click)="toggleSidebar()"></i>
-    <span class="text">Drop Down Sidebar</span>
+    <div class="toogle-sidebar">
+      <i class="bx bx-menu" (click)="toggleSidebar()"></i>
+      
+    </div>
+    <div class="usuario">
+        <span class="text">Administrador</span>
+        <!-- <mat-icon (click)="logoutAdmin()">logout</mat-icon> -->
+        <i class="bx bx-log-out" (click)="logoutAdmin()"></i>
+    </div>
   </div>
     <router-outlet></router-outlet>
 </section>
