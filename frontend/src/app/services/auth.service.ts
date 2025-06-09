@@ -40,10 +40,8 @@ export interface GoogleLoginResponse {
 })
 export class AuthService {
   private readonly USER_STORAGE_KEY = 'auth_user';
-  private readonly SESSION_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutos
   private apiUrl = environment.apiUrl;
   private userSubject: BehaviorSubject<User | null>;
-  private sessionCheckTimer: any;
   public user$: Observable<User | null>;
   
   constructor(
@@ -54,12 +52,7 @@ export class AuthService {
     this.userSubject = new BehaviorSubject<User | null>(
       this.isBrowser() ? this.getStoredUser() : null
     );
-    
     this.user$ = this.userSubject.asObservable();
-    
-    if (this.isBrowser() && this.isLoggedIn()) {
-      this.startSessionCheck();
-    }
   }
 
   private isBrowser(): boolean {
@@ -72,98 +65,42 @@ export class AuthService {
   }
 
   private setStoredUser(user: User | null): void {
-  if (user) {
-    // si viene sin loginProvider asumimos 'local'
-    if (!user.loginProvider) user.loginProvider = 'local';
-    localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
-  } else {
-    localStorage.removeItem(this.USER_STORAGE_KEY);
+    if (user) {
+      // si viene sin loginProvider asumimos 'local'
+      if (!user.loginProvider) user.loginProvider = 'local';
+      localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(this.USER_STORAGE_KEY);
+    }
+    this.userSubject.next(user);
   }
-  this.userSubject.next(user);
-}
 
   private getHttpOptions() {
-  return {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    }),
-    withCredentials: true
-  };
-}
-
-  private startSessionCheck(): void {
-    if (this.sessionCheckTimer) {
-      clearInterval(this.sessionCheckTimer);
-    }
-    
-    this.sessionCheckTimer = setInterval(() => {
-      this.checkSession().subscribe({
-        error: () => {
-          console.error('Sesión expirada o inválida');
-          this.handleSessionExpired();
-        }
-      });
-    }, this.SESSION_CHECK_INTERVAL);
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      withCredentials: true
+    };
   }
 
-  private checkSession(): Observable<any> {
-    console.log('Verificando estado de sesión...');
-    return this.http.get(
-      `${this.apiUrl}/auth/check-session.php`,
+  login(data: LoginData): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/auth/login.php`,
+      data,
       this.getHttpOptions()
     ).pipe(
-      tap(response => {
-        console.log('Respuesta de verificación de sesión:', response);
+      tap((response: any) => {
+        if (response.usuario) {
+          response.usuario.loginProvider = 'local';
+          this.setStoredUser(response.usuario);
+          this.toastService.success(`¡Bienvenido/a ${response.usuario.nombre}!`);
+        }
       })
     );
   }
 
-  private handleSessionExpired(): void {
-    console.log('Manejando sesión expirada');
-    const currentUser = this.getUser();
-    this.setStoredUser(null);
-    if (this.sessionCheckTimer) {
-      clearInterval(this.sessionCheckTimer);
-    }
-    if (currentUser) {
-      this.toastService.warning('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
-    }
-    window.dispatchEvent(new CustomEvent('session-expired'));
-  }
-
-login(data: LoginData): Observable<any> {
-  return this.http.post(
-    `${this.apiUrl}/auth/login.php`,
-    data,
-    this.getHttpOptions()
-  ).pipe(
-    tap((response: any) => {
-      if (response.usuario) {
-        response.usuario.loginProvider = 'local';
-        this.setStoredUser(response.usuario);
-        this.toastService.success(`¡Bienvenido/a ${response.usuario.nombre}!`);
-
-        this.checkSession().subscribe({
-          next: () => {
-            console.log('Sesión verificada después del login');
-            this.startSessionCheck();
-          },
-          error: (err) => {
-            console.error('Error al verificar sesión después del login:', err);
-            this.handleSessionExpired();
-          }
-        });
-      }
-    })
-  );
-}
-
-
   logout(): void {
-    if (this.sessionCheckTimer) {
-      clearInterval(this.sessionCheckTimer);
-    }
-    
     const currentUser = this.getUser();
     this.http.post(
       `${this.apiUrl}/auth/logout.php`,
