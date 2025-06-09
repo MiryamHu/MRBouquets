@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { AuthService, LoginData, GoogleLoginResponse, RegisterData } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
 
 declare const google: any;
 
@@ -28,7 +29,8 @@ declare const google: any;
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -40,13 +42,16 @@ export class LoginComponent implements OnInit {
   mensaje = '';
   googleClientId = environment.googleClientId;
   isLoginMode = true;
+  hideLoginPassword: boolean = true;
+  hideRegisterPassword: boolean = true;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
     private ngZone: NgZone,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
@@ -62,9 +67,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  
-
   ngOnInit(): void {
+    // Detectar el parámetro 'register' en la URL
+    this.route.queryParams.subscribe(params => {
+      if (params['register']) {
+        this.isLoginMode = false;
+      } else {
+        this.isLoginMode = true;
+      }
+    });
+
     // if (isPlatformBrowser(this.platformId)) {
     //   window['handleCredentialResponse'] = (resp: any) => {
     //     this.ngZone.run(() => this.onGoogleSignIn(resp.credential));
@@ -174,4 +186,12 @@ export class LoginComponent implements OnInit {
         }
       });
     }
+
+  toggleLoginPasswordVisibility() {
+    this.hideLoginPassword = !this.hideLoginPassword;
+  }
+
+  toggleRegisterPasswordVisibility() {
+    this.hideRegisterPassword = !this.hideRegisterPassword;
+  }
 }

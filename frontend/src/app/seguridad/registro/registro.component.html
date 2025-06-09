@@ -39,7 +39,10 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Contraseña</mat-label>
-    <input matInput type="password" formControlName="contrasena" />
+    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="contrasena" />
+    <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+      <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
     <mat-error *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched">
       Mínimo 6 caracteres
     </mat-error>

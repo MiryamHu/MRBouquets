@@ -39,7 +39,10 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Contraseña</mat-label>
-          <input matInput formControlName="contrasena" type="password" />
+          <input matInput [type]="hideLoginPassword ? 'password' : 'text'" formControlName="contrasena" />
+          <button mat-icon-button matSuffix type="button" (click)="toggleLoginPasswordVisibility()">
+            <mat-icon>{{ hideLoginPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
           <mat-error *ngIf="loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched">
             Contraseña requerida
           </mat-error>
@@ -103,7 +106,10 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Contraseña</mat-label>
-          <input matInput type="password" formControlName="contrasena" />
+          <input matInput [type]="hideRegisterPassword ? 'password' : 'text'" formControlName="contrasena" />
+          <button mat-icon-button matSuffix type="button" (click)="toggleRegisterPasswordVisibility()">
+            <mat-icon>{{ hideRegisterPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
           <mat-error *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched">
             Mínimo 6 caracteres
           </mat-error>

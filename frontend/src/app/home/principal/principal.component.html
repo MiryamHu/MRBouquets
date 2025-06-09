@@ -212,11 +212,16 @@
 
 <!-- Modal de invitación a login -->
 <div class="modal-backdrop" *ngIf="showLoginModal">
-  <div class="modal-contenido">
+  <div class="modal-contenido login-modal">
+    <div class="modal-icono">
+      <span>🔒</span>
+    </div>
     <h3>¡Ups!</h3>
     <p>Para añadir productos al carrito debes iniciar sesión.</p>
-    <button class="boton" (click)="goLogin()">Ir a Login</button>
-    <button class="boton cerrar" (click)="showLoginModal = false">Cerrar</button>
+    <div class="modal-botones">
+      <button class="boton principal" (click)="goLogin()">Ir a Login</button>
+      <button class="boton cerrar" (click)="showLoginModal = false">Cerrar</button>
+    </div>
   </div>
 </div>
 

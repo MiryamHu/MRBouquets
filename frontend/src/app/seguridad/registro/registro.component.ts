@@ -6,6 +6,7 @@ import { AuthService, RegisterData } from '../../services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-registro',
@@ -16,7 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css']
@@ -25,6 +27,7 @@ export class RegistroComponent {
   registroForm: FormGroup;
   error = '';
   mensaje = '';
+  hidePassword: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -41,7 +44,6 @@ export class RegistroComponent {
     });
   }
 
-
   onSubmit(): void {
     if (this.registroForm.invalid) return;
 
@@ -57,5 +59,9 @@ export class RegistroComponent {
         this.mensaje = '';
       }
     });
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 }

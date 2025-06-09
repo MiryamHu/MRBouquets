@@ -226,6 +226,7 @@ export class PrincipalComponent implements OnInit, AfterViewInit {
 
   onAddToCart(producto: Ramo): void {
     if (!this.auth.isLoggedIn()) {
+      this.ramoSeleccionado = null;
       this.showLoginModal = true;
       return;
     }
