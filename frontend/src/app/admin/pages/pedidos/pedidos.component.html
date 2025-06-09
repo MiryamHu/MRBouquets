@@ -14,7 +14,9 @@
 
     <!-- Cuando ya haya datos, mostrar la MatTable -->
     <div *ngIf="!loading && !errorMsg">
-        <!--  Campo de filtro global -->
+       
+        <div class="filtros-row">
+             <!--  Campo de filtro global -->
         <mat-form-field appearance="outline" class="filtro-field">
         <mat-label>Buscar (ID o Cliente)</mat-label>
         <input matInput
@@ -26,7 +28,30 @@
         </button>
         </mat-form-field>
 
-        
+       <mat-form-field appearance="outline" class="filtro-field">
+            <mat-label>Filtrar por estado</mat-label>
+
+            <!-- mientras cargan los estados -->
+            <mat-progress-spinner
+            *ngIf="cargandoEstados"
+            matSuffix
+            diameter="20">
+            </mat-progress-spinner>
+
+            <!-- select de estados -->
+            <mat-select
+            [(value)]="filterEstado"
+            (selectionChange)="applyFilter()">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let e of estados" [value]="e.id.toString()">
+                {{ e.nombre | titlecase }}
+            </mat-option>
+            </mat-select>
+
+            <!-- mostrar error si falla -->
+            <mat-error *ngIf="errorEstados">{{ errorEstados }}</mat-error>
+        </mat-form-field>
+        </div>
 
         <!--  Tabla de pedidos -->
         <div class="table-container">
@@ -77,7 +102,10 @@
 
             <!-- Definición de filas -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row        *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row 
+                *matRowDef="let row; columns: displayedColumns;"
+                [ngClass]="getRowClass(row)">
+            </tr>
         </table>
         </div>
 

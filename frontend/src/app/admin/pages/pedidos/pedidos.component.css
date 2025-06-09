@@ -164,6 +164,13 @@
     font-size: 0.95rem;
 }
 
+
+/* filas */
+.row-confirmado    { background-color: #ffcccc; } /* rojo claro */
+.row-enviado       { background-color: #fff2cc; } /* amarillo claro */
+.row-entregado     { background-color: #ccffcc; } /* verde claro */
+.row-cancelado     { background-color: #f2f2f2; } /* gris claro */
+
 /* ===== Ajustes responsivos ===== */
 
 /* Para pantallas pequeñas, reduce márgenes y padding */

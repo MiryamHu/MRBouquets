@@ -56,6 +56,7 @@ export class ClienteComponent implements OnInit {
           || data.apellido.toLowerCase().includes(f);
     };
     this.loadClientes();
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   private loadClientes() {

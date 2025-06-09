@@ -52,7 +52,9 @@ export class OcasionesComponent implements OnInit {
     };
 
     this.loadOcasiones();
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
+
 
   private loadOcasiones() {
     this.loading = true;

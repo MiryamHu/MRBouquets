@@ -1,0 +1,56 @@
+/* dashboard.component.css */
+.dashboard-container {
+  display: grid;
+  /* en lugar de 4 columnas, 2 columnas */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.dashboard-icon {
+  background: transparent !important;   /* quita el recuadro por defecto */
+  width: 48px;                          /* ancho del avatar */
+  height: 48px;                         /* alto del avatar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Agranda el icono dentro del avatar */
+.dashboard-icon mat-icon {
+  font-size: 32px;                      /* pruébalo a 28–36px según te guste */
+  color: white;                         /* o el color que quieras */
+}
+
+.card {
+  color: white;
+}
+.card.primary   { background: #3f51b5; }
+.card.accent    { background: #009688; }
+.card.warn      { background: #ffb300; }
+.card.danger    { background: #e91e63; }
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+mat-card-header mat-icon {
+  /* font-size: 2rem; */
+}
+mat-card-title {
+  font-size: 1rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+mat-card-content h2 {
+  margin: 0;
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+  }
+}

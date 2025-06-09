@@ -218,6 +218,29 @@
   left: 78px;
   width: calc(100% - 78px);
 }
+
+/* .home-section{
+  background-color: antiquewhite;
+} */
+.home-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem 0 0;
+  background-color: #fff;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.usuario i {
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
 .home-section .home-content {
   height: 60px;
   display: flex;

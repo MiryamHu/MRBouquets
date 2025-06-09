@@ -30,8 +30,25 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
     echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
     exit;
 }
+// 1) Verificar que el usuario está autenticado
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['initialized'])) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'error' => 'Usuario no autenticado']);
+    exit;
+}
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+// 2) Control de timeout de sesión (1 hora)
+if (isset($_SESSION['last_activity'])) {
+    $inactivo = 3600; // 1 hora en segundos
+    if (time() - $_SESSION['last_activity'] > $inactivo) {
+        session_unset();
+        session_destroy();
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'Sesión expirada']);
+        exit;
+    }
+}
+$_SESSION['last_activity'] = time();
 
 try {
     $sql = "SELECT id, nombre FROM estados_pedidos ORDER BY id ASC";

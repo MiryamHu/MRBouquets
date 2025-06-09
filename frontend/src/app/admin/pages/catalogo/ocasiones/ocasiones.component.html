@@ -54,5 +54,11 @@
         <tr mat-header-row *matHeaderRowDef="['id','nombre','acciones']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['id','nombre','acciones'];"></tr>
         </table>
+
+          <mat-paginator
+            [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 25, 50]"
+            showFirstLastButtons>
+            </mat-paginator>
     </div>
 </div>
