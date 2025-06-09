@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
+import { ToastService } from './toast.service';
 
 export interface User {
   id: number;
@@ -47,7 +48,8 @@ export class AuthService {
   
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
+    private toastService: ToastService
   ) {
     this.userSubject = new BehaviorSubject<User | null>(
       this.isBrowser() ? this.getStoredUser() : null
@@ -118,9 +120,13 @@ export class AuthService {
 
   private handleSessionExpired(): void {
     console.log('Manejando sesión expirada');
+    const currentUser = this.getUser();
     this.setStoredUser(null);
     if (this.sessionCheckTimer) {
       clearInterval(this.sessionCheckTimer);
+    }
+    if (currentUser) {
+      this.toastService.warning('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
     }
     window.dispatchEvent(new CustomEvent('session-expired'));
   }
@@ -133,11 +139,9 @@ login(data: LoginData): Observable<any> {
   ).pipe(
     tap((response: any) => {
       if (response.usuario) {
-        // Marca que este usuario vino por login “local”
         response.usuario.loginProvider = 'local';
-
-        // Ahora guarda el usuario ya con ese campo
         this.setStoredUser(response.usuario);
+        this.toastService.success(`¡Bienvenido/a ${response.usuario.nombre}!`);
 
         this.checkSession().subscribe({
           next: () => {
@@ -160,6 +164,7 @@ login(data: LoginData): Observable<any> {
       clearInterval(this.sessionCheckTimer);
     }
     
+    const currentUser = this.getUser();
     this.http.post(
       `${this.apiUrl}/auth/logout.php`,
       {},
@@ -167,6 +172,9 @@ login(data: LoginData): Observable<any> {
     ).subscribe({
       complete: () => {
         this.setStoredUser(null);
+        if (currentUser) {
+          this.toastService.info(`¡Hasta pronto ${currentUser.nombre}!`);
+        }
       }
     });
   }
@@ -191,10 +199,9 @@ login(data: LoginData): Observable<any> {
     ).pipe(
       tap(res => {
         if (res.usuario) {
-          // Marca que éste vino por Google
           res.usuario.loginProvider = 'google';
           this.setStoredUser(res.usuario);
-          // …resto de tu lógica…
+          this.toastService.success(`¡Bienvenido/a ${res.usuario.nombre}!`);
         }
       })
     );
@@ -209,6 +216,7 @@ login(data: LoginData): Observable<any> {
       tap(res => {
         if (res.usuario) {
           this.setStoredUser(res.usuario);
+          this.toastService.success(`¡Bienvenido/a ${res.usuario.nombre}! Tu cuenta ha sido creada exitosamente.`);
         }
       })
     );

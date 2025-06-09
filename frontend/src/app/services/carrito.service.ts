@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { ToastService } from './toast.service';
 
 export interface ArticuloCarrito {
   id: number;
@@ -30,7 +31,10 @@ private _showMinimal = new BehaviorSubject<boolean>(false);
 
 
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService
+  ) {}
 
   /** Obtener todos los ítems del carrito */
   listarArticulos(): Observable<ArticuloCarrito[]> {
@@ -52,6 +56,11 @@ private _showMinimal = new BehaviorSubject<boolean>(false);
       `${this.base}/agregar-articulos-carrito.php`,
       { id_ramo, cantidad },
       { withCredentials: true }
+    ).pipe(
+      tap(response => {
+        const mensajeConCantidad = `${response.mensaje} (${cantidad} ${cantidad === 1 ? 'unidad' : 'unidades'})`;
+        this.toastService.success(mensajeConCantidad);
+      })
     );
   }
 
@@ -61,6 +70,15 @@ private _showMinimal = new BehaviorSubject<boolean>(false);
       `${this.base}/actualizar-articulos-carrito.php?id=${id}`,
       { cantidad },
       { withCredentials: true }
+    ).pipe(
+      tap(response => {
+        if (response.success && response.message) {
+          const mensajeConCantidad = `${response.message} (${cantidad} ${cantidad === 1 ? 'unidad' : 'unidades'})`;
+          this.toastService.success(mensajeConCantidad);
+        } else if (response.error) {
+          this.toastService.error(response.error);
+        }
+      })
     );
   }
 
@@ -69,6 +87,14 @@ private _showMinimal = new BehaviorSubject<boolean>(false);
     return this.http.delete<{ success: boolean; mensaje?: string; error?: string }>(
       `${this.base}/eliminar-articulos-carrito.php?id=${id}`,
       { withCredentials: true }
+    ).pipe(
+      tap(response => {
+        if (response.success && response.mensaje) {
+          this.toastService.info(response.mensaje);
+        } else if (response.error) {
+          this.toastService.error(response.error);
+        }
+      })
     );
   }
 
@@ -76,6 +102,14 @@ private _showMinimal = new BehaviorSubject<boolean>(false);
     return this.http.delete<{ success: boolean; mensaje?: string; error?: string }>(
       `${this.base}/vaciar-carrito.php?id`,
       { withCredentials: true }
+    ).pipe(
+      tap(response => {
+        if (response.success && response.mensaje) {
+          this.toastService.warning(response.mensaje);
+        } else if (response.error) {
+          this.toastService.error(response.error);
+        }
+      })
     );
   }
 
