@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { AuthService, LoginData, GoogleLoginResponse, RegisterData } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -46,7 +46,8 @@ export class LoginComponent implements OnInit {
     private auth: AuthService,
     private router: Router,
     private ngZone: NgZone,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
@@ -62,9 +63,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  
-
   ngOnInit(): void {
+    // Detectar el parámetro 'register' en la URL
+    this.route.queryParams.subscribe(params => {
+      if (params['register']) {
+        this.isLoginMode = false;
+      } else {
+        this.isLoginMode = true;
+      }
+    });
+
     // if (isPlatformBrowser(this.platformId)) {
     //   window['handleCredentialResponse'] = (resp: any) => {
     //     this.ngZone.run(() => this.onGoogleSignIn(resp.credential));

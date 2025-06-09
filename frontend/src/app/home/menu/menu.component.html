@@ -49,6 +49,7 @@
       </ng-container>
       <ng-template #anon>
         <a routerLink="/login" class="boton">Iniciar sesión</a>
+        <a [routerLink]="['/login']" [queryParams]="{ register: true }" class="boton">Registrarse</a>
       </ng-template>
     </div>
   </div>
