@@ -33,6 +33,7 @@ export class CarritoComponent implements OnInit {
   selectedDireccionId: number | null = null;
   showAddressModal = false;
   showSuccessModal = false;
+  showConfirmClearCart = false;
 
   
   constructor(
@@ -196,5 +197,16 @@ export class CarritoComponent implements OnInit {
   continueShopping(): void {
     if (this.minimal) this.close();
     else this.router.navigate(['/']);
+  }
+
+  openConfirmClearCart() {
+    this.showConfirmClearCart = true;
+  }
+  closeConfirmClearCart() {
+    this.showConfirmClearCart = false;
+  }
+  confirmClearCart() {
+    this.showConfirmClearCart = false;
+    this.clearCart();
   }
 }

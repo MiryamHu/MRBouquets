@@ -5,7 +5,7 @@
     <!-- Header -->
     <div class="cart-header">
       <h2>Carrito de Compras</h2>
-      <button class="btn-clear" (click)="clearCart()">Vaciar Carrito</button>
+      <button class="btn-clear" (click)="openConfirmClearCart()">Vaciar Carrito</button>
       <button class="btn-close" (click)="continueShopping()">×</button>
     </div>
 
@@ -56,6 +56,17 @@
     </div>
   </div>
 
+  <!-- Modal de confirmación para vaciar carrito -->
+  <div class="confirm-modal-backdrop" *ngIf="showConfirmClearCart">
+    <div class="confirm-modal">
+      <h3>¿Estás seguro de que deseas vaciar el carrito?</h3>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeConfirmClearCart()">Cancelar</button>
+        <button class="btn-primary" (click)="confirmClearCart()">Vaciar</button>
+      </div>
+    </div>
+  </div>
+
 </ng-container>
 
 
@@ -64,7 +75,7 @@
   <!-- ───── Cabecera ───── -->
   <div class="cart-header">
     <h2>Carrito de Compras</h2>
-    <button class="btn-clear" (click)="clearCart()">Vaciar Carrito</button>
+    <button class="btn-clear" (click)="openConfirmClearCart()">Vaciar Carrito</button>
     <button class="btn-close" (click)="continueShopping()">×</button>
   </div>
 
@@ -175,6 +186,17 @@
     </div>
   </div>
 </div>
+
+  <!-- Modal de confirmación para vaciar carrito -->
+  <div class="confirm-modal-backdrop" *ngIf="showConfirmClearCart">
+    <div class="confirm-modal">
+      <h3>¿Estás seguro de que deseas vaciar el carrito?</h3>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeConfirmClearCart()">Cancelar</button>
+        <button class="btn-primary" (click)="confirmClearCart()">Vaciar</button>
+      </div>
+    </div>
+  </div>
 
 </ng-template>
 
