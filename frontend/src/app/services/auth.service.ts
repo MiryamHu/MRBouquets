@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
+import { ToastService } from './toast.service';
 
 export interface User {
   id: number;
@@ -39,25 +40,19 @@ export interface GoogleLoginResponse {
 })
 export class AuthService {
   private readonly USER_STORAGE_KEY = 'auth_user';
-  private readonly SESSION_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutos
   private apiUrl = environment.apiUrl;
   private userSubject: BehaviorSubject<User | null>;
-  private sessionCheckTimer: any;
   public user$: Observable<User | null>;
   
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
+    private toastService: ToastService
   ) {
     this.userSubject = new BehaviorSubject<User | null>(
       this.isBrowser() ? this.getStoredUser() : null
     );
-    
     this.user$ = this.userSubject.asObservable();
-    
-    if (this.isBrowser() && this.isLoggedIn()) {
-      this.startSessionCheck();
-    }
   }
 
   private isBrowser(): boolean {
@@ -70,96 +65,43 @@ export class AuthService {
   }
 
   private setStoredUser(user: User | null): void {
-  if (user) {
-    // si viene sin loginProvider asumimos 'local'
-    if (!user.loginProvider) user.loginProvider = 'local';
-    localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
-  } else {
-    localStorage.removeItem(this.USER_STORAGE_KEY);
+    if (user) {
+      // si viene sin loginProvider asumimos 'local'
+      if (!user.loginProvider) user.loginProvider = 'local';
+      localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(this.USER_STORAGE_KEY);
+    }
+    this.userSubject.next(user);
   }
-  this.userSubject.next(user);
-}
 
   private getHttpOptions() {
-  return {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    }),
-    withCredentials: true
-  };
-}
-
-  private startSessionCheck(): void {
-    if (this.sessionCheckTimer) {
-      clearInterval(this.sessionCheckTimer);
-    }
-    
-    this.sessionCheckTimer = setInterval(() => {
-      this.checkSession().subscribe({
-        error: () => {
-          console.error('Sesión expirada o inválida');
-          this.handleSessionExpired();
-        }
-      });
-    }, this.SESSION_CHECK_INTERVAL);
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      withCredentials: true
+    };
   }
 
-  private checkSession(): Observable<any> {
-    console.log('Verificando estado de sesión...');
-    return this.http.get(
-      `${this.apiUrl}/auth/check-session.php`,
+  login(data: LoginData): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/auth/login.php`,
+      data,
       this.getHttpOptions()
     ).pipe(
-      tap(response => {
-        console.log('Respuesta de verificación de sesión:', response);
+      tap((response: any) => {
+        if (response.usuario) {
+          response.usuario.loginProvider = 'local';
+          this.setStoredUser(response.usuario);
+          this.toastService.success(`¡Bienvenido/a ${response.usuario.nombre}!`);
+        }
       })
     );
   }
 
-  private handleSessionExpired(): void {
-    console.log('Manejando sesión expirada');
-    this.setStoredUser(null);
-    if (this.sessionCheckTimer) {
-      clearInterval(this.sessionCheckTimer);
-    }
-    window.dispatchEvent(new CustomEvent('session-expired'));
-  }
-
-login(data: LoginData): Observable<any> {
-  return this.http.post(
-    `${this.apiUrl}/auth/login.php`,
-    data,
-    this.getHttpOptions()
-  ).pipe(
-    tap((response: any) => {
-      if (response.usuario) {
-        // Marca que este usuario vino por login “local”
-        response.usuario.loginProvider = 'local';
-
-        // Ahora guarda el usuario ya con ese campo
-        this.setStoredUser(response.usuario);
-
-        this.checkSession().subscribe({
-          next: () => {
-            console.log('Sesión verificada después del login');
-            this.startSessionCheck();
-          },
-          error: (err) => {
-            console.error('Error al verificar sesión después del login:', err);
-            this.handleSessionExpired();
-          }
-        });
-      }
-    })
-  );
-}
-
-
   logout(): void {
-    if (this.sessionCheckTimer) {
-      clearInterval(this.sessionCheckTimer);
-    }
-    
+    const currentUser = this.getUser();
     this.http.post(
       `${this.apiUrl}/auth/logout.php`,
       {},
@@ -167,6 +109,9 @@ login(data: LoginData): Observable<any> {
     ).subscribe({
       complete: () => {
         this.setStoredUser(null);
+        if (currentUser) {
+          this.toastService.info(`¡Hasta pronto ${currentUser.nombre}!`);
+        }
       }
     });
   }
@@ -191,10 +136,9 @@ login(data: LoginData): Observable<any> {
     ).pipe(
       tap(res => {
         if (res.usuario) {
-          // Marca que éste vino por Google
           res.usuario.loginProvider = 'google';
           this.setStoredUser(res.usuario);
-          // …resto de tu lógica…
+          this.toastService.success(`¡Bienvenido/a ${res.usuario.nombre}!`);
         }
       })
     );
@@ -209,6 +153,7 @@ login(data: LoginData): Observable<any> {
       tap(res => {
         if (res.usuario) {
           this.setStoredUser(res.usuario);
+          this.toastService.success(`¡Bienvenido/a ${res.usuario.nombre}! Tu cuenta ha sido creada exitosamente.`);
         }
       })
     );

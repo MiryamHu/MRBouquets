@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Ramo } from './ramos.service';
+import { ToastService } from './toast.service';
 
 // Interfaz para items en el carrito, con cantidad
 export interface CartItem extends Omit<Ramo, 'precio'> {
@@ -23,7 +24,7 @@ export class CartService {
   private itemsSubject: BehaviorSubject<CartItem[]> = new BehaviorSubject<CartItem[]>([]);
   public items$: Observable<CartItem[]> = this.itemsSubject.asObservable();
 
-  constructor() {}
+  constructor(private toastService: ToastService) {}
 
   /**
    * Añade un producto al carrito. Si ya existe, incrementa la cantidad.
@@ -32,16 +33,18 @@ export class CartService {
     const existing = this.items.find(item => item.id === ramo.id);
     if (existing) {
       existing.quantity++;
+      this.toastService.success(`Se agregó una unidad más de ${ramo.nombre} al carrito (Total: ${existing.quantity} unidades)`);
     } else {
       // Convertir precio a price al agregar al carrito y mantener img
       const cartItem: CartItem = {
         ...ramo,
         price: ramo.precio,
         quantity: 1,
-        img: ramo.img  // Asegurarnos de copiar la propiedad img
+        img: ramo.img
       };
-      delete (cartItem as any).precio; // Eliminar la propiedad precio
+      delete (cartItem as any).precio;
       this.items.push(cartItem);
+      this.toastService.success(`${ramo.nombre} agregado al carrito (1 unidad)`);
     }
     this.itemsSubject.next([...this.items]);
   }
@@ -50,6 +53,10 @@ export class CartService {
    * Elimina un producto completo del carrito (por id).
    */
   remove(productId: number): void {
+    const item = this.items.find(item => item.id === productId);
+    if (item) {
+      this.toastService.info(`${item.nombre} eliminado del carrito`);
+    }
     this.items = this.items.filter(item => item.id !== productId);
     this.itemsSubject.next([...this.items]);
   }
@@ -58,6 +65,9 @@ export class CartService {
    * Vacía todo el carrito.
    */
   clearCart(): void {
+    if (this.items.length > 0) {
+      this.toastService.warning('Carrito vaciado');
+    }
     this.items = [];
     this.itemsSubject.next([]);
   }
