@@ -12,6 +12,7 @@ import { AuthService, User }        from '../../services/auth.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogoConfirmacionComponent } from '../../utilidades/dialogo-confirmacion/dialogo-confirmacion.component';
 import { validarPasswordActual } from '../../utilidades/password-validators';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-cambiar-password',
@@ -22,7 +23,8 @@ import { validarPasswordActual } from '../../utilidades/password-validators';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule
   ],
   templateUrl: './cambiar-password.component.html',
   styleUrl: './cambiar-password.component.css'
@@ -32,6 +34,8 @@ export class CambiarPasswordComponent {
   mensaje = '';
   error = '';
   loading = false;
+  hideActual: boolean = true;
+  hideNueva: boolean = true;
 
     constructor(
     private fb: FormBuilder,
@@ -84,6 +88,14 @@ export class CambiarPasswordComponent {
         this.loading = false;
       }
     });
+  }
+
+  toggleHideActual() {
+    this.hideActual = !this.hideActual;
+  }
+
+  toggleHideNueva() {
+    this.hideNueva = !this.hideNueva;
   }
 
 }

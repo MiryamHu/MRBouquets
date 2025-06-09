@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
 
 declare const google: any;
 
@@ -28,7 +29,8 @@ declare const google: any;
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -40,6 +42,8 @@ export class LoginComponent implements OnInit {
   mensaje = '';
   googleClientId = environment.googleClientId;
   isLoginMode = true;
+  hideLoginPassword: boolean = true;
+  hideRegisterPassword: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -182,4 +186,12 @@ export class LoginComponent implements OnInit {
         }
       });
     }
+
+  toggleLoginPasswordVisibility() {
+    this.hideLoginPassword = !this.hideLoginPassword;
+  }
+
+  toggleRegisterPasswordVisibility() {
+    this.hideRegisterPassword = !this.hideRegisterPassword;
+  }
 }
