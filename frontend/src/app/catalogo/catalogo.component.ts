@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RamosService } from '../services/ramos.service';
-import { CartService } from '../services/cart.service';
+import { CarritoService } from '../services/carrito.service';
 import { AuthService } from '../services/auth.service';
 import { RouterModule,Router } from '@angular/router';
 import { FooterComponent } from '../shared/footer/footer.component';
@@ -47,7 +47,7 @@ export class CatalogoComponent implements OnInit {
 
   constructor(
     private ramosService: RamosService,
-    private cartService: CartService,
+    private cartService: CarritoService,
     public auth: AuthService,
     private router: Router
   ) {
@@ -121,13 +121,25 @@ export class CatalogoComponent implements OnInit {
     this.aplicarFiltros();
   }
 
-  agregarAlCarrito(ramo: Ramo): void {
-    if (this.auth.isLoggedIn()) {
-      this.cartService.add(ramo);
-    } else {
-      this.showLoginModal = true;
+    agregarAlCarrito(ramo: Ramo): void {
+      // 1) Si no está logueado, mostramos el modal
+      if (!this.auth.isLoggedIn()) {
+        this.showLoginModal = true;
+        return;
+      }
+
+      // 2) Llamamos al servicio para añadir 1 unidad
+      this.cartService.agregarArticulo(ramo.id, 1).subscribe({
+        next: () => {
+          // 3) Abrimos el panel lateral del carrito
+          this.cartService.open();
+        },
+        error: err => console.error('Error al agregar al carrito', err)
+      });
+
+      // 4) Ocultamos el modal de login si estaba abierto
+      this.showLoginModal = false;
     }
-  }
 
   irALogin(): void {
     this.showLoginModal = false;

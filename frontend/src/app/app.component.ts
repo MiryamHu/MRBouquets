@@ -17,7 +17,6 @@ import {
 } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 
-import { CartService } from './services/cart.service';
 import { CarritoComponent }  from './carrito/carrito.component';
 
 @Component({
@@ -38,15 +37,14 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('cartDrawer') drawer!: MatSidenav;
 
   constructor(
-    private cartService: CartService,
     private router: Router
   ) {}
 
   ngAfterViewInit() {
-    this.cartService.toggleSidenav.subscribe(action => {
-      if (action === 'open')  this.drawer.open();
-      if (action === 'close') this.drawer.close();
-    });
+    // this.cartService.toggleSidenav.subscribe(action => {
+    //   if (action === 'open')  this.drawer.open();
+    //   if (action === 'close') this.drawer.close();
+    // });
   }
 
   goToCart() {
