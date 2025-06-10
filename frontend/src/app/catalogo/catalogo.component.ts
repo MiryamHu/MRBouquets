@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RamosService } from '../services/ramos.service';
@@ -6,6 +6,7 @@ import { CarritoService } from '../services/carrito.service';
 import { AuthService } from '../services/auth.service';
 import { RouterModule,Router } from '@angular/router';
 import { FooterComponent } from '../shared/footer/footer.component';
+import { MatButtonModule } from '@angular/material/button';
 
 interface Ramo {
   id: number;
@@ -21,7 +22,7 @@ interface Ramo {
 @Component({
   selector: 'app-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, FooterComponent],
+  imports: [CommonModule, FormsModule, RouterModule, FooterComponent, MatButtonModule],
   templateUrl: './catalogo.component.html',
   styleUrls: ['./catalogo.component.css']
 })
@@ -31,6 +32,21 @@ export class CatalogoComponent implements OnInit {
   loading = true;
   error = '';
   showLoginModal = false;
+  ramoSeleccionado: Ramo | null = null;
+  cantidades: { [key: number]: number } = {};
+  isZoomActive = false;
+
+  @ViewChild('mainCanvas', { static: false }) mainCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('copyCanvas', { static: false }) copyCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('square', { static: false }) square!: ElementRef<HTMLDivElement>;
+
+  private mainCtx: CanvasRenderingContext2D | null = null;
+  private copyCtx: CanvasRenderingContext2D | null = null;
+  private currentImage: HTMLImageElement | null = null;
+  
+  private scale   = 1;
+  private offsetX = 0;
+  private offsetY = 0;
 
   // Filtros
   filtros = {
@@ -153,5 +169,102 @@ export class CatalogoComponent implements OnInit {
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/']);
+  }
+
+  verDetalles(ramo: Ramo): void {
+    this.abrirDetalles(ramo);
+  }
+
+  abrirDetalles(ramo: Ramo): void {
+    console.log('Iniciando abrirDetalles con ramo:', ramo);
+    this.ramoSeleccionado = ramo;
+    this.cantidades[ramo.id] = 1;
+  
+    // Esperar a que el modal esté en el DOM
+    setTimeout(() => {
+      /* 1.- Reinicializar canvas */
+      this.initializeCanvas();
+      if (!this.mainCanvas?.nativeElement || !this.mainCtx) {
+        console.error('Canvas principal no disponible');
+        return;
+      }
+      // Dimensionar también el canvas de copia
+      if (this.copyCanvas?.nativeElement) {
+        this.copyCanvas.nativeElement.width  = 200;
+        this.copyCanvas.nativeElement.height = 200;
+      }
+  
+      /* 2.- Cargar la imagen */
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      const imageUrl = `http://localhost/MRBouquets/frontend/public/img/${ramo.img}`;
+      console.log('Intentando cargar imagen desde:', imageUrl);
+      img.src = imageUrl;
+    }, 100);
+  }
+
+  cerrarDetalles() {
+    this.ramoSeleccionado = null;
+    this.isZoomActive = false;
+    if (this.square?.nativeElement) {
+      this.square.nativeElement.style.display = 'none';
+    }
+    if (this.copyCanvas?.nativeElement) {
+      this.copyCanvas.nativeElement.style.display = 'none';
+    }
+  }
+
+  onMouseLeave() {
+    if (this.square?.nativeElement && this.copyCanvas?.nativeElement) {
+      this.square.nativeElement.style.display = 'none';
+      this.copyCanvas.nativeElement.style.display = 'none';
+    }
+  }
+
+  toggleZoom() {
+    this.isZoomActive = !this.isZoomActive;
+    if (!this.isZoomActive && this.square?.nativeElement && this.copyCanvas?.nativeElement) {
+      this.square.nativeElement.style.display = 'none';
+      this.copyCanvas.nativeElement.style.display = 'none';
+    }
+  }
+
+  private initializeCanvas() {
+    console.log('Inicializando canvas...');
+    
+    // Solo intentar inicializar si el modal está visible
+    if (this.ramoSeleccionado) {
+      if (this.mainCanvas?.nativeElement) {
+        this.mainCtx = this.mainCanvas.nativeElement.getContext('2d');
+        console.log('Canvas principal inicializado:', {
+          canvas: this.mainCanvas.nativeElement,
+          context: this.mainCtx
+        });
+      }
+
+      if (this.copyCanvas?.nativeElement) {
+        this.copyCtx = this.copyCanvas.nativeElement.getContext('2d');
+        this.copyCanvas.nativeElement.width  = 200;
+        this.copyCanvas.nativeElement.height = 200;
+      }
+    } else {
+      console.log('Modal no visible, omitiendo inicialización de canvas');
+    }
+  }
+
+  incrementarCantidad(ramoId: number): void {
+    if (this.cantidades[ramoId]) {
+      this.cantidades[ramoId]++;
+    }
+  }
+
+  decrementarCantidad(ramoId: number): void {
+    if (this.cantidades[ramoId] && this.cantidades[ramoId] > 1) {
+      this.cantidades[ramoId]--;
+    }
+  }
+
+  getCantidad(ramoId: number): number {
+    return this.cantidades[ramoId] || 1;
   }
 } 
