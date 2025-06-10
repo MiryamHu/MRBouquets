@@ -51,6 +51,7 @@ export class PrincipalPerfilComponent implements OnInit {
     private auth: AuthService,
     private pedidosService: PedidosService,
     private direccionesService: DireccionesService,
+    private router: Router,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -61,12 +62,17 @@ export class PrincipalPerfilComponent implements OnInit {
    * ===================================== */
   ngOnInit(): void {
     if (this.isBrowser) {
-      this.userData = this.auth.getUser();
-      this.cargarPedidos();
-      this.cargarDirecciones();
+      if (!this.auth.isLoggedIn()) {
+        this.router.navigate(['/login']);
+      } else {
+        this.userData = this.auth.getUser();
+        this.cargarPedidos();
+        this.cargarDirecciones();
+      }
     }
   }
 
+  
   /* =====================================
    *  PEDIDOS
    * ===================================== */
