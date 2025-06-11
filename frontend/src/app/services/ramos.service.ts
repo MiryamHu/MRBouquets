@@ -13,7 +13,7 @@ export interface Ramo {
   tipo_flor: string;
   color: string;
   disponible: boolean;
-  activo?: boolean;
+  activo: boolean;
   es_ocasion_especial?: boolean;
   id_ocasion?: number;
   nombre_ocasion?: string;
@@ -36,7 +36,7 @@ export class RamosService {
     return this.http.get<{success: boolean, data: Ramo[]}>(`${this.apiUrl}/ramos/get-ramos.php`).pipe(
       map(response => {
         if (response.success) {
-          return response.data;
+          return response.data.filter(ramo => ramo.activo);
         }
         throw new Error('Error al obtener los ramos');
       })
