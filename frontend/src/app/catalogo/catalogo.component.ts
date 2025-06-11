@@ -137,25 +137,39 @@ export class CatalogoComponent implements OnInit {
     this.aplicarFiltros();
   }
 
-    agregarAlCarrito(ramo: Ramo): void {
-      // 1) Si no está logueado, mostramos el modal
-      if (!this.auth.isLoggedIn()) {
-        this.showLoginModal = true;
-        return;
-      }
-
-      // 2) Llamamos al servicio para añadir 1 unidad
-      this.cartService.agregarArticulo(ramo.id, 1).subscribe({
-        next: () => {
-          // 3) Abrimos el panel lateral del carrito
-          this.cartService.open();
-        },
-        error: err => console.error('Error al agregar al carrito', err)
-      });
-
-      // 4) Ocultamos el modal de login si estaba abierto
-      this.showLoginModal = false;
+  incrementarCantidad(ramoId: number): void {
+    if (!this.cantidades[ramoId]) {
+      this.cantidades[ramoId] = 1;
     }
+    if (this.cantidades[ramoId] < 99) {
+      this.cantidades[ramoId]++;
+    }
+  }
+
+  decrementarCantidad(ramoId: number): void {
+    if (!this.cantidades[ramoId]) {
+      this.cantidades[ramoId] = 1;
+    }
+    if (this.cantidades[ramoId] > 1) {
+      this.cantidades[ramoId]--;
+    }
+  }
+
+  agregarAlCarrito(ramo: Ramo, cantidad: number = 1): void {
+    if (!this.auth.isLoggedIn()) {
+      this.showLoginModal = true;
+      return;
+    }
+    if (!cantidad || cantidad < 1) cantidad = 1;
+    this.cartService.agregarArticulo(ramo.id, cantidad).subscribe({
+      next: () => {
+        this.cartService.open();
+      },
+      error: err => console.error('Error al agregar al carrito', err)
+    });
+    this.showLoginModal = false;
+    this.cantidades[ramo.id] = 1; // Reiniciar a 1 tras agregar
+  }
 
   irALogin(): void {
     this.showLoginModal = false;
@@ -178,28 +192,23 @@ export class CatalogoComponent implements OnInit {
   abrirDetalles(ramo: Ramo): void {
     console.log('Iniciando abrirDetalles con ramo:', ramo);
     this.ramoSeleccionado = ramo;
-    this.cantidades[ramo.id] = 1;
+    this.cantidades[ramo.id] = this.cantidades[ramo.id] || 1;
   
     // Esperar a que el modal esté en el DOM
     setTimeout(() => {
-      /* 1.- Reinicializar canvas */
       this.initializeCanvas();
       if (!this.mainCanvas?.nativeElement || !this.mainCtx) {
         console.error('Canvas principal no disponible');
         return;
       }
-      // Dimensionar también el canvas de copia
-      if (this.copyCanvas?.nativeElement) {
-        this.copyCanvas.nativeElement.width  = 200;
-        this.copyCanvas.nativeElement.height = 200;
-      }
-  
-      /* 2.- Cargar la imagen */
+
+      // Cargar la imagen
       const img = new Image();
       img.crossOrigin = 'anonymous';
       const imageUrl = `http://localhost/MRBouquets/frontend/public/img/${ramo.img}`;
       console.log('Intentando cargar imagen desde:', imageUrl);
       img.src = imageUrl;
+      this.loadImage(img);
     }, 100);
   }
 
@@ -252,19 +261,76 @@ export class CatalogoComponent implements OnInit {
     }
   }
 
-  incrementarCantidad(ramoId: number): void {
-    if (this.cantidades[ramoId]) {
-      this.cantidades[ramoId]++;
-    }
-  }
-
-  decrementarCantidad(ramoId: number): void {
-    if (this.cantidades[ramoId] && this.cantidades[ramoId] > 1) {
-      this.cantidades[ramoId]--;
-    }
-  }
-
   getCantidad(ramoId: number): number {
     return this.cantidades[ramoId] || 1;
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (!this.isZoomActive || !this.mainCanvas?.nativeElement || !this.copyCanvas?.nativeElement || !this.square?.nativeElement) {
+      return;
+    }
+
+    const mainCanvas = this.mainCanvas.nativeElement;
+    const copyCanvas = this.copyCanvas.nativeElement;
+    const square = this.square.nativeElement;
+    const rect = mainCanvas.getBoundingClientRect();
+
+    // Calcular posición del mouse relativa al canvas
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Mostrar el selector y el canvas de copia
+    square.style.display = 'block';
+    copyCanvas.style.display = 'block';
+
+    // Posicionar el selector
+    const squareSize = 100;
+    const squareX = Math.max(0, Math.min(x - squareSize/2, mainCanvas.width - squareSize));
+    const squareY = Math.max(0, Math.min(y - squareSize/2, mainCanvas.height - squareSize));
+    square.style.left = `${squareX}px`;
+    square.style.top = `${squareY}px`;
+
+    // Dibujar la región ampliada en el canvas de copia
+    if (this.mainCtx && this.copyCtx) {
+      this.copyCtx.clearRect(0, 0, copyCanvas.width, copyCanvas.height);
+      this.copyCtx.drawImage(
+        mainCanvas,
+        squareX, squareY, squareSize, squareSize,
+        0, 0, copyCanvas.width, copyCanvas.height
+      );
+    }
+  }
+
+  private loadImage(img: HTMLImageElement): void {
+    img.onload = () => {
+      if (!this.mainCanvas?.nativeElement || !this.mainCtx) {
+        console.error('Canvas no disponible');
+        return;
+      }
+
+      const canvas = this.mainCanvas.nativeElement;
+      const ctx = this.mainCtx;
+
+      // Ajustar el tamaño del canvas al de la imagen
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      // Dibujar la imagen
+      ctx.drawImage(img, 0, 0);
+
+      // Guardar la imagen actual
+      this.currentImage = img;
+
+      // Inicializar el selector
+      if (this.square?.nativeElement) {
+        this.square.nativeElement.style.width = '100px';
+        this.square.nativeElement.style.height = '100px';
+        this.square.nativeElement.style.display = 'none';
+      }
+    };
+
+    img.onerror = () => {
+      console.error('Error al cargar la imagen:', img.src);
+    };
   }
 } 

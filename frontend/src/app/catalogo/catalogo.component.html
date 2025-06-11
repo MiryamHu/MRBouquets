@@ -91,19 +91,40 @@
 
     <!-- Lista de productos -->
     <div *ngFor="let ramo of ramosFiltrados" class="producto-card">
-      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' +ramo.img" [alt]="ramo.nombre" class="producto-imagen">
+      <div class="producto-imagen-wrapper">
+        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramo.img" 
+             [alt]="ramo.nombre" 
+             class="producto-imagen"
+             (click)="verDetalles(ramo)">
+      </div>
       <div class="producto-info">
-        <h3>{{ ramo.nombre }}</h3>
+        <h3 class="producto-titulo">{{ ramo.nombre }}</h3>
         <p class="producto-descripcion">{{ ramo.descripcion }}</p>
-        <div class="producto-detalles">
-          <span class="tipo-flor">{{ ramo.tipo_flor }}</span>
-          <span class="color">{{ ramo.color }}</span>
+        <div class="producto-badges">
+          <span class="badge tipo-flor">{{ ramo.tipo_flor }}</span>
+          <span class="badge color">{{ ramo.color }}</span>
         </div>
         <div class="producto-footer">
-          <span class="precio">{{ ramo.precio }}€</span>
+          <span class="precio">{{ ramo.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <div class="control-cantidad">
+            <button type="button" class="btn-cantidad" (click)="decrementarCantidad(ramo.id)">-</button>
+            <input 
+              type="number" 
+              min="1" 
+              max="99" 
+              [value]="cantidades[ramo.id] || 1"
+              readonly
+            />
+            <button type="button" class="btn-cantidad" (click)="incrementarCantidad(ramo.id)">+</button>
+          </div>
+        </div>
+        <div class="botones-tarjeta">
+          <button class="boton-ver" (click)="verDetalles(ramo)">
+            Ver detalles
+          </button>
           <button 
             class="btn-agregar"
-            (click)="agregarAlCarrito(ramo)"
+            (click)="agregarAlCarrito(ramo, cantidades[ramo.id] || 1)"
             [disabled]="!ramo.disponible">
             {{ ramo.disponible ? 'Agregar al carrito' : 'No disponible' }}
           </button>
@@ -120,6 +141,60 @@
       <div class="modal-actions">
         <button class="btn-primary" (click)="irALogin()">Iniciar sesión</button>
         <button class="btn-secondary" (click)="showLoginModal = false">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de detalles del ramo -->
+  <div class="modal-detalles" *ngIf="ramoSeleccionado">
+    <div class="modal-contenido-detalles">
+      <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
+      
+      <div class="modal-imagen" 
+           (mousemove)="onMouseMove($event)"
+           (mouseleave)="onMouseLeave()">
+        <canvas #mainCanvas class="main-canvas"></canvas>
+        <div #square class="selector"></div>
+        <canvas #copyCanvas class="copy-canvas" width="200" height="200"></canvas>
+        <button class="lupa-icon" [class.active]="isZoomActive" (click)="toggleZoom()">
+          <i class="bi" [class.bi-zoom-in]="!isZoomActive" [class.bi-zoom-out]="isZoomActive"></i>
+        </button>
+      </div>
+      
+      <div class="modal-info">
+        <h2>{{ ramoSeleccionado.nombre }}</h2>
+        <p class="descripcion">{{ ramoSeleccionado.descripcion }}</p>
+        
+        <div class="detalles-adicionales">
+          <div class="detalle">
+            <span class="etiqueta">Precio:</span>
+            <span class="valor precio">{{ ramoSeleccionado.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+          <div class="detalle">
+            <span class="etiqueta">Tipo de Flor:</span>
+            <span class="valor">{{ ramoSeleccionado.tipo_flor }}</span>
+          </div>
+          <div class="detalle">
+            <span class="etiqueta">Color:</span>
+            <span class="valor">{{ ramoSeleccionado.color }}</span>
+          </div>
+          <div class="detalle">
+            <span class="etiqueta">Disponibilidad:</span>
+            <span class="valor disponible">{{ ramoSeleccionado.disponible ? 'En stock' : 'No disponible' }}</span>
+          </div>
+        </div>
+        
+        <div class="control-cantidad">
+          <button (click)="decrementarCantidad(ramoSeleccionado.id)" [disabled]="cantidades[ramoSeleccionado.id] <= 1">-</button>
+          <input type="number" [value]="cantidades[ramoSeleccionado.id] || 1" min="1" max="99" readonly>
+          <button (click)="incrementarCantidad(ramoSeleccionado.id)" [disabled]="cantidades[ramoSeleccionado.id] >= 99">+</button>
+        </div>
+        
+        <button class="boton-agregar" 
+                (click)="agregarAlCarrito(ramoSeleccionado, cantidades[ramoSeleccionado.id] || 1)"
+                [disabled]="!ramoSeleccionado.disponible">
+          {{ ramoSeleccionado.disponible ? 'Agregar al Carrito' : 'No disponible' }}
+        </button>
       </div>
     </div>
   </div>
