@@ -1399,3 +1399,76 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
+@media (max-width: 768px) {
+  .pie-pagina {
+    padding: 1.5rem 0.5rem 0.5rem;
+    text-align: center;
+  }
+  .pie-pagina-contenido {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+    justify-items: center;
+  }
+  .columna-footer {
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+  }
+  .columna-footer h4,
+  .columna-footer p,
+  .descripcion-footer {
+    text-align: center;
+    width: 100%;
+  }
+  .redes-sociales {
+    justify-content: center;
+    gap: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .info-contacto {
+    align-items: center;
+    width: 100%;
+  }
+  .info-contacto p {
+    justify-content: center;
+    width: 100%;
+  }
+  .grid-enlaces {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+    justify-items: center;
+    width: 100%;
+  }
+  .grid-enlaces a {
+    justify-content: center;
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  .pie-pagina {
+    padding: 1rem 0.2rem 0.2rem;
+    text-align: center;
+  }
+  .pie-pagina-contenido {
+    gap: 1rem;
+    justify-items: center;
+  }
+  .columna-footer h4 {
+    font-size: 1rem;
+    text-align: center;
+    width: 100%;
+  }
+  .descripcion-footer {
+    font-size: 0.85rem;
+    text-align: center;
+    width: 100%;
+  }
+  .footer-bottom {
+    padding-top: 0.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    width: 100%;
+  }
+}
+

@@ -24,8 +24,23 @@ export class MenuComponent implements AfterViewInit {
 
   submenuAbierto = false;
 
+  // ===== Hamburguesa =====
+  hamburgerMenuAbierto = false;
+  submenuAbiertoHamburguesa = false;
+
+  toggleHamburgerMenu() {
+    this.hamburgerMenuAbierto = !this.hamburgerMenuAbierto;
+    if (!this.hamburgerMenuAbierto) {
+      this.submenuAbiertoHamburguesa = false;
+    }
+  }
+
+  toggleSubmenuHamburguesa() {
+    this.submenuAbiertoHamburguesa = !this.submenuAbiertoHamburguesa;
+  }
+
   toggleSubmenu() {
-  this.submenuAbierto = !this.submenuAbierto;
+    this.submenuAbierto = !this.submenuAbierto;
   }
 
   constructor(private ocasionesSvc: RamosService) {}
