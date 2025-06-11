@@ -12,6 +12,9 @@
   background: #fff;
   box-shadow: -2px 0 5px rgba(0,0,0,0.1);
   z-index: 1000;
+  margin: 0;
+  border-radius: 0;
+  padding: 1rem;
 }
 
 /* En modo completo (sin minimal) sí dejamos espacio para el header */
@@ -21,7 +24,6 @@
 
 /* Carrito ultra moderno y elegante */
 .cart-container {
-  max-width: 700px;
   background: #fff;
   border-radius: 2rem;
   box-shadow: 0 8px 40px rgba(220, 40, 120, 0.10);
@@ -31,6 +33,13 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+}
+
+/* Estilos específicos para la vista completa */
+:host(:not([minimal])) .cart-container {
+  max-width: 700px;
+  margin: 2.5rem auto;
+  padding: 2rem;
 }
 
 .cart-header {
@@ -101,6 +110,15 @@
   overflow-y: auto;
   padding: 0;
 }
+
+/* Ajustes para el contenido del carrito en vista minimal */
+:host([minimal]) .cart-items {
+  max-height: calc(100vh - 300px); /* Ajusta según el espacio que necesites para header y footer */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px; /* Para compensar el scrollbar */
+}
+
 .cart-item {
   display: flex;
   align-items: center;
@@ -112,10 +130,14 @@
   border: 1px solid #f3c1d7;
   transition: box-shadow 0.2s, border 0.2s;
 }
-.cart-item:hover {
-  box-shadow: 0 4px 16px rgba(220, 40, 120, 0.13);
-  border: 1px solid #ff4081;
+
+/* Ajustes para la vista minimal */
+:host([minimal]) .cart-item {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 0.8rem;
 }
+
 .item-img {
   width: 70px;
   height: 70px;
@@ -125,6 +147,13 @@
   border: 1.5px solid #f3c1d7;
   box-shadow: none;
 }
+
+/* Ajustes para la vista minimal */
+:host([minimal]) .item-img {
+  width: 60px;
+  height: 60px;
+}
+
 .item-img:not([src]), 
 .item-img[src=""] {
   visibility: hidden;
@@ -311,6 +340,26 @@
   .btn-primary, .btn-secondary {
     padding: 0.5rem 0.2rem;
     font-size: 0.95rem;
+  }
+}
+
+/* Ajustes responsive para la vista minimal */
+@media (max-width: 480px) {
+  :host([minimal]) .cart-container {
+    max-width: 100%;
+  }
+
+  :host([minimal]) .cart-header h2 {
+    font-size: 1.3rem;
+  }
+
+  :host([minimal]) .cart-item {
+    padding: 0.6rem;
+  }
+
+  :host([minimal]) .item-img {
+    width: 50px;
+    height: 50px;
   }
 }
 
