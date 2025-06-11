@@ -68,28 +68,28 @@
       <button class="close-btn" (click)="toggleHamburgerMenu()" aria-label="Cerrar menú">×</button>
     </div>
     <ul class="hamburger-list">
-      <li><a routerLink="/" (click)="toggleHamburgerMenu()">INICIO</a></li>
-      <li><a routerLink="/catalogo" (click)="toggleHamburgerMenu()">CATÁLOGO</a></li>
+      <li><a routerLink="/" (click)="toggleHamburgerMenu()"><i class="bi bi-house-door"></i> INICIO</a></li>
+      <li><a routerLink="/catalogo" (click)="toggleHamburgerMenu()"><i class="bi bi-flower3"></i> CATÁLOGO</a></li>
       <li class="has-submenu" [class.open]="submenuAbiertoHamburguesa">
-        <a href="#" (click)="toggleSubmenuHamburguesa(); $event.preventDefault()">OCASIONES <mat-icon class="submenu-icon">expand_more</mat-icon></a>
+        <a href="#" (click)="toggleSubmenuHamburguesa(); $event.preventDefault()"><i class="bi bi-gift"></i> OCASIONES <mat-icon class="submenu-icon">expand_more</mat-icon></a>
         <ul class="submenu" *ngIf="submenuAbiertoHamburguesa">
           <li *ngFor="let oc of ocasiones">
             <a [routerLink]="['/ocasiones']" [queryParams]="{ oc: oc.id }" (click)="toggleHamburgerMenu()" class="submenu-link">
-              <span class="link-text">{{ oc.nombre }}</span>
+              <i class="bi bi-dot"></i> <span class="link-text">{{ oc.nombre }}</span>
             </a>
           </li>
         </ul>
       </li>
-      <li><a routerLink="/contacto" (click)="toggleHamburgerMenu()">CONTACTO</a></li>
+      <li><a routerLink="/contacto" (click)="toggleHamburgerMenu()"><i class="bi bi-envelope"></i> CONTACTO</a></li>
       <ng-container *ngIf="auth.isLoggedIn(); else anonHamburguesa">
-        <li><span class="saludo">Hola, {{ userName }}</span></li>
-        <li><a routerLink="/perfil" (click)="toggleHamburgerMenu()">👤 Mi Perfil</a></li>
-        <li><a routerLink="/carrito" (click)="toggleHamburgerMenu()">🛒 Mi carrito</a></li>
-        <li><button class="boton cerrar-sesion" (click)="logout(); toggleHamburgerMenu()">🔒 Cerrar sesión</button></li>
+        <li><span class="saludo"><i class="bi bi-person"></i> Hola, {{ userName }}</span></li>
+        <li><a routerLink="/perfil" (click)="toggleHamburgerMenu()"><i class="bi bi-person-circle"></i> Mi Perfil</a></li>
+        <li><a routerLink="/carrito" (click)="toggleHamburgerMenu()"><i class="bi bi-cart"></i> Mi carrito</a></li>
+        <li><button class="boton cerrar-sesion" (click)="logout(); toggleHamburgerMenu()"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button></li>
       </ng-container>
       <ng-template #anonHamburguesa>
-        <li><a routerLink="/login" (click)="toggleHamburgerMenu()">Iniciar sesión</a></li>
-        <li><a [routerLink]="['/login']" [queryParams]="{ register: true }" (click)="toggleHamburgerMenu()">Registrarse</a></li>
+        <li><a routerLink="/login" (click)="toggleHamburgerMenu()"><i class="bi bi-box-arrow-in-right"></i> Iniciar sesión</a></li>
+        <li><a [routerLink]="['/login']" [queryParams]="{ register: true }" (click)="toggleHamburgerMenu()"><i class="bi bi-person-plus"></i> Registrarse</a></li>
       </ng-template>
     </ul>
   </nav>
