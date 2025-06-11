@@ -1,17 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface ArticuloCarrito {
   id: number;
-  id_usuario: number;
   id_ramo: number;
+  id_usuario?: number;
+  nombre: string;
+  descripcion: string;
+  precio: number;
   cantidad: number;
-  fecha_agregado: string;
-  nombre?: string;
-  precio?: number;
-  img?: string;
+  img: string;
+  fecha_agregado?: string;
+}
+
+export interface CartResponse {
+  success: boolean;
+  data: ArticuloCarrito[];
+  error?: string;
 }
 
 @Injectable({
@@ -19,72 +26,96 @@ export interface ArticuloCarrito {
 })
 export class CarritoService {
 
+  private base = `${environment.apiUrl}/carrito`;
 
-private base = `${environment.apiUrl}/carrito`;
-
-private _showMinimal = new BehaviorSubject<boolean>(false);
+  // Estado compartido del carrito
+  private _cartItems = new BehaviorSubject<ArticuloCarrito[]>([]);
+  cartItems$ = this._cartItems.asObservable();
+  
+  private _showMinimal = new BehaviorSubject<boolean>(false);
   showMinimal$ = this._showMinimal.asObservable();
   
   private toggleSidenav$ = new Subject<'open'|'close'>();
   toggleSidenav = this.toggleSidenav$.asObservable();
 
+  constructor(private http: HttpClient) {
+    // Cargar items iniciales
+    this.refreshCartItems();
+  }
 
+  private refreshCartItems(): void {
+    this.http.get<CartResponse>(`${this.base}/obtener-articulos-carrito.php`, { withCredentials: true })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this._cartItems.next(response.data);
+          } else {
+            this._cartItems.next([]);
+            console.error('Error loading cart:', response.error);
+          }
+        },
+        error: (error) => {
+          this._cartItems.next([]);
+          console.error('Error loading cart items:', error);
+        }
+      });
+  }
 
-  constructor(private http: HttpClient) {}
+  getCartItems(): Observable<ArticuloCarrito[]> {
+    return this.cartItems$;
+  }
 
-  /** Obtener todos los ítems del carrito */
-  listarArticulos(): Observable<ArticuloCarrito[]> {
-    return this.http.get<{ success: boolean, data: ArticuloCarrito[] }>(
-      `${this.base}/obtener-articulos-carrito.php`,
+  agregarArticulo(id_ramo: number, cantidad: number): Observable<any> {
+    return this.http.post(`${this.base}/agregar-articulos-carrito.php`, 
+      { id_ramo, cantidad }, 
       { withCredentials: true }
     ).pipe(
-      map(resp => {
-        if (!resp.success) {
-          throw new Error('No autenticado o sin datos');
-        }
-        return resp.data;
+      tap(() => {
+        // Refrescar items después de agregar
+        this.refreshCartItems();
       })
     );
-}
-  /** Agregar un ítem (o sumar cantidad si ya existe) */
-  agregarArticulo(id_ramo: number, cantidad: number): Observable<{ mensaje: string }> {
-    return this.http.post<{ mensaje: string }>(
-      `${this.base}/agregar-articulos-carrito.php`,
-      { id_ramo, cantidad },
+  }
+
+  actualizarCantidad(id: number, cantidad: number): Observable<any> {
+    return this.http.put(`${this.base}/actualizar-articulos-carrito.php?id=${id}`, 
+      { cantidad }, 
       { withCredentials: true }
+    ).pipe(
+      tap(() => {
+        // Refrescar items después de actualizar
+        this.refreshCartItems();
+      })
     );
   }
 
-  /** Actualizar la cantidad de un ítem existente */
-  actualizarCantidad(id: number, cantidad: number) {
-    return this.http.put<{ success: boolean, message?: string, error?: string }>(
-      `${this.base}/actualizar-articulos-carrito.php?id=${id}`,
-      { cantidad },
+  eliminarArticulo(id: number): Observable<any> {
+    return this.http.delete(`${this.base}/eliminar-articulos-carrito.php?id=${id}`, 
       { withCredentials: true }
+    ).pipe(
+      tap(() => {
+        // Refrescar items después de eliminar
+        this.refreshCartItems();
+      })
     );
   }
 
-  /** Eliminar un ítem del carrito */
-  eliminarArticulo(id: number) {
-    return this.http.delete<{ success: boolean; mensaje?: string; error?: string }>(
-      `${this.base}/eliminar-articulos-carrito.php?id=${id}`,
+  vaciarCarrito(): Observable<any> {
+    return this.http.delete(`${this.base}/vaciar-carrito.php`, 
       { withCredentials: true }
+    ).pipe(
+      tap(() => {
+        // Refrescar items después de vaciar
+        this.refreshCartItems();
+      })
     );
   }
 
-  vaciarCarrito() {
-    return this.http.delete<{ success: boolean; mensaje?: string; error?: string }>(
-      `${this.base}/vaciar-carrito.php?id`,
-      { withCredentials: true }
-    );
-  }
-
-  open() {
+  open(): void {
     this.toggleSidenav$.next('open');
   }
 
-  close() {
+  close(): void {
     this.toggleSidenav$.next('close');
   }
-
 }

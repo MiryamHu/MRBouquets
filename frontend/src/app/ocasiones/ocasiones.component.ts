@@ -152,7 +152,12 @@ export class OcasionesComponent implements OnInit {
     }
 
     const cantidad = this.getCantidad(ramo.id);
-    this.cartService.agregarArticulo(ramo.id, cantidad);
+    this.cartService.agregarArticulo(ramo.id, cantidad).subscribe({
+      next: () => {
+        this.cartService.open();
+      },
+      error: err => console.error('Error al agregar al carrito', err)
+    });
   }
 
   incrementarCantidad(ramoId: number) {

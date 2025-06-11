@@ -197,8 +197,24 @@ INSERT INTO estados_pedidos (nombre) VALUES
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 
 -- Insert usuario admin con contraseña hasheada (SHA2)
-INSERT INTO usuarios (nombre_usuario, nombre, apellido, correo, contrasena, telefono, rol) VALUES
-    ('admin', 'Admin', 'User', 'admin@example.com', SHA2('admin123',256), NULL, 'admin');
+INSERT INTO usuarios (
+    nombre_usuario, 
+    nombre, 
+    apellido, 
+    correo, 
+    contrasena, 
+    telefono, 
+    rol
+) VALUES (
+    'admin', 
+    'Administrador', 
+    'General', 
+    'admin@example.com', 
+    '$2b$12$LCUexQwOEBKSVFOJpdv4V.pIYmgMYZ.zQ5UnJmJm0uX1Geh7jaK82', 
+    '123456789', 
+    'admin'
+);
+
 
 -- Aquí irían más INSERTs si tienes datos existentes (pedidos, detalle_pedidos, articulos_carrito, entregas, soporte_cliente).
 

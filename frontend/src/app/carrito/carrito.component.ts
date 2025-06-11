@@ -35,7 +35,6 @@ export class CarritoComponent implements OnInit {
   showSuccessModal = false;
   showConfirmClearCart = false;
 
-  
   constructor(
     private carritoSvc: CarritoService,
     private pedidoService: PedidoService,
@@ -48,61 +47,30 @@ export class CarritoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Si estamos en la vista full (ruta /carrito), CARGAMOS EL BACKEND
-    if (!this.showMinimalView) {
-      // Protegido por AuthGuard, pero doble chequeo
-      if (!this.auth.isLoggedIn()) {
-        this.router.navigate(['/login']);
-      } else {
-        this.loadCart();
-      }
-    }
-    // En vista minimal NO hacemos ninguna llamada al servidor
-  }
-
-  private loadCart(): void {
-    this.carritoSvc.listarArticulos().subscribe({
-      next: items => {
-        this.items = Array.isArray(items) ? items : [];
-        this.calculateSubtotal();
-      },
-      error: err => {
-        console.error('Falló carga de carrito', err);
-        this.items = [];
-        this.subtotal = 0;
-      }
+    // Suscribirse a los cambios del carrito
+    this.carritoSvc.cartItems$.subscribe(items => {
+      this.items = items;
+      this.calculateSubtotal();
     });
   }
 
   private calculateSubtotal(): void {
-    this.subtotal = this.items.reduce(
-      (sum, i) => sum + i.cantidad * (i.precio ?? 0),
-      0
-    );
+    this.subtotal = this.items.reduce((total, item) => 
+      total + (item.precio * item.cantidad), 0);
   }
 
   increment(item: ArticuloCarrito): void {
-    this.carritoSvc
-      .actualizarCantidad(item.id, item.cantidad + 1)
+    this.carritoSvc.actualizarCantidad(item.id, item.cantidad + 1)
       .subscribe({
-        next: resp => {
-          if (resp.success) this.loadCart();
-          else alert(resp.error);
-        },
-        error: () => alert('Error de red al actualizar'),
+        error: () => alert('Error al actualizar la cantidad')
       });
   }
 
   decrement(item: ArticuloCarrito): void {
     if (item.cantidad > 1) {
-      this.carritoSvc
-        .actualizarCantidad(item.id, item.cantidad - 1)
+      this.carritoSvc.actualizarCantidad(item.id, item.cantidad - 1)
         .subscribe({
-          next: resp => {
-            if (resp.success) this.loadCart();
-            else alert(resp.error);
-          },
-          error: () => alert('Error de red al actualizar'),
+          error: () => alert('Error al actualizar la cantidad')
         });
     } else {
       this.removeItem(item.id);
@@ -111,74 +79,70 @@ export class CarritoComponent implements OnInit {
 
   removeItem(id: number): void {
     this.carritoSvc.eliminarArticulo(id).subscribe({
-      next: resp => {
-        if (resp.success) {
-          this.loadCart();       // recarga lista tras borrar
-        } else {
-          alert(resp.error);
-        }
-      },
-      error: err => {
-        console.error('HTTP Error al eliminar:', err);
-        // aunque haya error JSON (parseo, warnings PHP...) recargamos
-        this.loadCart();
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        alert('Error al eliminar el artículo');
       }
     });
   }
 
-
   close(): void {
-    if (this.isDialog) this.dialogRef!.close();
-    else this.router.navigate(['/']);
+    if (this.minimal) {
+      this.carritoSvc.close();
+    } else if (this.isDialog && this.dialogRef) {
+      this.dialogRef.close();
+    }
   }
 
   goToPage(): void {
-    if (this.minimal || this.isDialog) this.close();
+    if (this.minimal || this.isDialog) {
+      this.close();
+    }
     this.router.navigate(['/carrito']);
   }
 
   proceedToCheckout(): void {
     if (!this.items.length) return;
-    this.loadDirecciones();
+    this.cargarDirecciones();
+    this.showAddressModal = true;
   }
 
-  private loadDirecciones(): void {
-    this.direccionesSvc.getDirecciones().subscribe({
-      next: ds => {
-        this.direcciones = ds;
-        this.selectedDireccionId = ds.length ? ds[0].id : null;
-        this.showAddressModal = true;
-      },
-      error: () => alert('No se pudieron cargar las direcciones')
-    });
-  }
+  procesarPedido(): void {
+    if (!this.selectedDireccionId) {
+      alert('Por favor selecciona una dirección de envío');
+      return;
+    }
 
-  confirmarDireccion(): void {
-    if (this.selectedDireccionId == null) return;
     this.pedidoService
       .confirmOrder(this.subtotal, this.items, this.selectedDireccionId)
       .subscribe({
         next: () => {
-          this.showAddressModal = false;
           this.showSuccessModal = true;
-          this.clearCart();
+          this.showAddressModal = false;
         },
-        error: () => alert('Error al confirmar tu pedido')
+        error: err => {
+          console.error('Error al procesar pedido:', err);
+          alert('Error al procesar el pedido');
+        }
       });
   }
 
-  clearCart(): void {
-    this.carritoSvc.vaciarCarrito().subscribe({
-      next: resp => {
-        if (resp.success) {
-          this.loadCart();
-        } else {
-          alert(resp.error);
+  seleccionarDireccion(id: number): void {
+    this.selectedDireccionId = id;
+  }
+
+  cargarDirecciones(): void {
+    this.direccionesSvc.getDirecciones().subscribe({
+      next: direcciones => {
+        this.direcciones = direcciones;
+        if (direcciones.length > 0) {
+          this.selectedDireccionId = direcciones[0].id;
         }
+        this.showAddressModal = true;
       },
       error: err => {
-        console.error('HTTP Error al eliminar:', err);
-        this.loadCart();
+        console.error('Error al cargar direcciones:', err);
+        alert('Error al cargar las direcciones');
       }
     });
   }
@@ -188,29 +152,41 @@ export class CarritoComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-    closeModal(): void {
+  closeModal(): void {
     this.showSuccessModal = false;
     this.router.navigate(['/']);
   }
 
-
   continueShopping(): void {
-    if (this.minimal) this.close();
-    else this.router.navigate(['/']);
+    if (this.minimal || this.isDialog) {
+      this.close();
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
-  openConfirmClearCart() {
+  openConfirmClearCart(): void {
     this.showConfirmClearCart = true;
   }
-  closeConfirmClearCart() {
+
+  closeConfirmClearCart(): void {
     this.showConfirmClearCart = false;
-  }
-  confirmClearCart() {
-    this.showConfirmClearCart = false;
-    this.clearCart();
   }
 
-  goToCatalogo() {
+  confirmClearCart(): void {
+    this.showConfirmClearCart = false;
+    this.carritoSvc.vaciarCarrito().subscribe({
+      error: (err) => {
+        console.error('Error al vaciar el carrito:', err);
+        alert('Error al vaciar el carrito');
+      }
+    });
+  }
+
+  goToCatalogo(): void {
+    if (this.minimal) {
+      this.close();
+    }
     this.router.navigate(['/catalogo']);
   }
 }

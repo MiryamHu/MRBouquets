@@ -5,7 +5,7 @@
     <div class="cart-header">
       <h2>Carrito de Compras</h2>
       <button class="btn-clear" (click)="openConfirmClearCart()">Vaciar Carrito</button>
-      <button class="btn-close" (click)="continueShopping()">×</button>
+      <button class="btn-close" (click)="close()">×</button>
     </div>
 
     <ng-container *ngIf="items.length > 0; else emptyCart">
@@ -16,12 +16,12 @@
             <h3>{{ item.nombre }}</h3>
             <p>{{ item.descripcion }}</p>
             <span class="item-price">
-              {{ (item.quantity * item.price) | currency:'EUR':'symbol':'1.2-2' }}
+              {{ (item.cantidad * item.precio) | currency:'EUR':'symbol':'1.2-2' }}
             </span>
           </div>
           <div class="quantity-controls">
             <button (click)="decrement(item)">–</button>
-            <span>{{ item.quantity }}</span>
+            <span>{{ item.cantidad }}</span>
             <button (click)="increment(item)">+</button>
           </div>
           <button class="btn-remove" (click)="removeItem(item.id)">🗑️</button>
@@ -83,7 +83,7 @@
   <div class="cart-header">
     <h2>Carrito de Compras</h2>
     <button class="btn-clear" (click)="openConfirmClearCart()">Vaciar Carrito</button>
-    <button class="btn-close" (click)="continueShopping()">×</button>
+    <button class="btn-close" (click)="close()">×</button>
   </div>
 
   <!-- ───── Lista de productos ───── -->
