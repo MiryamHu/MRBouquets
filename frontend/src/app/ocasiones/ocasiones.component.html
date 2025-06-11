@@ -1,7 +1,11 @@
 <div class="ocasiones-container">
-  <!-- Título de la sección -->
+  <!-- Título y filtros (sin tocar) -->
   <div class="ocasiones-header">
-    <h1>{{ ocasionNombre ? 'Ramos para ' + ocasionNombre : 'Ramos para Ocasiones Especiales' }}</h1>
+    <h1>
+      {{ ocasionNombre
+         ? 'Ramos para ' + ocasionNombre
+         : 'Ramos para Ocasiones Especiales' }}
+    </h1>
   </div>
 
   <!-- Sección de filtros -->
@@ -78,40 +82,87 @@
       <p>No se encontraron productos que coincidan con los filtros seleccionados.</p>
     </div>
 
-    <!-- Tarjetas de productos -->
-    <div *ngFor="let ramo of ramosFiltrados" class="producto-card">
-      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramo.img" [alt]="ramo.nombre" class="producto-imagen">
-      <div class="producto-info">
-        <h3>{{ ramo.nombre }}</h3>
-        <p class="producto-descripcion">{{ ramo.descripcion }}</p>
-        <div class="producto-detalles">
-          <span class="tipo-flor">{{ ramo.tipo_flor }}</span>
-          <span class="color">{{ ramo.color }}</span>
+   <!-- Grid de tarjetas idénticas a Principal -->
+  <div class="grid-ocasiones">
+    <article class="tarjeta-ocasion" *ngFor="let ramo of ramosFiltrados">
+      <img
+        [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramo.img"
+        [alt]="ramo.nombre"
+      />
+      <h3>{{ ramo.nombre }}</h3>
+      <p class="descripcion">{{ ramo.descripcion }}</p>
+      <span class="precio">{{ ramo.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+
+
+  <ng-container *ngIf="ramo.disponible; else noDisponible">
+        <div class="control-cantidad">
+          <button class="btn-cantidad" (click)="decrementarCantidad(ramo.id)">−</button>
+          <input
+            type="number"
+            min="1"
+            max="99"
+            [(ngModel)]="cantidades[ramo.id]"
+            (input)="cantidades[ramo.id] = $event.target.value"
+          />
+          <button class="btn-cantidad" (click)="incrementarCantidad(ramo.id)">+</button>
         </div>
-        <div class="producto-footer">
-          <span class="precio">{{ ramo.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-          <div class="cantidad-control">
-            <button (click)="decrementarCantidad(ramo.id)" [disabled]="getCantidad(ramo.id) <= 1">−</button>
-            <span>{{ getCantidad(ramo.id) }}</span>
-            <button (click)="incrementarCantidad(ramo.id)">+</button>
-          </div>
-          <button class="btn-agregar" (click)="agregarAlCarrito(ramo)">
-            Agregar al carrito
+        <div class="botones-tarjeta">
+          <button class="boton-ver" (click)="verDetalles(ramo)">
+            <i class="bi bi-search lupa-icon"></i> Ver detalles
+          </button>
+          <button class="boton-ocasion" (click)="onAddToCart(ramo)">
+            <i class="bi bi-cart-plus"></i> Agregar al carrito
           </button>
         </div>
-      </div>
-    </div>
-  </div>
+      </ng-container>
 
-  <!-- Modal de login -->
-  <div class="modal-backdrop" *ngIf="showLoginModal">
-    <div class="modal">
-      <h3>¡Ups!</h3>
-      <p>Para agregar productos al carrito, necesitas iniciar sesión primero.</p>
-      <div class="modal-actions">
-        <button class="btn-primary" (click)="irALogin()">Iniciar sesión</button>
-        <button class="btn-secondary" (click)="showLoginModal = false">Cerrar</button>
+    <ng-template #noDisponible>
+      <div class="text-center">No Disponible</div>
+    </ng-template>
+      </article>
+  </div>
+</div>
+
+<!-- Modal de detalles del ramo -->
+<div class="modal-detalles" *ngIf="ramoSeleccionado">
+  <div class="modal-contenido-detalles">
+    <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
+    
+    <div class="modal-imagen" 
+         (mousemove)="onMouseMove($event)"
+         (mouseleave)="onMouseLeave()">
+      <canvas #mainCanvas class="main-canvas"></canvas>
+      <div #square class="selector"></div>
+      <canvas #copyCanvas class="zoom-canvas" width="200" height="200"></canvas>
+      <button class="lupa-icon" [class.active]="isZoomActive" (click)="toggleZoom()">
+        <i class="bi" [class.bi-zoom-in]="!isZoomActive" [class.bi-zoom-out]="isZoomActive"></i>
+      </button>
+    </div>
+    
+    <div class="modal-info">
+      <h2>{{ ramoSeleccionado.nombre }}</h2>
+      <p class="descripcion">{{ ramoSeleccionado.descripcion }}</p>
+      
+      <div class="detalles-adicionales">
+        <div class="detalle">
+          <span class="etiqueta">Precio:</span>
+          <span class="valor precio">{{ ramoSeleccionado.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="detalle">
+          <span class="etiqueta">Disponibilidad:</span>
+          <span class="valor disponible">En stock</span>
+        </div>
       </div>
+      
+      <div class="control-cantidad">
+        <button (click)="decrementarCantidad(ramoSeleccionado.id)" [disabled]="cantidades[ramoSeleccionado.id] <= 1">-</button>
+        <input type="number" [(ngModel)]="cantidades[ramoSeleccionado.id]" min="1" max="99" readonly>
+        <button (click)="incrementarCantidad(ramoSeleccionado.id)" [disabled]="cantidades[ramoSeleccionado.id] >= 99">+</button>
+      </div>
+      
+      <button class="boton-agregar" (click)="onAddToCart(ramoSeleccionado)">
+        Agregar al Carrito
+      </button>
     </div>
   </div>
 </div>

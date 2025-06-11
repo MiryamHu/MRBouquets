@@ -89,59 +89,62 @@
       <p>No se encontraron productos que coincidan con los filtros seleccionados.</p>
     </div>
 
-    <!-- Lista de productos -->
-    <div *ngFor="let ramo of ramosFiltrados" class="producto-card">
-      <div class="producto-imagen-wrapper">
-        <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramo.img" 
-             [alt]="ramo.nombre" 
-             class="producto-imagen"
-             (click)="verDetalles(ramo)">
+     <!-- Lista de productos -->
+  <div *ngFor="let ramo of ramosFiltrados" class="producto-card">
+    <div class="producto-imagen-wrapper">
+      <img
+        [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramo.img"
+        [alt]="ramo.nombre"
+        class="producto-imagen"
+        (click)="verDetalles(ramo)"
+      />
+    </div>
+    <div class="producto-info">
+      <h3 class="producto-titulo">{{ ramo.nombre }}</h3>
+      <p class="producto-descripcion">{{ ramo.descripcion }}</p>
+      <div class="producto-badges">
+        <span class="badge tipo-flor">{{ ramo.tipo_flor }}</span>
+        <span class="badge color">{{ ramo.color }}</span>
       </div>
-      <div class="producto-info">
-        <h3 class="producto-titulo">{{ ramo.nombre }}</h3>
-        <p class="producto-descripcion">{{ ramo.descripcion }}</p>
-        <div class="producto-badges">
-          <span class="badge tipo-flor">{{ ramo.tipo_flor }}</span>
-          <span class="badge color">{{ ramo.color }}</span>
-        </div>
-        <div class="producto-precio-cantidad">
-          <span class="precio">{{ ramo.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-          <div class="control-cantidad">
-            <button type="button" class="btn-cantidad" (click)="decrementarCantidad(ramo.id)">-</button>
-            <input 
-              type="number" 
-              min="1" 
-              max="99" 
-              [value]="cantidades[ramo.id] || 1"
-              readonly
-            />
-            <button type="button" class="btn-cantidad" (click)="incrementarCantidad(ramo.id)">+</button>
-          </div>
+
+      <!-- Precio + control de disponibilidad -->
+      <span class="precio">{{ ramo.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+      <ng-container *ngIf="ramo.disponible; else noDisponible">
+        <div class="control-cantidad">
+          <button
+            type="button"
+            class="btn-cantidad"
+            (click)="decrementarCantidad(ramo.id)"
+          >-</button>
+          <input
+            type="number"
+            min="1"
+            max="99"
+            [value]="cantidades[ramo.id] || 1"
+            readonly
+          />
+          <button
+            type="button"
+            class="btn-cantidad"
+            (click)="incrementarCantidad(ramo.id)"
+          >+</button>
         </div>
         <div class="botones-tarjeta">
-          <button class="boton-ver" (click)="verDetalles(ramo)">
-            <i class="bi bi-search"></i> Ver detalles
-          </button>
-          <button 
+          <button
+            class="boton-ver"
+            (click)="verDetalles(ramo)"
+          ><i class="bi bi-search"></i> Ver detalles</button>
+          <button
             class="btn-agregar"
             (click)="agregarAlCarrito(ramo, cantidades[ramo.id] || 1)"
-            [disabled]="!ramo.disponible">
-            <i class="bi bi-cart-plus"></i> Agregar al carrito
-          </button>
+          ><i class="bi bi-cart-plus"></i> Agregar al carrito</button>
         </div>
-      </div>
-    </div>
-  </div>
+      </ng-container>
+      <ng-template #noDisponible>
+        <div class="text-center">No Disponible</div>
+      </ng-template>
+      <!-- Fin sección disponibilidad -->
 
-  <!-- Modal de login -->
-  <div class="modal-backdrop" *ngIf="showLoginModal">
-    <div class="modal">
-      <h3>¡Ups!</h3>
-      <p>Para agregar productos al carrito, necesitas iniciar sesión primero.</p>
-      <div class="modal-actions">
-        <button class="btn-primary" (click)="irALogin()">Iniciar sesión</button>
-        <button class="btn-secondary" (click)="showLoginModal = false">Cerrar</button>
-      </div>
     </div>
   </div>
 
@@ -149,21 +152,24 @@
   <div class="modal-detalles" *ngIf="ramoSeleccionado">
     <div class="modal-contenido-detalles">
       <button class="cerrar-modal" (click)="cerrarDetalles()">×</button>
-      
-      <div class="modal-imagen" 
-           (mousemove)="onMouseMove($event)"
-           (mouseleave)="onMouseLeave()">
+
+      <div
+        class="modal-imagen"
+        (mousemove)="onMouseMove($event)"
+        (mouseleave)="onMouseLeave()"
+      >
         <canvas #mainCanvas class="main-canvas"></canvas>
       </div>
-      
+
       <div class="modal-info">
         <h2>{{ ramoSeleccionado.nombre }}</h2>
         <p class="descripcion">{{ ramoSeleccionado.descripcion }}</p>
-        
         <div class="detalles-adicionales">
           <div class="detalle">
             <span class="etiqueta">Precio:</span>
-            <span class="valor precio">{{ ramoSeleccionado.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+            <span class="valor precio">
+              {{ ramoSeleccionado.precio | currency:'EUR':'symbol':'1.2-2' }}
+            </span>
           </div>
           <div class="detalle">
             <span class="etiqueta">Tipo de Flor:</span>
@@ -173,26 +179,42 @@
             <span class="etiqueta">Color:</span>
             <span class="valor">{{ ramoSeleccionado.color }}</span>
           </div>
-          <div class="detalle">
-            <span class="etiqueta">Disponibilidad:</span>
-            <span class="valor disponible">{{ ramoSeleccionado.disponible ? 'En stock' : 'No disponible' }}</span>
-          </div>
         </div>
-        
+
         <div class="control-cantidad">
-          <button (click)="decrementarCantidad(ramoSeleccionado.id)" [disabled]="cantidades[ramoSeleccionado.id] <= 1">-</button>
-          <input type="number" [value]="cantidades[ramoSeleccionado.id] || 1" min="1" max="99" readonly>
-          <button (click)="incrementarCantidad(ramoSeleccionado.id)" [disabled]="cantidades[ramoSeleccionado.id] >= 99">+</button>
+          <button
+            type="button"
+            (click)="decrementarCantidad(ramoSeleccionado.id)"
+            [disabled]="cantidades[ramoSeleccionado.id] <= 1"
+          >-</button>
+          <input
+            type="number"
+            [value]="cantidades[ramoSeleccionado.id] || 1"
+            min="1"
+            max="99"
+            readonly
+          />
+          <button
+            type="button"
+            (click)="incrementarCantidad(ramoSeleccionado.id)"
+            [disabled]="cantidades[ramoSeleccionado.id] >= 99"
+          >+</button>
         </div>
-        
-        <button class="boton-agregar" 
-                (click)="agregarAlCarrito(ramoSeleccionado, cantidades[ramoSeleccionado.id] || 1)"
-                [disabled]="!ramoSeleccionado.disponible">
-          {{ ramoSeleccionado.disponible ? 'Agregar al Carrito' : 'No disponible' }}
-        </button>
+
+       <ng-container *ngIf="ramoSeleccionado.disponible; else noDisponibleModal">
+  <button
+    class="boton-agregar"
+    (click)="agregarAlCarrito(ramoSeleccionado, cantidades[ramoSeleccionado.id] || 1)"
+  >
+    Agregar al Carrito
+  </button>
+</ng-container>
+<ng-template #noDisponibleModal>
+  <div class="text-center">No Disponible</div>
+</ng-template>
       </div>
     </div>
   </div>
 
   <app-footer></app-footer>
-</div> 
+</div>

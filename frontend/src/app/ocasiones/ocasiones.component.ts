@@ -1,9 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  HostListener,
+  Inject,
+  PLATFORM_ID
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+
 import { RamosService, Ramo, Ocasion } from '../services/ramos.service';
 import { CarritoService } from '../services/carrito.service';
 import { AuthService } from '../services/auth.service';
@@ -14,23 +24,18 @@ import { AuthService } from '../services/auth.service';
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     MatButtonModule,
-    MatIconModule,
-    RouterModule
+    MatIconModule
   ],
   templateUrl: './ocasiones.component.html',
-  styleUrl: './ocasiones.component.css'
+  styleUrls: ['./ocasiones.component.css']
 })
-export class OcasionesComponent implements OnInit {
+export class OcasionesComponent implements OnInit, AfterViewInit {
+  // ramos y filtros
   ramos: Ramo[] = [];
   ramosFiltrados: Ramo[] = [];
-  ocasionId: number | null = null;
-  ocasionNombre: string = '';
-  showLoginModal: boolean = false;
-  cantidades: { [key: number]: number } = {};
-  ocasiones: Ocasion[] = [];
-
-  // Filtros
+  cantidades: { [id: number]: number } = {};
   filtros = {
     busqueda: '',
     tipoFlor: '',
@@ -38,147 +43,208 @@ export class OcasionesComponent implements OnInit {
     precioMin: null as number | null,
     precioMax: null as number | null
   };
-
-  // Opciones de filtro
   tiposFlor: string[] = [];
   colores: string[] = [];
+
+  // ocasión seleccionada
+  ocasiones: Ocasion[] = [];
+  ocasionId: number | null = null;
+  ocasionNombre = '';
+
+    public showLoginModal: boolean = false;
+    
+  // modal & lupa
+  @ViewChild('mainCanvas', { static: false }) mainCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('copyCanvas', { static: false }) copyCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('square',     { static: false }) square!: ElementRef<HTMLDivElement>;
+  ramoSeleccionado: Ramo | null = null;
+  private mainCtx!: CanvasRenderingContext2D;
+  private copyCtx!: CanvasRenderingContext2D;
+  private currentImage!: HTMLImageElement;
+  private isZoomActive = false;
+  private isBrowser: boolean;
 
   constructor(
     private ramosService: RamosService,
     private route: ActivatedRoute,
-    private router: Router,
     private cartService: CarritoService,
-    public auth: AuthService
-  ) {}
+    public auth: AuthService,
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: any
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
-  ngOnInit() {
-    // Cargar todas las ocasiones
-    this.ramosService.getOcasiones().subscribe({
-      next: (ocasiones) => {
-        this.ocasiones = ocasiones;
-        // Obtener el ID de la ocasión de los parámetros de la URL
-        this.route.queryParams.subscribe(params => {
-          this.ocasionId = params['oc'] ? Number(params['oc']) : null;
-          console.log('ID de ocasión:', this.ocasionId);
-          if (this.ocasionId) {
-            const ocasionSeleccionada = this.ocasiones.find(o => o.id === this.ocasionId);
-            this.ocasionNombre = ocasionSeleccionada ? ocasionSeleccionada.nombre : '';
-          }
-          this.cargarRamos();
-        });
-      },
-      error: (error) => {
-        console.error('Error al cargar las ocasiones:', error);
-      }
+  ngOnInit(): void {
+    // 1) Leer queryParam de la ocasión
+    this.route.queryParams.subscribe(params => {
+      this.ocasionId = params['oc'] ? +params['oc'] : null;
+      this.loadOcasiones();  // recarga ocasiones y ramos siempre que cambie el param
     });
   }
 
-  cargarRamos() {
-    console.log('Cargando ramos para ocasión ID:', this.ocasionId);
+  private loadOcasiones() {
+    // 2) Cargar lista de ocasiones para mostrar nombre
+    this.ramosService.getOcasiones().subscribe({
+      next: oc => {
+        this.ocasiones = oc;
+        const sel = this.ocasiones.find(o => o.id === this.ocasionId);
+        this.ocasionNombre = sel ? sel.nombre : '';
+        this.loadRamosOcasiones();
+      },
+      error: err => console.error('Error cargando ocasiones', err)
+    });
+  }
+
+  private loadRamosOcasiones() {
+    // 3) Traer sólo ramos de ocasión y filtrar por id_ocasion
     this.ramosService.getRamosOcasiones().subscribe({
-      next: (ramos) => {
-        console.log('Ramos obtenidos del servicio:', ramos);
-        // Si hay un ID de ocasión, filtrar por ese ID
-        if (this.ocasionId) {
-          console.log('Filtrando por ocasión ID:', this.ocasionId);
-          this.ramos = ramos.filter(ramo => {
-            console.log('Ramo:', ramo.id, 'id_ocasion:', ramo.id_ocasion);
-            return ramo.id_ocasion === this.ocasionId;
-          });
-          console.log('Ramos filtrados:', this.ramos);
-        } else {
-          this.ramos = ramos;
-        }
+      next: all => {
+        this.ramos = this.ocasionId
+          ? all.filter(r => r.id_ocasion === this.ocasionId)
+          : all;
+        // Init cantidades y filtros
+        this.ramos.forEach(r => this.cantidades[r.id] = 1);
         this.extraerOpciones();
         this.aplicarFiltros();
       },
-      error: (error) => {
-        console.error('Error al cargar los ramos:', error);
-      }
+      error: err => console.error('Error cargando ramosOcasiones', err)
     });
   }
 
+  // ===== Filtros (idénticos a tu lógica actual) =====
   extraerOpciones(): void {
-    // Extraer tipos de flor únicos
-    this.tiposFlor = [...new Set(this.ramos.map(ramo => ramo.tipo_flor))];
-    // Extraer colores únicos
-    this.colores = [...new Set(this.ramos.map(ramo => ramo.color))];
+    this.tiposFlor = [...new Set(this.ramos.map(r => r.tipo_flor))];
+    this.colores   = [...new Set(this.ramos.map(r => r.color))];
   }
 
-  aplicarFiltros() {
-    console.log('Aplicando filtros a ramos:', this.ramos);
+  aplicarFiltros(): void {
     this.ramosFiltrados = this.ramos.filter(ramo => {
-      // Filtro por búsqueda (nombre o descripción)
-      const busquedaMatch = !this.filtros.busqueda || 
+      const b = !this.filtros.busqueda ||
         ramo.nombre.toLowerCase().includes(this.filtros.busqueda.toLowerCase()) ||
         ramo.descripcion.toLowerCase().includes(this.filtros.busqueda.toLowerCase());
-
-      // Filtro por tipo de flor
-      const tipoFlorMatch = !this.filtros.tipoFlor || 
-        ramo.tipo_flor === this.filtros.tipoFlor;
-
-      // Filtro por color
-      const colorMatch = !this.filtros.color || 
-        ramo.color === this.filtros.color;
-
-      // Filtro por precio mínimo
-      const precioMinMatch = !this.filtros.precioMin || 
-        ramo.precio >= this.filtros.precioMin;
-
-      // Filtro por precio máximo
-      const precioMaxMatch = !this.filtros.precioMax || 
-        ramo.precio <= this.filtros.precioMax;
-
-      return busquedaMatch && tipoFlorMatch && colorMatch && precioMinMatch && precioMaxMatch && ramo.disponible;
+      const t = !this.filtros.tipoFlor || ramo.tipo_flor === this.filtros.tipoFlor;
+      const c = !this.filtros.color   || ramo.color     === this.filtros.color;
+      const min = !this.filtros.precioMin || ramo.precio >= this.filtros.precioMin!;
+      const max = !this.filtros.precioMax || ramo.precio <= this.filtros.precioMax!;
+      return b && t && c && min && max ;
     });
-    console.log('Ramos después de filtros:', this.ramosFiltrados);
   }
 
   limpiarFiltros(): void {
-    this.filtros = {
-      busqueda: '',
-      tipoFlor: '',
-      color: '',
-      precioMin: null,
-      precioMax: null
-    };
+    this.filtros = { busqueda: '', tipoFlor: '', color: '', precioMin: null, precioMax: null };
     this.aplicarFiltros();
   }
 
-  agregarAlCarrito(ramo: Ramo) {
+  // ===== Carrito & Login =====
+  incrementarCantidad(id: number)   { if (this.cantidades[id] < 99) this.cantidades[id]++; }
+  decrementarCantidad(id: number)   { if (this.cantidades[id] > 1) this.cantidades[id]--; }
+
+    onAddToCart(producto: Ramo): void {
     if (!this.auth.isLoggedIn()) {
+      this.ramoSeleccionado = null;
       this.showLoginModal = true;
       return;
     }
-
-    const cantidad = this.getCantidad(ramo.id);
-    this.cartService.agregarArticulo(ramo.id, cantidad).subscribe({
+    const cantidad = this.cantidades[producto.id] || 1;
+    this.cartService.agregarArticulo(producto.id, cantidad).subscribe({
       next: () => {
         this.cartService.open();
       },
-      error: err => console.error('Error al agregar al carrito', err)
+      error: err => console.error('Error al añadir al carrito', err)
     });
+    // Cierra el modal de detalles si está abierto
+    this.ramoSeleccionado = null;
   }
 
-  incrementarCantidad(ramoId: number) {
-    if (!this.cantidades[ramoId]) {
-      this.cantidades[ramoId] = 1;
-    }
-    this.cantidades[ramoId]++;
-  }
 
-  decrementarCantidad(ramoId: number) {
-    if (this.cantidades[ramoId] && this.cantidades[ramoId] > 1) {
-      this.cantidades[ramoId]--;
-    }
-  }
-
-  getCantidad(ramoId: number): number {
-    return this.cantidades[ramoId] || 1;
-  }
-
-  irALogin(): void {
+  irALogin() {
     this.showLoginModal = false;
     this.router.navigate(['/login']);
+  }
+
+  // ===== Modal & Lupa (idéntico a Principal) =====
+  ngAfterViewInit(): void {
+    if (this.copyCanvas?.nativeElement) {
+      this.copyCtx = this.copyCanvas.nativeElement.getContext('2d')!;
+    }
+  }
+
+  verDetalles(r: Ramo): void {
+    this.ramoSeleccionado = r;
+    setTimeout(() => {
+      if (!this.mainCanvas) return;
+      this.initializeCanvas();
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = `http://localhost/MRBouquets/frontend/public/img/${r.img}`;
+      img.onload  = () => this.drawToCanvas(img);
+    }, 50);
+  }
+
+  private initializeCanvas() {
+    if (!this.isBrowser) return;
+    const mc = this.mainCanvas.nativeElement;
+    this.mainCtx = mc.getContext('2d')!;
+    this.square.nativeElement.style.display    = 'none';
+    this.copyCanvas.nativeElement.style.display = 'none';
+  }
+
+  private drawToCanvas(img: HTMLImageElement) {
+    const mc = this.mainCanvas.nativeElement;
+    // ajustar al contenedor
+    const cont = mc.parentElement;
+    if (cont) {
+      mc.width  = cont.clientWidth;
+      mc.height = cont.clientHeight;
+    }
+    const scale   = Math.min(mc.width / img.width, mc.height / img.height);
+    const offX    = (mc.width  - img.width  * scale) / 2;
+    const offY    = (mc.height - img.height * scale) / 2;
+    this.mainCtx.clearRect(0, 0, mc.width, mc.height);
+    this.mainCtx.drawImage(img, offX, offY, img.width * scale, img.height * scale);
+    // preparar imagen de lupa
+    this.currentImage = img;
+    this.copyCanvas.nativeElement.width  = 200;
+    this.copyCanvas.nativeElement.height = 200;
+  }
+
+  toggleZoom() {
+    this.isZoomActive = !this.isZoomActive;
+    this.square.nativeElement.style.display    = this.isZoomActive ? 'block' : 'none';
+    this.copyCanvas.nativeElement.style.display = this.isZoomActive ? 'block' : 'none';
+  }
+
+  @HostListener('mousemove', ['$event'])
+  onMouseMove(evt: MouseEvent) {
+    if (!this.isZoomActive || !this.currentImage) return;
+    const rect = this.mainCanvas.nativeElement.getBoundingClientRect();
+    const x = evt.clientX - rect.left, y = evt.clientY - rect.top;
+    // mover selector
+    const sq = this.square.nativeElement;
+    sq.style.left    = `${x - 50}px`;
+    sq.style.top     = `${y - 50}px`;
+    // dibujar lupa
+    const cc = this.copyCanvas.nativeElement;
+    this.copyCtx.clearRect(0, 0, cc.width, cc.height);
+    this.copyCtx.drawImage(
+      this.currentImage,
+      (x - rect.left) / (rect.width  / this.currentImage.width) - 50,
+      (y - rect.top ) / (rect.height / this.currentImage.height) - 50,
+      100, 100,
+      0, 0,
+      cc.width, cc.height
+    );
+  }
+
+  @HostListener('mouseleave')
+  onMouseLeave() {
+    this.square.nativeElement.style.display    = 'none';
+    this.copyCanvas.nativeElement.style.display = 'none';
+  }
+
+  cerrarDetalles() {
+    this.ramoSeleccionado = null;
+    this.isZoomActive = false;
   }
 }

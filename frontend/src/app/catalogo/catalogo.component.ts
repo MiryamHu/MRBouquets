@@ -16,6 +16,7 @@ interface Ramo {
   img: string;
   tipo_flor: string;
   color: string;
+  activo: boolean;
   disponible: boolean;
 }
 
@@ -111,7 +112,12 @@ export class CatalogoComponent implements OnInit {
       const precioMaxMatch = !this.filtros.precioMax || 
         ramo.precio <= this.filtros.precioMax;
 
-      return busquedaMatch && tipoFlorMatch && colorMatch && precioMinMatch && precioMaxMatch && ramo.disponible;
+      return busquedaMatch
+        && tipoFlorMatch
+        && colorMatch
+        && precioMinMatch
+        && precioMaxMatch
+        && ramo.activo;
     });
   }
 
