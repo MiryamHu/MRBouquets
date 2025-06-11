@@ -401,6 +401,10 @@ body {
   .navegacion .lista-navegacion {
     gap: 1.5rem;
   }
+  .navegacion,
+  .acciones-usuario {
+    display: none !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -443,4 +447,207 @@ body {
     width: 100%;
     justify-content: center;
   }
+}
+
+/* ====== HAMBURGER MENU ====== */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: 2px solid #ff4081;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1201;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+.hamburger-btn span {
+  display: block;
+  width: 22px;
+  height: 3px;
+  margin: 3px 0;
+  background: #ff4081;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.hamburger-menu-backdrop {
+  display: none;
+}
+.hamburger-menu {
+  display: none;
+}
+@media (max-width: 992px) {
+  .hamburger-btn {
+    display: flex;
+  }
+  .hamburger-menu-backdrop {
+    display: block;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 1200;
+  }
+  .hamburger-menu {
+    display: block;
+    position: fixed;
+    top: 0; right: 0;
+    width: 80vw;
+    max-width: 320px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -2px 0 16px rgba(0,0,0,0.12);
+    z-index: 1201;
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+    overflow-y: auto;
+    animation: slideInMenu 0.3s;
+  }
+  @keyframes slideInMenu {
+    from { right: -100vw; }
+    to { right: 0; }
+  }
+  .hamburger-menu .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #ff4081;
+    cursor: pointer;
+  }
+  .hamburger-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .hamburger-list a, .hamburger-list button {
+    color: #ff4081;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0.5rem 0;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+  }
+  .hamburger-list .saludo {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .hamburger-list .has-submenu > a {
+    display: flex;
+    align-items: center;
+    color: #ff4081;
+  }
+  .hamburger-list .submenu {
+    background: #fbeaf2;
+    border-radius: 0.5rem;
+    margin: 0.5rem 0 0.5rem 1rem;
+    padding: 0.5rem 0;
+    box-shadow: none;
+    position: static;
+    min-width: 0;
+  }
+  .hamburger-list .submenu-link {
+    color: #d6336c;
+    font-size: 1rem;
+    padding: 0.4rem 1rem;
+    border-radius: 0.3rem;
+    transition: background 0.2s;
+  }
+  .hamburger-list .submenu-link:hover {
+    background: #ff4081;
+    color: #fff;
+  }
+}
+
+@media (min-width: 993px) {
+  .hamburger-btn, .hamburger-menu, .hamburger-menu-backdrop {
+    display: none !important;
+  }
+}
+
+/* ====== HAMBURGER MENU HEADER Y LOGO ====== */
+.hamburger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.2rem;
+  border-bottom: 1.5px solid #f3c6de;
+  margin-bottom: 1.2rem;
+}
+.hamburger-logo img {
+  max-height: 48px;
+  width: auto;
+  display: block;
+}
+.hamburger-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.hamburger-menu .close-btn {
+  font-size: 2.2rem;
+  color: #ff4081;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+.hamburger-list {
+  margin-top: 0.5rem;
+}
+.hamburger-list li {
+  margin-bottom: 0.7rem;
+}
+.hamburger-list a, .hamburger-list button {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ff4081;
+  letter-spacing: 0.5px;
+  padding: 0.6rem 0 0.6rem 0.2rem;
+  border-radius: 0.4rem;
+  transition: background 0.18s, color 0.18s;
+}
+.hamburger-list a:hover, .hamburger-list button:hover {
+  background: #ffe3f0;
+  color: #d6336c;
+}
+.hamburger-list .has-submenu > a {
+  font-size: 1.13rem;
+  font-weight: 700;
+}
+.hamburger-list .submenu {
+  margin: 0.2rem 0 0.2rem 1.2rem;
+  padding: 0.2rem 0 0.2rem 0.2rem;
+  background: #fbeaf2;
+  border-radius: 0.4rem;
+}
+.hamburger-list .submenu-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #d6336c;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.3rem;
+}
+.hamburger-list .submenu-link:hover {
+  background: #ff4081;
+  color: #fff;
+}
+.hamburger-list .saludo {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
 }
