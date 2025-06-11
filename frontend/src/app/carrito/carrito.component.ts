@@ -40,7 +40,7 @@ export class CarritoComponent implements OnInit {
     private pedidoService: PedidoService,
     private direccionesSvc: DireccionesService,
     private auth: AuthService,
-    private router: Router,
+    public router: Router,
     @Optional() private dialogRef: MatDialogRef<CarritoComponent>
   ) {
     this.isDialog = !!dialogRef;
@@ -104,7 +104,6 @@ export class CarritoComponent implements OnInit {
   proceedToCheckout(): void {
     if (!this.items.length) return;
     this.cargarDirecciones();
-    this.showAddressModal = true;
   }
 
   procesarPedido(): void {
@@ -122,7 +121,7 @@ export class CarritoComponent implements OnInit {
         },
         error: err => {
           console.error('Error al procesar pedido:', err);
-          alert('Error al procesar el pedido');
+          alert('Error al procesar el pedido: ' + (err.error?.error || 'Error desconocido'));
         }
       });
   }
