@@ -157,79 +157,202 @@ h1 {
 
 /* Tarjeta de producto */
 .producto-card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  min-height: 320px;
+  padding: 0;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  margin-bottom: 1.2rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .producto-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+  border-color: #bdbdbd;
+}
+
+.producto-imagen-wrapper {
+  height: 120px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 0.5rem 0 0.2rem 0;
 }
 
 .producto-imagen {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 110px;
+  max-width: 90%;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
 }
 
 .producto-info {
-  padding: 1.5rem;
+  padding: 0.7rem 0.7rem 0.7rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  text-align: center;
 }
 
-.producto-info h3 {
-  margin: 0 0 0.5rem;
-  color: #333;
-  font-size: 1.25rem;
+.producto-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.12rem;
+  letter-spacing: 0.05px;
 }
 
 .producto-descripcion {
-  color: #666;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  color: #888;
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+  line-height: 1.35;
+  min-height: 18px;
 }
 
-.producto-detalles {
+.producto-badges {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.13rem;
+  margin-bottom: 0.3rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.tipo-flor,
-.color {
+.badge {
+  font-size: 0.65rem;
+  padding: 0.06rem 0.38rem;
+  border-radius: 7px;
   background: #f8f9fa;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  color: #666;
+  color: #e91e63;
+  border: 1px solid #ffe3ef;
+  font-weight: 600;
+  margin-bottom: 2px;
 }
 
-.producto-footer {
+.badge.color {
+  color: #4caf50;
+  border-color: #e0f7e9;
+  background: #f3fef7;
+}
+
+.producto-precio-cantidad {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
+  justify-content: center;
+  margin-top: 0.18rem;
+  margin-bottom: 0.3rem;
+  gap: 0.3rem;
+  padding-top: 0.18rem;
 }
 
 .precio {
-  font-size: 1.25rem;
+  font-size: 0.98rem;
   font-weight: bold;
   color: #e91e63;
+  letter-spacing: 0.2px;
+}
+
+.control-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 0.08rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.01rem 0.08rem;
+}
+
+.btn-cantidad {
+  width: 18px;
+  height: 18px;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  color: #e91e63;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-cantidad:active {
+  background: #ffe3ef;
+}
+
+.control-cantidad input {
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e91e63;
+  pointer-events: none;
+}
+
+.botones-tarjeta {
+  display: flex;
+  gap: 0.2rem;
+  margin-top: 0.2rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.boton-ver {
+  background: transparent;
+  color: #e91e63;
+  border: 1.2px solid #e91e63;
+  border-radius: 5px;
+  padding: 0.28rem 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.boton-ver i {
+  font-size: 1em;
+}
+
+.boton-ver:hover {
+  background: #ffe3ef;
+  color: #d81557;
 }
 
 .btn-agregar {
-  padding: 0.5rem 1rem;
   background: #e91e63;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  padding: 0.28rem 0.7rem;
+  font-weight: 700;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.btn-agregar i {
+  font-size: 1em;
 }
 
 .btn-agregar:hover:not([disabled]) {
@@ -473,4 +596,233 @@ h1 {
   background: transparent;
   border: 1.5px solid #ff4081;
   cursor: pointer;
+}
+
+/* Modal de detalles */
+.modal-detalles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-contenido-detalles {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  position: relative;
+}
+
+.cerrar-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.modal-imagen {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.main-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.selector {
+  position: absolute;
+  border: 2px solid #e91e63;
+  background: rgba(233, 30, 99, 0.1);
+  pointer-events: none;
+  display: none;
+}
+
+.copy-canvas {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 200px;
+  height: 200px;
+  border: 2px solid #e91e63;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(233,30,99,0.13);
+  z-index: 20;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.15s;
+}
+
+.lupa-icon {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+.lupa-icon.active {
+  background: #e91e63;
+  color: white;
+}
+
+.modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-info h2 {
+  color: #333;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.modal-info .descripcion {
+  color: #666;
+  line-height: 1.6;
+}
+
+.detalles-adicionales {
+  display: grid;
+  gap: 1rem;
+}
+
+.detalle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.etiqueta {
+  color: #666;
+  font-weight: 500;
+}
+
+.valor {
+  color: #333;
+}
+
+.valor.precio {
+  color: #e91e63;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.valor.disponible {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.control-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.control-cantidad button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.control-cantidad button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-cantidad input {
+  width: 60px;
+  height: 36px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.boton-agregar {
+  background: #e91e63;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.boton-agregar:hover:not([disabled]) {
+  background: #d81557;
+}
+
+.boton-agregar[disabled] {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+  .modal-contenido-detalles {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .modal-imagen {
+    height: 300px;
+  }
+
+  .copy-canvas {
+    display: none !important;
+  }
+
+  .modal-info {
+    gap: 1rem;
+  }
+
+  .modal-info h2 {
+    font-size: 1.5rem;
+  }
 }

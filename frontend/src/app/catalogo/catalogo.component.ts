@@ -34,19 +34,8 @@ export class CatalogoComponent implements OnInit {
   showLoginModal = false;
   ramoSeleccionado: Ramo | null = null;
   cantidades: { [key: number]: number } = {};
-  isZoomActive = false;
 
   @ViewChild('mainCanvas', { static: false }) mainCanvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('copyCanvas', { static: false }) copyCanvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('square', { static: false }) square!: ElementRef<HTMLDivElement>;
-
-  private mainCtx: CanvasRenderingContext2D | null = null;
-  private copyCtx: CanvasRenderingContext2D | null = null;
-  private currentImage: HTMLImageElement | null = null;
-  
-  private scale   = 1;
-  private offsetX = 0;
-  private offsetY = 0;
 
   // Filtros
   filtros = {
@@ -137,25 +126,39 @@ export class CatalogoComponent implements OnInit {
     this.aplicarFiltros();
   }
 
-    agregarAlCarrito(ramo: Ramo): void {
-      // 1) Si no está logueado, mostramos el modal
-      if (!this.auth.isLoggedIn()) {
-        this.showLoginModal = true;
-        return;
-      }
-
-      // 2) Llamamos al servicio para añadir 1 unidad
-      this.cartService.agregarArticulo(ramo.id, 1).subscribe({
-        next: () => {
-          // 3) Abrimos el panel lateral del carrito
-          this.cartService.open();
-        },
-        error: err => console.error('Error al agregar al carrito', err)
-      });
-
-      // 4) Ocultamos el modal de login si estaba abierto
-      this.showLoginModal = false;
+  incrementarCantidad(ramoId: number): void {
+    if (!this.cantidades[ramoId]) {
+      this.cantidades[ramoId] = 1;
     }
+    if (this.cantidades[ramoId] < 99) {
+      this.cantidades[ramoId]++;
+    }
+  }
+
+  decrementarCantidad(ramoId: number): void {
+    if (!this.cantidades[ramoId]) {
+      this.cantidades[ramoId] = 1;
+    }
+    if (this.cantidades[ramoId] > 1) {
+      this.cantidades[ramoId]--;
+    }
+  }
+
+  agregarAlCarrito(ramo: Ramo, cantidad: number = 1): void {
+    if (!this.auth.isLoggedIn()) {
+      this.showLoginModal = true;
+      return;
+    }
+    if (!cantidad || cantidad < 1) cantidad = 1;
+    this.cartService.agregarArticulo(ramo.id, cantidad).subscribe({
+      next: () => {
+        this.cartService.open();
+      },
+      error: err => console.error('Error al agregar al carrito', err)
+    });
+    this.showLoginModal = false;
+    this.cantidades[ramo.id] = 1; // Reiniciar a 1 tras agregar
+  }
 
   irALogin(): void {
     this.showLoginModal = false;
@@ -178,55 +181,26 @@ export class CatalogoComponent implements OnInit {
   abrirDetalles(ramo: Ramo): void {
     console.log('Iniciando abrirDetalles con ramo:', ramo);
     this.ramoSeleccionado = ramo;
-    this.cantidades[ramo.id] = 1;
-  
+    this.cantidades[ramo.id] = this.cantidades[ramo.id] || 1;
     // Esperar a que el modal esté en el DOM
     setTimeout(() => {
-      /* 1.- Reinicializar canvas */
       this.initializeCanvas();
-      if (!this.mainCanvas?.nativeElement || !this.mainCtx) {
+      if (!this.mainCanvas?.nativeElement) {
         console.error('Canvas principal no disponible');
         return;
       }
-      // Dimensionar también el canvas de copia
-      if (this.copyCanvas?.nativeElement) {
-        this.copyCanvas.nativeElement.width  = 200;
-        this.copyCanvas.nativeElement.height = 200;
-      }
-  
-      /* 2.- Cargar la imagen */
+      // Cargar la imagen
       const img = new Image();
       img.crossOrigin = 'anonymous';
       const imageUrl = `http://localhost/MRBouquets/frontend/public/img/${ramo.img}`;
       console.log('Intentando cargar imagen desde:', imageUrl);
       img.src = imageUrl;
+      this.loadImage(img);
     }, 100);
   }
 
   cerrarDetalles() {
     this.ramoSeleccionado = null;
-    this.isZoomActive = false;
-    if (this.square?.nativeElement) {
-      this.square.nativeElement.style.display = 'none';
-    }
-    if (this.copyCanvas?.nativeElement) {
-      this.copyCanvas.nativeElement.style.display = 'none';
-    }
-  }
-
-  onMouseLeave() {
-    if (this.square?.nativeElement && this.copyCanvas?.nativeElement) {
-      this.square.nativeElement.style.display = 'none';
-      this.copyCanvas.nativeElement.style.display = 'none';
-    }
-  }
-
-  toggleZoom() {
-    this.isZoomActive = !this.isZoomActive;
-    if (!this.isZoomActive && this.square?.nativeElement && this.copyCanvas?.nativeElement) {
-      this.square.nativeElement.style.display = 'none';
-      this.copyCanvas.nativeElement.style.display = 'none';
-    }
   }
 
   private initializeCanvas() {
@@ -235,36 +209,42 @@ export class CatalogoComponent implements OnInit {
     // Solo intentar inicializar si el modal está visible
     if (this.ramoSeleccionado) {
       if (this.mainCanvas?.nativeElement) {
-        this.mainCtx = this.mainCanvas.nativeElement.getContext('2d');
+        const ctx = this.mainCanvas.nativeElement.getContext('2d');
         console.log('Canvas principal inicializado:', {
           canvas: this.mainCanvas.nativeElement,
-          context: this.mainCtx
+          context: ctx
         });
-      }
-
-      if (this.copyCanvas?.nativeElement) {
-        this.copyCtx = this.copyCanvas.nativeElement.getContext('2d');
-        this.copyCanvas.nativeElement.width  = 200;
-        this.copyCanvas.nativeElement.height = 200;
       }
     } else {
       console.log('Modal no visible, omitiendo inicialización de canvas');
     }
   }
 
-  incrementarCantidad(ramoId: number): void {
-    if (this.cantidades[ramoId]) {
-      this.cantidades[ramoId]++;
-    }
-  }
-
-  decrementarCantidad(ramoId: number): void {
-    if (this.cantidades[ramoId] && this.cantidades[ramoId] > 1) {
-      this.cantidades[ramoId]--;
-    }
-  }
-
   getCantidad(ramoId: number): number {
     return this.cantidades[ramoId] || 1;
+  }
+
+  private loadImage(img: HTMLImageElement): void {
+    img.onload = () => {
+      if (!this.mainCanvas?.nativeElement) {
+        console.error('Canvas no disponible');
+        return;
+      }
+
+      const canvas = this.mainCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      // Ajustar el tamaño del canvas al de la imagen
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      // Dibujar la imagen
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      ctx?.drawImage(img, 0, 0);
+    };
+
+    img.onerror = () => {
+      console.error('Error al cargar la imagen:', img.src);
+    };
   }
 } 
