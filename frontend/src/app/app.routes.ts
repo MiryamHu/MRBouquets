@@ -5,6 +5,7 @@ import { PrincipalComponent } from './home/principal/principal.component';
 import { CarritoComponent } from './carrito/carrito.component';
 import { PrincipalPerfilComponent } from './mi-perfil/principal-perfil/principal-perfil.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
+import { OcasionesComponent } from './ocasiones/ocasiones.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ContactoComponent } from './contacto/contacto.component';
 import { GarantiaComponent } from './garantia/garantia.component';
@@ -30,6 +31,7 @@ export const routes: Routes = [
       { path: 'registro', component: RegistroComponent },
       { path: 'login', component: LoginComponent },
       { path: 'catalogo', component: CatalogoComponent },
+      { path: 'ocasiones', component: OcasionesComponent },
       { path: 'contacto', component: ContactoComponent },
       { path: 'garantia', component: GarantiaComponent },
       { path: 'envios', component: EnviosComponent },

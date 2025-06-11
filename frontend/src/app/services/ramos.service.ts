@@ -15,6 +15,8 @@ export interface Ramo {
   disponible: boolean;
   activo?: boolean;
   es_ocasion_especial?: boolean;
+  id_ocasion?: number;
+  nombre_ocasion?: string;
 }
 
 export interface Ocasion {

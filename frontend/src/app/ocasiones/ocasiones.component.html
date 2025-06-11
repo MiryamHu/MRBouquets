@@ -1,1 +1,117 @@
-<p>ocasiones works!</p>
+<div class="ocasiones-container">
+  <!-- Título de la sección -->
+  <div class="ocasiones-header">
+    <h1>{{ ocasionNombre ? 'Ramos para ' + ocasionNombre : 'Ramos para Ocasiones Especiales' }}</h1>
+  </div>
+
+  <!-- Sección de filtros -->
+  <section class="filtros-section">
+    <div class="filtros-header">
+      <h2>Filtros</h2>
+      <button class="btn-limpiar" (click)="limpiarFiltros()">Limpiar filtros</button>
+    </div>
+
+    <div class="filtros-grid">
+      <!-- Búsqueda por nombre -->
+      <div class="filtro-grupo">
+        <label for="busqueda">Buscar:</label>
+        <input 
+          type="text" 
+          id="busqueda"
+          [(ngModel)]="filtros.busqueda"
+          (input)="aplicarFiltros()"
+          placeholder="Buscar por nombre o descripción...">
+      </div>
+
+      <!-- Filtro por tipo de flor -->
+      <div class="filtro-grupo">
+        <label for="tipoFlor">Tipo de Flor:</label>
+        <select 
+          id="tipoFlor" 
+          [(ngModel)]="filtros.tipoFlor"
+          (change)="aplicarFiltros()">
+          <option value="">Todos los tipos</option>
+          <option *ngFor="let tipo of tiposFlor" [value]="tipo">
+            {{ tipo }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtro por color -->
+      <div class="filtro-grupo">
+        <label for="color">Color:</label>
+        <select 
+          id="color" 
+          [(ngModel)]="filtros.color"
+          (change)="aplicarFiltros()">
+          <option value="">Todos los colores</option>
+          <option *ngFor="let color of colores" [value]="color">
+            {{ color }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtro por precio -->
+      <div class="filtro-grupo precio-grupo">
+        <label>Rango de Precio:</label>
+        <div class="precio-inputs">
+          <input 
+            type="number" 
+            [(ngModel)]="filtros.precioMin"
+            (input)="aplicarFiltros()"
+            placeholder="Mín €">
+          <span>-</span>
+          <input 
+            type="number" 
+            [(ngModel)]="filtros.precioMax"
+            (input)="aplicarFiltros()"
+            placeholder="Máx €">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grid de productos -->
+  <div class="productos-grid">
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="ramosFiltrados.length === 0" class="no-resultados">
+      <p>No se encontraron productos que coincidan con los filtros seleccionados.</p>
+    </div>
+
+    <!-- Tarjetas de productos -->
+    <div *ngFor="let ramo of ramosFiltrados" class="producto-card">
+      <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + ramo.img" [alt]="ramo.nombre" class="producto-imagen">
+      <div class="producto-info">
+        <h3>{{ ramo.nombre }}</h3>
+        <p class="producto-descripcion">{{ ramo.descripcion }}</p>
+        <div class="producto-detalles">
+          <span class="tipo-flor">{{ ramo.tipo_flor }}</span>
+          <span class="color">{{ ramo.color }}</span>
+        </div>
+        <div class="producto-footer">
+          <span class="precio">{{ ramo.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <div class="cantidad-control">
+            <button (click)="decrementarCantidad(ramo.id)" [disabled]="getCantidad(ramo.id) <= 1">−</button>
+            <span>{{ getCantidad(ramo.id) }}</span>
+            <button (click)="incrementarCantidad(ramo.id)">+</button>
+          </div>
+          <button class="btn-agregar" (click)="agregarAlCarrito(ramo)">
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de login -->
+  <div class="modal-backdrop" *ngIf="showLoginModal">
+    <div class="modal">
+      <h3>¡Ups!</h3>
+      <p>Para agregar productos al carrito, necesitas iniciar sesión primero.</p>
+      <div class="modal-actions">
+        <button class="btn-primary" (click)="irALogin()">Iniciar sesión</button>
+        <button class="btn-secondary" (click)="showLoginModal = false">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

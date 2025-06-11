@@ -18,18 +18,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     $query = "
         SELECT 
-            id,
-            nombre,
-            descripcion,
-            precio,
-            img,
-            tipo_flor,
-            color,
-            disponible,
-            es_ocasion_especial
-        FROM ramos
-        WHERE activo = 1
-        ORDER BY nombre ASC
+            r.id,
+            r.nombre,
+            r.descripcion,
+            r.precio,
+            r.img,
+            r.tipo_flor,
+            r.color,
+            r.disponible,
+            r.es_ocasion_especial,
+            r.id_ocasion,
+            t.nombre as nombre_ocasion
+        FROM ramos r
+        LEFT JOIN tipos_ocasion t ON r.id_ocasion = t.id
+        WHERE r.activo = 1
+        ORDER BY r.nombre ASC
     ";
 
     $result = $conn->query($query);
@@ -45,6 +48,9 @@ try {
         $row['precio'] = (float)$row['precio'];
         $row['disponible'] = (bool)$row['disponible'];
         $row['es_ocasion_especial'] = (bool)$row['es_ocasion_especial'];
+        if ($row['id_ocasion'] !== null) {
+            $row['id_ocasion'] = (int)$row['id_ocasion'];
+        }
         
         $ramos[] = $row;
     }

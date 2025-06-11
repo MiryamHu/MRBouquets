@@ -24,7 +24,7 @@
           <ul class="submenu" *ngIf="submenuAbierto">
             <li *ngFor="let oc of ocasiones">
               <a
-                [routerLink]="['/catalogo']"
+                [routerLink]="['/ocasiones']"
                 [queryParams]="{ oc: oc.id }"
                 class="submenu-link"
               >
