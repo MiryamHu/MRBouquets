@@ -104,7 +104,7 @@
           <span class="badge tipo-flor">{{ ramo.tipo_flor }}</span>
           <span class="badge color">{{ ramo.color }}</span>
         </div>
-        <div class="producto-footer">
+        <div class="producto-precio-cantidad">
           <span class="precio">{{ ramo.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
           <div class="control-cantidad">
             <button type="button" class="btn-cantidad" (click)="decrementarCantidad(ramo.id)">-</button>
@@ -120,13 +120,13 @@
         </div>
         <div class="botones-tarjeta">
           <button class="boton-ver" (click)="verDetalles(ramo)">
-            Ver detalles
+            <i class="bi bi-search"></i> Ver detalles
           </button>
           <button 
             class="btn-agregar"
             (click)="agregarAlCarrito(ramo, cantidades[ramo.id] || 1)"
             [disabled]="!ramo.disponible">
-            {{ ramo.disponible ? 'Agregar al carrito' : 'No disponible' }}
+            <i class="bi bi-cart-plus"></i> Agregar al carrito
           </button>
         </div>
       </div>
@@ -154,11 +154,6 @@
            (mousemove)="onMouseMove($event)"
            (mouseleave)="onMouseLeave()">
         <canvas #mainCanvas class="main-canvas"></canvas>
-        <div #square class="selector"></div>
-        <canvas #copyCanvas class="copy-canvas" width="200" height="200"></canvas>
-        <button class="lupa-icon" [class.active]="isZoomActive" (click)="toggleZoom()">
-          <i class="bi" [class.bi-zoom-in]="!isZoomActive" [class.bi-zoom-out]="isZoomActive"></i>
-        </button>
       </div>
       
       <div class="modal-info">

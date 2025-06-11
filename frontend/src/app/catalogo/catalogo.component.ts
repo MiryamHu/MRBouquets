@@ -34,19 +34,8 @@ export class CatalogoComponent implements OnInit {
   showLoginModal = false;
   ramoSeleccionado: Ramo | null = null;
   cantidades: { [key: number]: number } = {};
-  isZoomActive = false;
 
   @ViewChild('mainCanvas', { static: false }) mainCanvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('copyCanvas', { static: false }) copyCanvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('square', { static: false }) square!: ElementRef<HTMLDivElement>;
-
-  private mainCtx: CanvasRenderingContext2D | null = null;
-  private copyCtx: CanvasRenderingContext2D | null = null;
-  private currentImage: HTMLImageElement | null = null;
-  
-  private scale   = 1;
-  private offsetX = 0;
-  private offsetY = 0;
 
   // Filtros
   filtros = {
@@ -193,15 +182,13 @@ export class CatalogoComponent implements OnInit {
     console.log('Iniciando abrirDetalles con ramo:', ramo);
     this.ramoSeleccionado = ramo;
     this.cantidades[ramo.id] = this.cantidades[ramo.id] || 1;
-  
     // Esperar a que el modal esté en el DOM
     setTimeout(() => {
       this.initializeCanvas();
-      if (!this.mainCanvas?.nativeElement || !this.mainCtx) {
+      if (!this.mainCanvas?.nativeElement) {
         console.error('Canvas principal no disponible');
         return;
       }
-
       // Cargar la imagen
       const img = new Image();
       img.crossOrigin = 'anonymous';
@@ -214,28 +201,6 @@ export class CatalogoComponent implements OnInit {
 
   cerrarDetalles() {
     this.ramoSeleccionado = null;
-    this.isZoomActive = false;
-    if (this.square?.nativeElement) {
-      this.square.nativeElement.style.display = 'none';
-    }
-    if (this.copyCanvas?.nativeElement) {
-      this.copyCanvas.nativeElement.style.display = 'none';
-    }
-  }
-
-  onMouseLeave() {
-    if (this.square?.nativeElement && this.copyCanvas?.nativeElement) {
-      this.square.nativeElement.style.display = 'none';
-      this.copyCanvas.nativeElement.style.display = 'none';
-    }
-  }
-
-  toggleZoom() {
-    this.isZoomActive = !this.isZoomActive;
-    if (!this.isZoomActive && this.square?.nativeElement && this.copyCanvas?.nativeElement) {
-      this.square.nativeElement.style.display = 'none';
-      this.copyCanvas.nativeElement.style.display = 'none';
-    }
   }
 
   private initializeCanvas() {
@@ -244,17 +209,11 @@ export class CatalogoComponent implements OnInit {
     // Solo intentar inicializar si el modal está visible
     if (this.ramoSeleccionado) {
       if (this.mainCanvas?.nativeElement) {
-        this.mainCtx = this.mainCanvas.nativeElement.getContext('2d');
+        const ctx = this.mainCanvas.nativeElement.getContext('2d');
         console.log('Canvas principal inicializado:', {
           canvas: this.mainCanvas.nativeElement,
-          context: this.mainCtx
+          context: ctx
         });
-      }
-
-      if (this.copyCanvas?.nativeElement) {
-        this.copyCtx = this.copyCanvas.nativeElement.getContext('2d');
-        this.copyCanvas.nativeElement.width  = 200;
-        this.copyCanvas.nativeElement.height = 200;
       }
     } else {
       console.log('Modal no visible, omitiendo inicialización de canvas');
@@ -265,68 +224,23 @@ export class CatalogoComponent implements OnInit {
     return this.cantidades[ramoId] || 1;
   }
 
-  onMouseMove(event: MouseEvent): void {
-    if (!this.isZoomActive || !this.mainCanvas?.nativeElement || !this.copyCanvas?.nativeElement || !this.square?.nativeElement) {
-      return;
-    }
-
-    const mainCanvas = this.mainCanvas.nativeElement;
-    const copyCanvas = this.copyCanvas.nativeElement;
-    const square = this.square.nativeElement;
-    const rect = mainCanvas.getBoundingClientRect();
-
-    // Calcular posición del mouse relativa al canvas
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    // Mostrar el selector y el canvas de copia
-    square.style.display = 'block';
-    copyCanvas.style.display = 'block';
-
-    // Posicionar el selector
-    const squareSize = 100;
-    const squareX = Math.max(0, Math.min(x - squareSize/2, mainCanvas.width - squareSize));
-    const squareY = Math.max(0, Math.min(y - squareSize/2, mainCanvas.height - squareSize));
-    square.style.left = `${squareX}px`;
-    square.style.top = `${squareY}px`;
-
-    // Dibujar la región ampliada en el canvas de copia
-    if (this.mainCtx && this.copyCtx) {
-      this.copyCtx.clearRect(0, 0, copyCanvas.width, copyCanvas.height);
-      this.copyCtx.drawImage(
-        mainCanvas,
-        squareX, squareY, squareSize, squareSize,
-        0, 0, copyCanvas.width, copyCanvas.height
-      );
-    }
-  }
-
   private loadImage(img: HTMLImageElement): void {
     img.onload = () => {
-      if (!this.mainCanvas?.nativeElement || !this.mainCtx) {
+      if (!this.mainCanvas?.nativeElement) {
         console.error('Canvas no disponible');
         return;
       }
 
       const canvas = this.mainCanvas.nativeElement;
-      const ctx = this.mainCtx;
+      const ctx = canvas.getContext('2d');
 
       // Ajustar el tamaño del canvas al de la imagen
       canvas.width = img.width;
       canvas.height = img.height;
 
       // Dibujar la imagen
-      ctx.drawImage(img, 0, 0);
-
-      // Guardar la imagen actual
-      this.currentImage = img;
-
-      // Inicializar el selector
-      if (this.square?.nativeElement) {
-        this.square.nativeElement.style.width = '100px';
-        this.square.nativeElement.style.height = '100px';
-        this.square.nativeElement.style.display = 'none';
-      }
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      ctx?.drawImage(img, 0, 0);
     };
 
     img.onerror = () => {
