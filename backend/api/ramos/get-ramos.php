@@ -28,6 +28,7 @@ try {
             r.disponible,
             r.es_ocasion_especial,
             r.id_ocasion,
+            r.activo,
             t.nombre as nombre_ocasion
         FROM ramos r
         LEFT JOIN tipos_ocasion t ON r.id_ocasion = t.id
@@ -47,6 +48,7 @@ try {
         $row['id'] = (int)$row['id'];
         $row['precio'] = (float)$row['precio'];
         $row['disponible'] = (bool)$row['disponible'];
+        $row['activo'] = (bool)$row['activo'];
         $row['es_ocasion_especial'] = (bool)$row['es_ocasion_especial'];
         if ($row['id_ocasion'] !== null) {
             $row['id_ocasion'] = (int)$row['id_ocasion'];

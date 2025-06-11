@@ -48,33 +48,38 @@
       </button>
 
       <div class="grid-destacados">
-        <article class="tarjeta-bouquet" *ngFor="let producto of productosRegularesVisibles">
-          <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + producto.img" 
-               [alt]="producto.nombre">
-          <h3>{{ producto.nombre }}</h3>
-          <p>{{ producto.descripcion }}</p>
-          <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-          <div class="control-cantidad">
-            <button type="button" class="btn-cantidad" (click)="decrementarCantidad(producto.id)">-</button>
-            <input 
-              type="number" 
-              min="1" 
-              max="99" 
-              [(ngModel)]="cantidades[producto.id]" 
-              [value]="cantidades[producto.id]"
-              (input)="cantidades[producto.id] = $event.target.value"
-            />
-            <button type="button" class="btn-cantidad" (click)="incrementarCantidad(producto.id)">+</button>
-          </div>
-          <div class="botones-tarjeta">
-            <button class="boton-ver" (click)="verDetalles(producto)">
-              Ver detalles
-            </button>
-            <button class="boton" (click)="onAddToCart(producto)">
-              Agregar al carrito
-            </button>
-          </div>
-        </article>
+   <article class="tarjeta-bouquet" *ngFor="let producto of productosRegularesVisibles">
+  <!-- img, título, descripción y precio igual que antes -->
+  <img [src]="'http://localhost/MRBouquets/frontend/public/img/' + producto.img" [alt]="producto.nombre">
+  <h3>{{ producto.nombre }}</h3>
+  <p>{{ producto.descripcion }}</p>
+  <span class="precio">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+
+  <!-- Aquí viene la lógica de disponibilidad -->
+  <ng-container *ngIf="producto.disponible; else noDisponible">
+    <div class="control-cantidad">
+      <button type="button" class="btn-cantidad" (click)="decrementarCantidad(producto.id)">-</button>
+      <input
+        type="number"
+        min="1"
+        max="99"
+        [(ngModel)]="cantidades[producto.id]"
+        (input)="cantidades[producto.id] = $event.target.value"
+      />
+      <button type="button" class="btn-cantidad" (click)="incrementarCantidad(producto.id)">+</button>
+    </div>
+    <div class="botones-tarjeta">
+      <button class="boton-ver" (click)="verDetalles(producto)">Ver detalles</button>
+      <button class="boton" (click)="onAddToCart(producto)">Agregar al carrito</button>
+    </div>
+  </ng-container>
+  <ng-template #noDisponible>
+    <div class="text-center p-3">
+      <span class="text-danger">No Disponible</span>
+    </div>
+  </ng-template>
+</article>
+
       </div>
 
       <button 
@@ -106,6 +111,8 @@
           <h3>{{ ocasion.nombre }}</h3>
           <p class="descripcion">{{ ocasion.descripcion }}</p>
           <span class="precio">{{ ocasion.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+
+          <ng-container *ngIf="ocasion.disponible; else noDisponibleOcasion">
           <div class="control-cantidad">
             <button type="button" class="btn-cantidad" (click)="decrementarCantidad(ocasion.id)">-</button>
             <input type="number" min="1" max="99" [(ngModel)]="cantidades[ocasion.id]" />
@@ -119,6 +126,12 @@
               Agregar al carrito
             </button>
           </div>
+          </ng-container>
+           <ng-template #noDisponibleOcasion>
+          <div class="text-center p-3">
+            <span class="text-danger">No Disponible</span>
+          </div>
+        </ng-template>
         </article>
       </div>
 

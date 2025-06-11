@@ -65,8 +65,26 @@ $stmt->close();
 try {
     $conn->begin_transaction();
 
+    // Verificar stock disponible para todos los items
+    $stmt = $conn->prepare("
+        SELECT id, stock, nombre 
+        FROM ramos 
+        WHERE id = ? AND stock >= ?
+    ");
+
+    foreach ($items as $item) {
+        $stmt->bind_param("ii", $item['id'], $item['quantity']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if (!$result->fetch_assoc()) {
+            throw new Exception("Stock insuficiente para el ramo con ID: " . $item['id']);
+        }
+    }
+    $stmt->close();
+
     // 1) Insertar en 'pedidos' con id_estado = 1 (confirmado)
-    $estadoPendiente = 1; // Asegúrate que en tu tabla estados_pedidos el ID=1 corresponde a "confirmado"
+    $estadoPendiente = 1;
 
     $stmt = $conn->prepare("
         INSERT INTO pedidos (id_usuario, id_direccion, precio_total, id_estado)
@@ -90,31 +108,57 @@ try {
     $id_pedido = $stmt->insert_id;
     $stmt->close();
 
-    // 2) Insertar cada ítem en detalle_pedidos
-    $stmt = $conn->prepare("
+    // 2) Insertar cada ítem en detalle_pedidos y actualizar stock
+    $stmtDetalle = $conn->prepare("
         INSERT INTO detalle_pedidos (id_pedido, id_ramo, cantidad, precio_unitario)
         VALUES (?, ?, ?, ?)
     ");
 
-    if ($stmt === false) {
-        throw new Exception("Error en prepare detalle_pedidos: " . $conn->error);
+    $stmtStock = $conn->prepare("
+        UPDATE ramos 
+        SET stock = stock - ? 
+        WHERE id = ?
+    ");
+
+    if ($stmtDetalle === false || $stmtStock === false) {
+        throw new Exception("Error en prepare: " . $conn->error);
     }
 
     foreach ($items as $item) {
-        $stmt->bind_param("iiid",
+        // Insertar detalle
+        $stmtDetalle->bind_param("iiid",
             $id_pedido,
             $item['id'],
             $item['quantity'],
             $item['price']
         );
-        $stmt->execute();
+        $stmtDetalle->execute();
 
-        if ($stmt->affected_rows !== 1) {
+        if ($stmtDetalle->affected_rows !== 1) {
             throw new Exception('Error al guardar detalle del pedido');
+        }
+
+        // Actualizar stock
+        $stmtStock->bind_param("ii", $item['quantity'], $item['id']);
+        $stmtStock->execute();
+
+        if ($stmtStock->affected_rows !== 1) {
+            throw new Exception('Error al actualizar el stock');
         }
     }
 
-    $stmt->close();
+    $stmtDetalle->close();
+    $stmtStock->close();
+
+    // 3) Vaciar el carrito del usuario
+    $stmtVaciar = $conn->prepare("
+        DELETE FROM articulos_carrito 
+        WHERE id_usuario = ?
+    ");
+    $stmtVaciar->bind_param("i", $id_usuario);
+    $stmtVaciar->execute();
+    $stmtVaciar->close();
+
     $conn->commit();
 
     echo json_encode([
