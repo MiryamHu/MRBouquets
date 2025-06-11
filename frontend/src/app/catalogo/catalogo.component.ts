@@ -146,6 +146,7 @@ export class CatalogoComponent implements OnInit {
 
   agregarAlCarrito(ramo: Ramo, cantidad: number = 1): void {
     if (!this.auth.isLoggedIn()) {
+      this.ramoSeleccionado = null;
       this.showLoginModal = true;
       return;
     }
